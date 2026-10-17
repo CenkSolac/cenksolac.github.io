@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canlı yayın | CenkSolac</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel">Novel</a><a href="canliyayin" aria-current="page">Canlı yayın</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p></main>
+<script>
+const app=document.getElementById("app");
+const sayi=n=>Number(n||0).toLocaleString("tr-TR");
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+function tablo(baslik,kol,satirlar){
+  const k=e("section");k.append(e("h2",null,baslik));
+  if(!satirlar||!satirlar.length){k.append(e("p","bos","Henüz veri yok."));return k}
+  const t=e("table"),th=e("tr");
+  kol.forEach(c=>th.append(e("th",null,c)));t.append(th);
+  satirlar.forEach((s,i)=>{const r=e("tr");r.append(e("td",null,(i+1)+". "+s.ad),e("td",null,sayi(s.deger)));t.append(r)});
+  k.append(t);return k;
+}
+fetch("data.json").then(r=>r.json()).then(d=>{
+  const c=d.canli;
+  app.replaceChildren(e("h1",null,"Canlı yayın"));
+  if(c.guncelleme)app.append(e("p","alt","Son güncelleme: "+c.guncelleme));
+  const g=e("div","sayilar");
+  [["Toplam ödül",c.toplamOdul],["Beğeni",c.begeni],["Yorum",c.yorum]].forEach(([a,v])=>{
+    const k=e("div","sayi");k.append(e("b",null,sayi(v)),e("span",null,a));g.append(k)});
+  app.append(g,tablo("Sponsorlar",["Sponsor","Katkı"],c.sponsorlar),tablo("Sıralama",["İzleyici","Puan"],c.siralama));
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+</script>
+</body>
+</html>

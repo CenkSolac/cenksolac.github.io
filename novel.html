@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Novel | CenkSolac</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel" aria-current="page">Novel</a><a href="canliyayin">Canlı yayın</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p></main>
+<script>
+const app=document.getElementById("app");
+const q=new URLSearchParams(location.search);
+const DIL={tr:"Türkçe",en:"English"};
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+function link(href,c,x){const a=e("a",c,x);a.href=href;return a}
+
+fetch("data.json").then(r=>r.json()).then(d=>{
+  const s=d.seriler.find(x=>x.id===q.get("s"));
+  if(!s)return liste(d.seriler);
+  const b=parseInt(q.get("b"),10);
+  if(b>=1&&b<=s.bolumler.length)return oku(s,b);
+  seri(s);
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+
+function liste(seriler){
+  app.replaceChildren();
+  app.append(e("h1",null,"Novel"));
+  const arac=e("div","arac"),ara=e("input");
+  ara.type="search";ara.placeholder="Seri veya bölüm ara";ara.setAttribute("aria-label","Ara");
+  const f=e("select");f.setAttribute("aria-label","Dil");
+  [["hepsi","Tüm diller"],["tr","Türkçe"],["en","English"]].forEach(([v,t])=>{const o=e("option",null,t);o.value=v;f.append(o)});
+  arac.append(ara,f);
+  const kutu=e("div","liste");
+  app.append(arac,kutu);
+  function ciz(){
+    const t=ara.value.toLocaleLowerCase("tr").trim();
+    const r=seriler.filter(s=>(f.value==="hepsi"||s.dil===f.value)&&(s.ad+" "+s.ozet+" "+s.bolumler.join(" ")).toLocaleLowerCase("tr").includes(t));
+    kutu.replaceChildren();
+    if(!r.length)kutu.append(e("p","bos","Aramana uyan seri ya da bölüm yok."));
+    r.forEach(s=>{
+      const a=link("?s="+s.id);
+      const sol=e("span");
+      const bas=e("strong",null,s.ad);bas.append(e("span","dil",DIL[s.dil]||s.dil));
+      sol.append(bas,e("br"),e("small",null,s.ozet));
+      a.append(sol,e("small",null,s.bolumler.length+" bölüm"));
+      kutu.append(a);
+    });
+  }
+  ara.oninput=f.onchange=ciz;ciz();
+}
+
+function seri(s){
+  document.title=s.ad+" | CenkSolac";
+  app.replaceChildren(link("novel","soluk","Tüm seriler"));
+  const h=e("h1",null,s.ad);h.append(e("span","dil",DIL[s.dil]||s.dil));
+  app.append(h,e("p","alt",s.ozet));
+  const k=e("div","liste");
+  s.bolumler.forEach((ad,i)=>{const a=link("?s="+s.id+"&b="+(i+1));a.append(e("strong",null,ad));k.append(a)});
+  app.append(k);
+}
+
+function oku(s,b){
+  document.title=s.bolumler[b-1]+" | "+s.ad;
+  app.replaceChildren(link("?s="+s.id,"soluk",s.ad));
+  app.append(e("h1",null,s.bolumler[b-1]));
+  const m=e("div","okuma");app.append(m);
+  fetch("bolumler/"+s.id+"/"+b+".txt").then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    t.split(/\n\s*\n/).forEach(p=>{if(p.trim())m.append(e("p",null,p.trim()))});
+  }).catch(()=>m.append(e("p","bos","Bu bölümün dosyası henüz yüklenmedi: bolumler/"+s.id+"/"+b+".txt")));
+  const g=e("div","gezin");
+  g.append(b>1?link("?s="+s.id+"&b="+(b-1),null,"Önceki bölüm"):e("span"));
+  if(b<s.bolumler.length)g.append(link("?s="+s.id+"&b="+(b+1),null,"Sonraki bölüm"));
+  app.append(g);
+  scrollTo(0,0);
+}
+</script>
+</body>
+</html>
