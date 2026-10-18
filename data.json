@@ -29,16 +29,31 @@
   },
   "moblar": [
     {
-      "ad": "Örnek Mob 1",
-      "gorsel": "ornek-mob-1",
-      "hediye": "Hediye adı",
-      "coin": 50
+      "ad": "Dev Çukur",
+      "gorsel": "screenshot-71",
+      "hediye": "Corgi",
+      "hediyeGorsel": "screenshot-78",
+      "coin": 299
     },
     {
-      "ad": "Örnek Mob 2",
-      "gorsel": "ornek-mob-2",
-      "hediye": "Hediye adı",
-      "coin": 200
+      "ad": "İnek",
+      "gorsel": "screenshot-72",
+      "hediye": "Ice Cream Cone",
+      "hediyeGorsel": "screenshot-75",
+      "coin": 1
+    },
+    {
+      "ad": "Netherite Zombi",
+      "gorsel": "screenshot-73",
+      "hediye": "Energy Capsule",
+      "hediyeGorsel": "screenshot-76",
+      "coin": 30
+    },
+    {
+      "ad": "Yunus Balığı",
+      "gorsel": "screenshot-74",
+      "hediye": "Heart Me",
+      "coin": 1
     }
   ]
 }
