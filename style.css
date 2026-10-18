@@ -40,3 +40,12 @@ th,td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--cizgi)}
 th{color:var(--soluk);font-weight:400}
 td:last-child,th:last-child{text-align:right}
 .bos{color:var(--soluk);padding:14px 0}
+.izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.mob{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;overflow:hidden}
+.mob .resim{aspect-ratio:1;background:#0e1527;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:var(--cizgi)}
+.mob img{width:100%;height:100%;object-fit:contain;display:block}
+.mob .bilgi{padding:12px 14px 14px}
+.mob h3{margin:0 0 6px;font-size:17px;line-height:1.25}
+.hediye{display:flex;align-items:center;gap:7px;color:var(--soluk);font-size:15px}
+.hediye img{width:22px;height:22px}
+.coin{margin-top:8px;font-weight:800;color:var(--vurgu)}

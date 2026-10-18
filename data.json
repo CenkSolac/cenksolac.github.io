@@ -5,14 +5,18 @@
       "ad": "Örnek Seri",
       "dil": "tr",
       "ozet": "Buraya serinin kısa özetini yaz.",
-      "bolumler": ["Bölüm 1: Başlangıç"]
+      "bolumler": [
+        "Bölüm 1: Başlangıç"
+      ]
     },
     {
       "id": "sample-series",
       "ad": "Sample Series",
       "dil": "en",
       "ozet": "Write a short summary of the series here.",
-      "bolumler": ["Chapter 1: The Beginning"]
+      "bolumler": [
+        "Chapter 1: The Beginning"
+      ]
     }
   ],
   "canli": {
@@ -22,5 +26,19 @@
     "yorum": 0,
     "sponsorlar": [],
     "siralama": []
-  }
+  },
+  "moblar": [
+    {
+      "ad": "Örnek Mob 1",
+      "gorsel": "ornek-mob-1",
+      "hediye": "Hediye adı",
+      "coin": 50
+    },
+    {
+      "ad": "Örnek Mob 2",
+      "gorsel": "ornek-mob-2",
+      "hediye": "Hediye adı",
+      "coin": 200
+    }
+  ]
 }

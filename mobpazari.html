@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mob Pazarı | CenkSolac</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari" aria-current="page">Mob Pazarı</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p></main>
+<script>
+const app=document.getElementById("app");
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+fetch("data.json").then(r=>r.json()).then(d=>{
+  const moblar=d.moblar||[];
+  app.replaceChildren(e("h1",null,"Mob Pazarı"),e("p","alt","Yayında göndermek istediğin mobu seç, yanındaki hediyeyi canlı yayında gönder."));
+  const arac=e("div","arac"),ara=e("input"),sira=e("select");
+  ara.type="search";ara.placeholder="Mob ara";ara.setAttribute("aria-label","Mob ara");
+  sira.setAttribute("aria-label","Sıralama");
+  [["artan","Ucuzdan pahalıya"],["azalan","Pahalıdan ucuza"]].forEach(([v,t])=>{const o=e("option",null,t);o.value=v;sira.append(o)});
+  arac.append(ara,sira);
+  const izgara=e("div","izgara");
+  app.append(arac,izgara);
+  function ciz(){
+    const t=ara.value.toLocaleLowerCase("tr").trim();
+    const r=moblar.filter(m=>m.ad.toLocaleLowerCase("tr").includes(t)).sort((a,b)=>sira.value==="artan"?a.coin-b.coin:b.coin-a.coin);
+    izgara.replaceChildren();
+    if(!r.length){izgara.append(e("p","bos","Aramana uyan mob yok."));return}
+    r.forEach(m=>{
+      const k=e("article","mob"),res=e("div","resim");
+      const im=e("img");im.src="mobs/"+m.gorsel+".webp";im.alt=m.ad;im.loading="lazy";
+      im.onerror=()=>res.replaceChildren(document.createTextNode(m.ad.charAt(0)));
+      res.append(im);
+      const b=e("div","bilgi"),h=e("div","hediye");
+      if(m.hediyeGorsel){const hi=e("img");hi.src="hediyeler/"+m.hediyeGorsel+".webp";hi.alt="";hi.onerror=()=>hi.remove();h.append(hi)}
+      h.append(e("span",null,m.hediye||""));
+      b.append(e("h3",null,m.ad),h,e("div","coin",Number(m.coin).toLocaleString("tr-TR")+" coin"));
+      k.append(res,b);izgara.append(k);
+    });
+  }
+  ara.oninput=sira.onchange=ciz;ciz();
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+</script>
+</body>
+</html>
