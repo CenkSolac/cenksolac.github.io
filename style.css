@@ -63,3 +63,30 @@ td:last-child,th:last-child{text-align:right}
 .vitrin:hover .dugme{filter:brightness(1.1)}
 .ikili{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .ikili .kapi{margin-bottom:0}
+.ust{flex-wrap:wrap;gap:6px 16px}
+nav{display:flex;flex-wrap:wrap}
+@media (max-width:540px){nav a{margin-left:0;margin-right:16px}}
+.takvim-ust{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.takvim-ust h2{margin:0;font-size:26px}
+.takvim-ust div{display:flex;gap:8px}
+.dgm{font:inherit;color:var(--yazi);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:10px;padding:8px 16px;cursor:pointer}
+.dgm:hover{border-color:var(--vurgu)}
+.takvim{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.takvim .bas{color:var(--soluk);font-size:13px;text-align:center;padding:4px 0}
+.gun{min-height:48px;font:inherit;font-size:15px;color:var(--yazi);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 0}
+.gun:hover{border-color:var(--vurgu)}
+.gun.bugun{border-color:var(--vurgu)}
+.gun.secili{background:var(--vurgu);color:var(--bg);font-weight:600}
+.noktalar{display:flex;gap:3px;height:6px}
+.nokta{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--vurgu)}
+.nokta.video{background:#ff7a7a}
+.nokta.diger{background:#f5c86b}
+.nokta.yazi{background:#9be29b}
+.gun.secili .nokta{background:var(--bg)}
+.aciklama{display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 0;color:var(--soluk);font-size:14px}
+.detay{margin:26px 0 34px;padding:20px 22px;background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px}
+.detay h3{margin:0 0 12px;font-size:21px}
+.detay h4{margin:18px 0 10px;font-size:19px}
+.olay{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--cizgi)}
+.olay .saat{min-width:52px;color:var(--vurgu);font-weight:600}
+.detay .bos{padding:0}

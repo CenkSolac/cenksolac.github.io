@@ -27,6 +27,22 @@
     "sponsorlar": [],
     "siralama": []
   },
+  "takvim": [
+    {
+      "tarih": "2026-10-25",
+      "saat": "20:00",
+      "tur": "diger",
+      "baslik": "Örnek etkinlik (silip kendi etkinliğini yaz)",
+      "not": "tur şunlardan biri olabilir: yayin, video, diger"
+    }
+  ],
+  "gunluk": [
+    {
+      "tarih": "2026-10-20",
+      "baslik": "Örnek günlük yazısı",
+      "metin": "Buraya günlük yazını yaz.\n\nYeni paragraf için araya boş bir satır bırak."
+    }
+  ],
   "moblar": [
     {
       "ad": "Dev Çukur",

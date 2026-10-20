@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Günlük | CenkSolac</title>
+<meta name="description" content="CenkSolac takvimi: canlı yayın günleri, YouTube videoları ve günlük yazıları.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="gunluk" aria-current="page">Günlük</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p></main>
+<script>
+const app=document.getElementById("app");
+const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const GUNLER=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+const TUR={yayin:"Canlı yayın",video:"YouTube videosu",diger:"Diğer"};
+const pad=n=>String(n).padStart(2,"0");
+const anahtar=(y,a,g)=>y+"-"+pad(a+1)+"-"+pad(g);
+const gecerli=t=>/^\d{4}-\d{2}-\d{2}$/.test(t||"");
+function tarihYaz(t){const [y,a,g]=t.split("-").map(Number);return g+" "+AYLAR[a-1]+" "+y}
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+
+fetch("data.json").then(r=>r.json()).then(d=>{
+  const olaylar=(d.takvim||[]).filter(o=>gecerli(o.tarih)).sort((a,b)=>(a.tarih+(a.saat||"")).localeCompare(b.tarih+(b.saat||"")));
+  const yazilar=(d.gunluk||[]).filter(y=>gecerli(y.tarih)).sort((a,b)=>b.tarih.localeCompare(a.tarih));
+  const bn=new Date(),bugun=anahtar(bn.getFullYear(),bn.getMonth(),bn.getDate());
+  let yil=bn.getFullYear(),ay=bn.getMonth(),secili=bugun;
+
+  app.replaceChildren(e("h1",null,"Günlük"));
+  const sonraki=olaylar.find(o=>o.tur==="yayin"&&o.tarih>=bugun);
+  app.append(e("p","alt",sonraki
+    ?"Sıradaki canlı yayın: "+tarihYaz(sonraki.tarih)+(sonraki.saat?", "+sonraki.saat:"")
+    :"Yayın günlerim, videolarım ve notlarım burada."));
+
+  const takvimKutu=e("section"),detayKutu=e("section","detay"),yaziKutu=e("section");
+  app.append(takvimKutu,detayKutu,yaziKutu);
+
+  function ciz(odak){
+    // takvim
+    takvimKutu.replaceChildren();
+    const ust=e("div","takvim-ust"),btn=e("div");
+    const onceki=e("button","dgm","‹"),ileri=e("button","dgm","›"),bugunBtn=e("button","dgm","Bugün");
+    onceki.setAttribute("aria-label","Önceki ay");ileri.setAttribute("aria-label","Sonraki ay");
+    onceki.onclick=()=>{ay--;if(ay<0){ay=11;yil--}ciz()};
+    ileri.onclick=()=>{ay++;if(ay>11){ay=0;yil++}ciz()};
+    bugunBtn.onclick=()=>{yil=bn.getFullYear();ay=bn.getMonth();secili=bugun;ciz()};
+    btn.append(onceki,bugunBtn,ileri);
+    ust.append(e("h2",null,AYLAR[ay]+" "+yil),btn);
+    const izgara=e("div","takvim");
+    GUNLER.forEach(g=>izgara.append(e("div","bas",g)));
+    const bosluk=(new Date(yil,ay,1).getDay()+6)%7,gunSayisi=new Date(yil,ay+1,0).getDate();
+    for(let i=0;i<bosluk;i++)izgara.append(e("div"));
+    for(let g=1;g<=gunSayisi;g++){
+      const k=anahtar(yil,ay,g);
+      const buGun=olaylar.filter(o=>o.tarih===k),buYazi=yazilar.filter(y=>y.tarih===k);
+      const b=e("button","gun"+(k===bugun?" bugun":"")+(k===secili?" secili":""));
+      b.append(e("span",null,String(g)));
+      const nk=e("span","noktalar");
+      [...new Set(buGun.map(o=>TUR[o.tur]?o.tur:"diger"))].forEach(t=>nk.append(e("i","nokta "+t)));
+      if(buYazi.length)nk.append(e("i","nokta yazi"));
+      b.append(nk);
+      const sayi=buGun.length+buYazi.length;
+      b.setAttribute("aria-label",g+" "+AYLAR[ay]+" "+yil+(sayi?", "+sayi+" kayıt":""));
+      b.onclick=()=>{secili=k;ciz(true)};
+      izgara.append(b);
+    }
+    const aciklama=e("div","aciklama");
+    [["yayin","Canlı yayın"],["video","Video"],["diger","Diğer"],["yazi","Günlük yazısı"]].forEach(([c,t])=>{
+      const s=e("span");s.append(e("i","nokta "+c),document.createTextNode(" "+t));aciklama.append(s)});
+    takvimKutu.append(ust,izgara,aciklama);
+
+    // gün detayı
+    detayKutu.replaceChildren(e("h3",null,tarihYaz(secili)));
+    const gOlay=olaylar.filter(o=>o.tarih===secili),gYazi=yazilar.filter(y=>y.tarih===secili);
+    if(!gOlay.length&&!gYazi.length)detayKutu.append(e("p","bos","Bu güne ait kayıt yok."));
+    gOlay.forEach(o=>{
+      const s=e("div","olay");
+      s.append(e("span","saat",o.saat||"—"));
+      const m=e("div");
+      const bas=e("strong",null,o.baslik||"Etkinlik");bas.append(e("span","dil",TUR[o.tur]||TUR.diger));
+      m.append(bas);
+      if(o.not)m.append(e("br"),e("small","soluk",o.not));
+      s.append(m);detayKutu.append(s);
+    });
+    gYazi.forEach(y=>{
+      detayKutu.append(e("h4",null,y.baslik||"Günlük"));
+      const m=e("div","okuma");
+      String(y.metin||"").split(/\n\s*\n/).forEach(p=>{if(p.trim())m.append(e("p",null,p.trim()))});
+      detayKutu.append(m);
+    });
+
+    // günlük yazıları listesi
+    yaziKutu.replaceChildren(e("h2",null,"Günlük yazıları"));
+    if(!yazilar.length)yaziKutu.append(e("p","bos","Henüz günlük yazısı yok."));
+    else{
+      const l=e("div","liste");
+      yazilar.forEach(y=>{
+        const a=e("a");a.href="#gun";
+        const sol=e("strong",null,y.baslik||"Günlük");
+        a.append(sol,e("small",null,tarihYaz(y.tarih)));
+        a.onclick=ev=>{ev.preventDefault();secili=y.tarih;yil=Number(y.tarih.slice(0,4));ay=Number(y.tarih.slice(5,7))-1;ciz();detayKutu.scrollIntoView({behavior:"smooth",block:"start"})};
+        l.append(a);
+      });
+      yaziKutu.append(l);
+    }
+    if(odak){const s=takvimKutu.querySelector(".secili");if(s)s.focus({preventScroll:true})}
+  }
+  ciz();
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+</script>
+</body>
+</html>
