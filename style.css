@@ -49,3 +49,17 @@ td:last-child,th:last-child{text-align:right}
 .hediye{display:flex;align-items:center;gap:7px;color:var(--soluk);font-size:15px}
 .hediye img{width:22px;height:22px}
 .coin{margin-top:8px;font-weight:800;color:var(--vurgu)}
+.vitrin{padding:28px 26px 26px;border-color:var(--vurgu);background:linear-gradient(160deg,#16223d,var(--yuzey) 60%);margin-bottom:16px}
+.vitrin h2{font-size:clamp(30px,7vw,42px);line-height:1.1;margin:6px 0 8px}
+.vitrin p{max-width:30em}
+.etiket{display:inline-block;font-size:13px;font-weight:600;color:var(--bg);background:var(--vurgu);border-radius:999px;padding:2px 12px}
+.onizleme{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 14px;max-width:420px}
+.onizleme:empty{display:none}
+.onizleme span{aspect-ratio:1;background:#0e1527;border:1px solid var(--cizgi);border-radius:12px;overflow:hidden;display:block}
+.onizleme img{width:100%;height:100%;object-fit:contain;display:block}
+.bilgi-satir{display:block;color:var(--soluk);font-size:15px;margin-bottom:16px}
+.bilgi-satir:empty{display:none}
+.dugme{display:inline-block;font-weight:600;color:var(--bg);background:var(--vurgu);border-radius:10px;padding:11px 20px;margin-top:6px}
+.vitrin:hover .dugme{filter:brightness(1.1)}
+.ikili{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.ikili .kapi{margin-bottom:0}

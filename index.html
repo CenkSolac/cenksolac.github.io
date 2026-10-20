@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CenkSolac</title>
-<meta name="description" content="CenkSolac: web novel serileri ve TikTok canlı yayın istatistikleri.">
+<meta name="description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve canlı yayın istatistikleri.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,10 +14,38 @@
 </header>
 <main>
   <h1 class="dev">CenkSolac</h1>
-  <p class="alt">Türkçe ve İngilizce web novel serilerim bir yanda, TikTok canlı yayın rakamlarım öbür yanda.</p>
-  <a class="kapi" href="novel"><h2>Novel</h2><p>Serileri oku, bölümlerde ve serilerde ara.</p></a>
-  <a class="kapi" href="canliyayin"><h2>Canlı yayın</h2><p>Toplam ödül, beğeni, yorum, sponsorlar ve sıralama.</p></a>
-  <a class="kapi" href="mobpazari"><h2>Mob Pazarı</h2><p>Yayında göndereceğin mobu seç, hediyesini ve coin fiyatını gör.</p></a>
+  <p class="alt">Canlı yayında mob gönder, novel serilerimi oku, yayın rakamlarını takip et.</p>
+
+  <a class="kapi vitrin" href="mobpazari">
+    <span class="etiket">Yayından geliyorsan buradan başla</span>
+    <h2>Mob Pazarı</h2>
+    <p>Yayında göndermek istediğin mobu seç, yanındaki hediyeyi ve coin fiyatını gör.</p>
+    <div class="onizleme" id="onizleme" aria-hidden="true"></div>
+    <span class="bilgi-satir" id="mobBilgi"></span>
+    <span class="dugme">Mobları gör</span>
+  </a>
+
+  <div class="ikili">
+    <a class="kapi" href="novel"><h2>Novel</h2><p>Türkçe ve İngilizce serileri oku, bölümlerde ve serilerde ara.</p></a>
+    <a class="kapi" href="canliyayin"><h2>Canlı yayın</h2><p>Toplam ödül, beğeni, yorum, sponsorlar ve sıralama.</p></a>
+  </div>
 </main>
+<script>
+fetch("data.json").then(r=>r.json()).then(d=>{
+  const moblar=d.moblar||[];
+  if(!moblar.length)return;
+  const onizleme=document.getElementById("onizleme");
+  moblar.slice(0,4).forEach(m=>{
+    const kutu=document.createElement("span");
+    const im=document.createElement("img");
+    im.src="mobs/"+m.gorsel+".webp";im.alt="";im.loading="lazy";
+    im.onerror=()=>kutu.remove();
+    kutu.append(im);onizleme.append(kutu);
+  });
+  const enUcuz=Math.min(...moblar.map(m=>Number(m.coin)||0));
+  document.getElementById("mobBilgi").textContent=
+    moblar.length+" mob, en ucuzu "+enUcuz.toLocaleString("tr-TR")+" coin";
+}).catch(()=>{});
+</script>
 </body>
 </html>
