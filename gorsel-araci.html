@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Görsel aracı</title>
+<style>
+body{margin:0;padding:28px 20px 60px;background:#0b1020;color:#e8edf7;font:17px/1.6 system-ui,sans-serif;max-width:760px;margin:auto}
+h1{margin:0 0 6px}p{color:#93a1bf;margin:0 0 18px}
+.kutu{border:2px dashed #2a3860;border-radius:14px;padding:34px 18px;text-align:center;background:#121a2f;cursor:pointer}
+.kutu.uzerinde{border-color:#7cc4ff}
+button{font:inherit;color:#0b1020;background:#7cc4ff;border:0;border-radius:10px;padding:11px 18px;cursor:pointer;margin:14px 10px 0 0}
+label{display:inline-block;margin:14px 18px 0 0;color:#93a1bf}
+ul{padding:0;list-style:none;margin:18px 0}
+li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #1f2a45}
+li span:last-child{color:#93a1bf;white-space:nowrap}
+textarea{width:100%;height:220px;background:#121a2f;color:#e8edf7;border:1px solid #1f2a45;border-radius:10px;padding:12px;font:14px/1.5 monospace}
+</style>
+</head>
+<body>
+<h1>Görsel aracı</h1>
+<p>Resimlerini buraya bırak. Hepsi 400x400 WebP olur, dosya adları küçük harfe ve Türkçe karaktersiz hale gelir. Tarayıcında çalışır, hiçbir şey internete yüklenmez.</p>
+<div class="kutu" id="kutu" tabindex="0">Resimleri buraya sürükle ya da seçmek için tıkla</div>
+<input type="file" id="dosya" accept="image/*" multiple hidden>
+<label><input type="checkbox" id="piksel"> Piksel sanatı (keskin büyüt)</label>
+<label><input type="checkbox" id="kirp"> Kare olacak şekilde kırp (kapalıysa sığdırır)</label>
+<ul id="liste"></ul>
+<button id="indir" hidden>Hepsini ZIP olarak indir</button>
+<div id="sablon" hidden>
+  <p style="margin-top:22px">Aşağıdaki satırları data.json içindeki "moblar" listesine yapıştırıp hediye ve coin değerlerini doldur:</p>
+  <textarea id="metin" readonly></textarea>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const S=400,$=id=>document.getElementById(id);
+const kutu=$("kutu"),dosya=$("dosya"),liste=$("liste");
+let sonuc=[];
+const harita={ç:"c",ğ:"g",ı:"i",ö:"o",ş:"s",ü:"u",â:"a",î:"i",û:"u"};
+function slug(ad){
+  return ad.replace(/\.[^.]+$/,"").toLocaleLowerCase("tr").replace(/[çğıöşüâîû]/g,c=>harita[c])
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"mob";
+}
+function baslik(s){return s.split("-").map(k=>k.charAt(0).toUpperCase()+k.slice(1)).join(" ")}
+function yukle(f){return createImageBitmap(f).catch(()=>new Promise((ok,hata)=>{const i=new Image(),r=new FileReader();r.onload=()=>{i.onload=()=>ok(i);i.onerror=hata;i.src=r.result};r.onerror=hata;r.readAsDataURL(f)}))}
+function blob(c,q){return new Promise(r=>c.toBlob(r,"image/webp",q))}
+async function isle(dosyalar){
+  sonuc=[];liste.replaceChildren();
+  const kullanilan=new Set();
+  for(const f of dosyalar){
+    let ad=slug(f.name),n=2,tmp=ad;
+    while(kullanilan.has(tmp))tmp=ad+"-"+n++;
+    ad=tmp;kullanilan.add(ad);
+    const li=document.createElement("li"),a=document.createElement("span"),b=document.createElement("span");
+    a.textContent=f.name+"  →  "+ad+".webp";li.append(a,b);liste.append(li);
+    try{
+      const im=await yukle(f),c=document.createElement("canvas");c.width=c.height=S;
+      const x=c.getContext("2d");x.imageSmoothingEnabled=!$("piksel").checked;
+      const o=$("kirp").checked?Math.max(S/im.width,S/im.height):Math.min(S/im.width,S/im.height);
+      const w=im.width*o,h=im.height*o;x.drawImage(im,(S-w)/2,(S-h)/2,w,h);
+      let q=.9,bl=await blob(c,q);
+      while(bl.size>100*1024&&q>.4){q-=.1;bl=await blob(c,q)}
+      sonuc.push({ad,bl});b.textContent=Math.round(bl.size/1024)+" KB";
+    }catch(err){b.textContent="Açılamadı"}
+  }
+  $("indir").hidden=!sonuc.length;$("sablon").hidden=!sonuc.length;
+  $("metin").value=sonuc.map(s=>JSON.stringify({ad:baslik(s.ad),gorsel:s.ad,hediye:"",coin:0})).join(",\n");
+}
+kutu.onclick=()=>dosya.click();
+kutu.onkeydown=e=>{if(e.key==="Enter")dosya.click()};
+dosya.onchange=()=>isle([...dosya.files]);
+kutu.ondragover=e=>{e.preventDefault();kutu.classList.add("uzerinde")};
+kutu.ondragleave=()=>kutu.classList.remove("uzerinde");
+kutu.ondrop=e=>{e.preventDefault();kutu.classList.remove("uzerinde");isle([...e.dataTransfer.files].filter(f=>f.type.startsWith("image/")))};
+$("indir").onclick=async()=>{
+  const z=new JSZip().folder("mobs");
+  sonuc.forEach(s=>z.file(s.ad+".webp",s.bl));
+  const t=await z.generateAsync({type:"blob"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(t);a.download="mobs.zip";a.click();
+};
+</script>
+</body>
+</html>
