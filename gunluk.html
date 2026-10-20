@@ -26,7 +26,7 @@ function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==un
 
 fetch("data.json").then(r=>r.json()).then(d=>{
   const olaylar=(d.takvim||[]).filter(o=>gecerli(o.tarih)).sort((a,b)=>(a.tarih+(a.saat||"")).localeCompare(b.tarih+(b.saat||"")));
-  const yazilar=(d.gunluk||[]).filter(y=>gecerli(y.tarih)).sort((a,b)=>b.tarih.localeCompare(a.tarih));
+  const yazilar=(d.gunluk||[]).filter(y=>gecerli(y.tarih)).sort((a,b)=>(b.tarih+(b.saat||"")).localeCompare(a.tarih+(a.saat||"")));
   const bn=new Date(),bugun=anahtar(bn.getFullYear(),bn.getMonth(),bn.getDate());
   let yil=bn.getFullYear(),ay=bn.getMonth(),secili=bugun;
 
@@ -87,7 +87,7 @@ fetch("data.json").then(r=>r.json()).then(d=>{
       s.append(m);detayKutu.append(s);
     });
     gYazi.forEach(y=>{
-      detayKutu.append(e("h4",null,y.baslik||"Günlük"));
+      detayKutu.append(e("h4",null,(y.saat?y.saat+" · ":"")+(y.baslik||"Günlük")));
       const m=e("div","okuma");
       String(y.metin||"").split(/\n\s*\n/).forEach(p=>{if(p.trim())m.append(e("p",null,p.trim()))});
       detayKutu.append(m);
@@ -101,7 +101,7 @@ fetch("data.json").then(r=>r.json()).then(d=>{
       yazilar.forEach(y=>{
         const a=e("a");a.href="#gun";
         const sol=e("strong",null,y.baslik||"Günlük");
-        a.append(sol,e("small",null,tarihYaz(y.tarih)));
+        a.append(sol,e("small",null,tarihYaz(y.tarih)+(y.saat?", "+y.saat:"")));
         a.onclick=ev=>{ev.preventDefault();secili=y.tarih;yil=Number(y.tarih.slice(0,4));ay=Number(y.tarih.slice(5,7))-1;ciz();detayKutu.scrollIntoView({behavior:"smooth",block:"start"})};
         l.append(a);
       });

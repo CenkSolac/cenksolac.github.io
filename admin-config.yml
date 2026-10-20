@@ -1,0 +1,96 @@
+backend:
+  name: github
+  repo: CenkSolac/cenksolac.github.io
+  branch: main
+  commit_messages:
+    update: "Panelden güncelleme: {{collection}}"
+site_url: https://cenksolac.com
+display_url: https://cenksolac.com
+locale: tr
+media_folder: gorseller
+public_folder: /gorseller
+
+collections:
+  - name: icerik
+    label: Site içeriği
+    files:
+      - name: veri
+        label: Günlük, takvim, canlı yayın, moblar, seriler
+        file: data.json
+        format: json
+        fields:
+          - label: Günlük yazıları
+            name: gunluk
+            widget: list
+            label_singular: yazı
+            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
+            fields:
+              - {label: Tarih, name: tarih, widget: string, hint: "Yıl-ay-gün şeklinde, örnek 2026-10-20", pattern: ['^\d{4}-\d{2}-\d{2}$', "2026-10-20 gibi yaz"]}
+              - {label: Saat, name: saat, widget: string, required: false, hint: "Örnek 21:30", pattern: ['^([01]\d|2[0-3]):[0-5]\d$', "21:30 gibi yaz"]}
+              - {label: Başlık, name: baslik, widget: string}
+              - {label: Yazı, name: metin, widget: text, hint: "Yeni paragraf için araya boş bir satır bırak"}
+          - label: Takvim etkinlikleri
+            name: takvim
+            widget: list
+            label_singular: etkinlik
+            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
+            fields:
+              - {label: Tarih, name: tarih, widget: string, hint: "Örnek 2026-10-25", pattern: ['^\d{4}-\d{2}-\d{2}$', "2026-10-25 gibi yaz"]}
+              - {label: Saat, name: saat, widget: string, required: false, hint: "Örnek 20:00"}
+              - label: Tür
+                name: tur
+                widget: select
+                options: [{label: Canlı yayın, value: yayin}, {label: YouTube videosu, value: video}, {label: Diğer, value: diger}]
+              - {label: Başlık, name: baslik, widget: string}
+              - {label: Not, name: not, widget: text, required: false}
+          - label: Canlı yayın sayfası
+            name: canli
+            widget: object
+            fields:
+              - {label: Son güncelleme, name: guncelleme, widget: string, required: false, hint: "Örnek 20.10.2026"}
+              - {label: Toplam ödül, name: toplamOdul, widget: number, value_type: int, required: false}
+              - {label: Beğeni, name: begeni, widget: number, value_type: int, required: false}
+              - {label: Yorum, name: yorum, widget: number, value_type: int, required: false}
+              - label: Sponsorlar
+                name: sponsorlar
+                widget: list
+                required: false
+                fields:
+                  - {label: Sponsor, name: ad, widget: string}
+                  - {label: Katkı, name: deger, widget: number, value_type: int}
+              - label: Sıralama
+                name: siralama
+                widget: list
+                required: false
+                fields:
+                  - {label: İzleyici, name: ad, widget: string}
+                  - {label: Puan, name: deger, widget: number, value_type: int}
+          - label: Moblar
+            name: moblar
+            widget: list
+            label_singular: mob
+            summary: "{{fields.ad}} ({{fields.coin}} coin)"
+            fields:
+              - {label: Mob adı, name: ad, widget: string}
+              - {label: Mob resim dosyası, name: gorsel, widget: string, hint: "mobs klasöründeki dosya adı, uzantısız. Örnek screenshot-71"}
+              - {label: Hediye adı, name: hediye, widget: string}
+              - {label: Hediye resim dosyası, name: hediyeGorsel, widget: string, required: false, hint: "hediyeler klasöründeki dosya adı, uzantısız"}
+              - {label: Coin, name: coin, widget: number, value_type: int}
+          - label: Novel serileri
+            name: seriler
+            widget: list
+            label_singular: seri
+            summary: "{{fields.ad}}"
+            fields:
+              - {label: Seri kodu, name: id, widget: string, hint: "Küçük harf, boşluksuz. Örnek ornek-seri"}
+              - {label: Seri adı, name: ad, widget: string}
+              - label: Dil
+                name: dil
+                widget: select
+                options: [{label: Türkçe, value: tr}, {label: English, value: en}]
+              - {label: Özet, name: ozet, widget: text}
+              - label: Bölümler
+                name: bolumler
+                widget: list
+                label_singular: bölüm
+                field: {label: Bölüm adı, name: ad, widget: string}
