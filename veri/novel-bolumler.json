@@ -1,0 +1,13 @@
+---
+---
+{
+{%- assign gruplar = site.bolumler | group_by: "seri" -%}
+{%- for g in gruplar -%}
+{{ g.name | jsonify }}: [
+{%- assign liste = g.items | sort: "numara" -%}
+{%- for b in liste -%}
+{"numara": {{ b.numara | jsonify }}, "baslik": {{ b.baslik | jsonify }}, "url": {{ b.url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+}

@@ -1,0 +1,11 @@
+# GitHub Pages (Jekyll) ayarı. Novel bölümlerinin listesini otomatik üretir.
+# Bu dosyayı değiştirmene gerek yok.
+collections:
+  bolumler:
+    output: true
+defaults:
+  - scope:
+      path: ""
+      type: "bolumler"
+    values:
+      layout: "bolum"
