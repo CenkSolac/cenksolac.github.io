@@ -111,7 +111,7 @@ collections:
     icon: article
     folder: _bolumler
     path: "{{seri}}/{{numara}}"
-    extension: txt
+    extension: md
     format: yaml-frontmatter
     summary: "{{seri}} · Bölüm {{numara}}: {{baslik}}"
     sortable_fields:
