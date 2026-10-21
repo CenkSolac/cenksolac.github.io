@@ -13,15 +13,15 @@ locale: tr
 media_folder: /mobs
 public_folder: /mobs
 
-# Yüklenen her resim otomatik WebP olur ve en fazla 400x400 piksele küçülür.
+# Yüklenen her resim otomatik WebP olur ve en fazla 600x600 piksele küçülür.
 media_libraries:
   all:
     transformations:
       raster_image:
         format: webp
         quality: 85
-        width: 400
-        height: 400
+        width: 600
+        height: 600
 
 collections:
   # ---------------------------------------------------------------- CANLI YAYIN
@@ -74,14 +74,14 @@ collections:
             summary: "{{fields.ad}} ({{fields.coin}} coin)"
             fields:
               - {label: Mob adı, name: ad, widget: string}
-              - {label: Mob resmi, name: gorsel, widget: image, media_folder: /mobs, public_folder: /mobs, hint: "Resmi buraya yükle. Kendisi 400x400 WebP'ye çevirir."}
+              - {label: Mob resmi, name: gorsel, widget: image, media_folder: /mobs, public_folder: /mobs, hint: "Resmi buraya yükle. Kendisi küçültüp WebP'ye çevirir."}
               - {label: Hediye adı, name: hediye, widget: string}
               - {label: Hediye resmi, name: hediyeGorsel, widget: image, required: false, media_folder: /hediyeler, public_folder: /hediyeler, hint: "İstersen yükle, istemezsen boş bırak."}
               - {label: Coin, name: coin, widget: number, value_type: int, hint: "Hediyenin coin değeri"}
 
-  # ---------------------------------------------------------------- NOVEL
+  # ---------------------------------------------------------------- NOVEL SERİLERİ
   - name: novel
-    label: Novel
+    label: Novel serileri
     icon: menu_book
     files:
       - name: seriler
@@ -95,19 +95,43 @@ collections:
             label_singular: seri
             summary: "{{fields.ad}}"
             fields:
-              - {label: Seri kodu, name: id, widget: string, hint: "Küçük harf, boşluksuz, Türkçe harf yok. Örnek: fleshbeyondhumanity. Bölüm dosyalarının klasör adı bu olacak."}
+              - {label: Seri kodu, name: id, widget: string, hint: "Küçük harf, boşluksuz, Türkçe harf yok. Örnek: fleshbeyondhumanity. Kaydettikten sonra değiştirme."}
               - {label: Seri adı, name: ad, widget: string}
+              - {label: Kapak görseli, name: kapak, widget: image, required: false, media_folder: /kapaklar, public_folder: /kapaklar, hint: "Dikey bir kapak resmi yükle (2:3 oran güzel durur). Kendisi küçültüp WebP yapar."}
               - label: Dil
                 name: dil
                 widget: select
                 options: [{label: Türkçe, value: tr}, {label: English, value: en}]
-              - {label: Özet, name: ozet, widget: text}
-              - label: Bölümler
-                name: bolumler
-                widget: list
-                label_singular: bölüm
-                hint: "Buraya sadece bölümün adı yazılır. Bölümün metni ayrı bir dosya olarak yüklenir."
-                field: {label: Bölüm adı, name: ad, widget: string}
+              - {label: Özet, name: ozet, widget: text, hint: "Seriye tıklayınca en üstte görünen tanıtım yazısı."}
+
+  # ---------------------------------------------------------------- NOVEL BÖLÜMLERİ
+  - name: bolumler
+    label: Novel bölümleri
+    label_singular: bölüm
+    icon: article
+    folder: _bolumler
+    path: "{{seri}}/{{numara}}"
+    extension: txt
+    format: yaml-frontmatter
+    summary: "{{seri}} · Bölüm {{numara}}: {{baslik}}"
+    sortable_fields:
+      fields: [numara, seri, baslik]
+      default:
+        field: numara
+        direction: descending
+    fields:
+      - label: Seri
+        name: seri
+        widget: relation
+        collection: novel
+        file: seriler
+        value_field: "{{seriler.*.id}}"
+        display_fields: ["{{seriler.*.ad}}"]
+        search_fields: ["{{seriler.*.ad}}"]
+        hint: "Hangi serinin bölümü? Liste, Novel serileri bölümünden gelir."
+      - {label: Bölüm numarası, name: numara, widget: number, value_type: int, min: 1, hint: "1, 2, 3 diye devam et. Aynı seride aynı numarayı iki kez kullanma. Kaydettikten sonra değiştirme."}
+      - {label: Bölüm başlığı, name: baslik, widget: string, hint: "Sitede böyle görünür. Örnek: Bölüm 5: Yeni Başlangıç"}
+      - {label: Bölüm metni, name: metin, widget: text, hint: "Yeni paragraf için araya boş bir satır bırak."}
 
   # ---------------------------------------------------------------- GÜNLÜK
   - name: gunluk

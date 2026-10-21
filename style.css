@@ -14,7 +14,7 @@ nav a{margin-left:20px;color:var(--soluk);text-decoration:none;padding-bottom:3p
 nav a[aria-current]{color:var(--yazi);border-bottom:2px solid var(--vurgu)}
 main{padding-bottom:90px}
 h1{font-size:clamp(34px,8vw,56px);line-height:1.1;margin:.6em 0 .3em;font-weight:800}
-.dev{font-size:clamp(52px,15vw,112px);line-height:.95;margin:.5em 0 .2em;font-weight:800}
+.dev{font-size:clamp(38px,15vw,112px);line-height:.95;margin:.5em 0 .2em;font-weight:800}
 .alt{color:var(--soluk);max-width:34em;margin:0 0 2em}
 .kapi{display:block;padding:22px 24px;margin-bottom:14px;background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;text-decoration:none;color:var(--yazi)}
 .kapi:hover{border-color:var(--vurgu)}
@@ -61,7 +61,7 @@ td:last-child,th:last-child{text-align:right}
 .bilgi-satir:empty{display:none}
 .dugme{display:inline-block;font-weight:600;color:var(--bg);background:var(--vurgu);border-radius:10px;padding:11px 20px;margin-top:6px}
 .vitrin:hover .dugme{filter:brightness(1.1)}
-.ikili{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.ikili{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:14px}
 .ikili .kapi{margin-bottom:0}
 .ust{flex-wrap:wrap;gap:6px 16px}
 nav{display:flex;flex-wrap:wrap}
@@ -90,3 +90,27 @@ nav{display:flex;flex-wrap:wrap}
 .olay{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--cizgi)}
 .olay .saat{min-width:52px;color:var(--vurgu);font-weight:600}
 .detay .bos{padding:0}
+.seri-liste{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.seri-kart{min-width:0;display:flex;gap:16px;padding:14px;background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;color:var(--yazi);text-decoration:none}
+.seri-kart:hover{border-color:var(--vurgu)}
+.kapak{flex:none;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:#0e1527;border:1px solid var(--cizgi);display:flex;align-items:center;justify-content:center}
+.kapak img{width:100%;height:100%;object-fit:cover;display:block}
+.kapak.yok{font-size:44px;font-weight:800;color:#2a3860;background:linear-gradient(160deg,#16223d,#0e1527)}
+.kapak.kucuk{width:92px}
+.kapak.buyuk{width:200px}
+.seri-bilgi{min-width:0;display:flex;flex-direction:column;gap:6px}
+.seri-bilgi strong{font-size:19px;line-height:1.25}
+.seri-bilgi .ozet{margin:0;color:var(--soluk);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.seri-bilgi small{color:var(--soluk)}
+.seri-ust{display:flex;gap:26px;align-items:flex-start;margin:0 0 30px}
+.seri-sag{min-width:0;max-width:100%;flex:1}
+.seri-sag h1{margin-top:.1em}
+.ozet-tam{white-space:pre-line;margin:0 0 18px;max-width:38em}
+.dugmeler{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 12px}
+.btn{padding:11px 18px;border:1px solid var(--cizgi);border-radius:10px;text-decoration:none;color:var(--yazi);background:var(--yuzey)}
+.btn:hover{border-color:var(--vurgu)}
+.btn.ana{background:var(--vurgu);color:var(--bg);border-color:var(--vurgu);font-weight:600}
+@media (max-width:600px){.seri-ust{flex-direction:column;gap:18px}.kapak.buyuk{width:150px}}
+.seri-bilgi strong,.seri-sag h1{overflow-wrap:break-word}
+.seri-bilgi .dil,.seri-sag .dil{display:inline-block;vertical-align:middle}
+.seri-sag h1{font-size:clamp(30px,7vw,52px)}
