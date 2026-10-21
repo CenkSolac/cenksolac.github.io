@@ -1,18 +1,18 @@
 {
   "seriler": [
     {
-      "id": "fleshbeyondhumanity",
+      "id": "fleshbeyondhumanity-tr",
       "ad": "FleshBeyondHumanity",
+      "kapak": "/kapaklar/WhatsApp Image 2026-09-28 at 14.33.02.webp",
       "dil": "tr",
-      "ozet": "Buraya serinin kısa özetini yaz.",
-      "kapak": ""
+      "ozet": "Buraya serinin kısa özetini yaz."
     },
     {
-      "id": "sample-series",
-      "ad": "Sample Series",
+      "id": "fleshbeyondhumanity-eng",
+      "ad": "FleshBeyondHumanity",
+      "kapak": "/kapaklar/WhatsApp Image 2026-09-28 at 14.33.02.webp",
       "dil": "en",
-      "ozet": "Write a short summary of the series here.",
-      "kapak": ""
+      "ozet": "Write a short summary of the series here."
     }
   ]
 }
