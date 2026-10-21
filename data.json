@@ -1,48 +1,29 @@
 {
-  "seriler": [
+  "gunluk": [
     {
-      "id": "ornek-seri",
-      "ad": "Örnek Seri",
-      "dil": "tr",
-      "ozet": "Buraya serinin kısa özetini yaz.",
-      "bolumler": [
-        "Bölüm 1: Başlangıç"
-      ]
-    },
+      "tarih": "2026-10-20",
+      "saat": "",
+      "baslik": "Örnek günlük yazısı",
+      "metin": "Buraya günlük yazını yaz.\n\nYeni paragraf için araya boş bir satır bırak."
+    }
+  ],
+  "takvim": [
     {
-      "id": "sample-series",
-      "ad": "Sample Series",
-      "dil": "en",
-      "ozet": "Write a short summary of the series here.",
-      "bolumler": [
-        "Chapter 1: The Beginning"
-      ]
+      "tarih": "2026-10-22",
+      "saat": "19:00",
+      "tur": "yayin",
+      "baslik": "Bilinmiyor",
+      "not": "Yayın muhtemelen dandik olacak ama hiç yoktan iyidir"
     }
   ],
   "canli": {
-    "guncelleme": "17.10.2026",
-    "toplamOdul": 0,
+    "guncelleme": "21.10.2026",
+    "toplamOdul": 500,
     "begeni": 0,
     "yorum": 0,
     "sponsorlar": [],
     "siralama": []
   },
-  "takvim": [
-    {
-      "tarih": "2026-10-25",
-      "saat": "20:00",
-      "tur": "diger",
-      "baslik": "Örnek etkinlik (silip kendi etkinliğini yaz)",
-      "not": "tur şunlardan biri olabilir: yayin, video, diger"
-    }
-  ],
-  "gunluk": [
-    {
-      "tarih": "2026-10-20",
-      "baslik": "Örnek günlük yazısı",
-      "metin": "Buraya günlük yazını yaz.\n\nYeni paragraf için araya boş bir satır bırak."
-    }
-  ],
   "moblar": [
     {
       "ad": "Dev Çukur",
@@ -69,7 +50,28 @@
       "ad": "Yunus Balığı",
       "gorsel": "screenshot-74",
       "hediye": "Heart Me",
+      "hediyeGorsel": "",
       "coin": 1
+    }
+  ],
+  "seriler": [
+    {
+      "id": "fleshbeyondhumanity",
+      "ad": "FleshBeyondHumanity",
+      "dil": "tr",
+      "ozet": "Buraya serinin kısa özetini yaz.",
+      "bolumler": [
+        "Bölüm 1: Başlangıç"
+      ]
+    },
+    {
+      "id": "sample-series",
+      "ad": "Sample Series",
+      "dil": "en",
+      "ozet": "Write a short summary of the series here.",
+      "bolumler": [
+        "Chapter 1: The Beginning"
+      ]
     }
   ]
 }
