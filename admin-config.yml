@@ -4,67 +4,69 @@ backend:
   branch: main
   commit_messages:
     update: "Panelden güncelleme: {{collection}}"
+    uploadMedia: "Panelden resim yüklendi: {{path}}"
 site_url: https://cenksolac.com
 display_url: https://cenksolac.com
 locale: tr
-media_folder: gorseller
-public_folder: /gorseller
+
+# Mob resimlerinin klasörü. Hediye alanlarında ayrıca /hediyeler seçilir.
+media_folder: /mobs
+public_folder: /mobs
+
+# Yüklenen her resim otomatik WebP olur ve en fazla 400x400 piksele küçülür.
+media_libraries:
+  all:
+    transformations:
+      raster_image:
+        format: webp
+        quality: 85
+        width: 400
+        height: 400
 
 collections:
-  - name: icerik
-    label: Site içeriği
+  # ---------------------------------------------------------------- CANLI YAYIN
+  - name: canli
+    label: Canlı yayın
+    icon: sensors
     files:
-      - name: veri
-        label: Günlük, takvim, canlı yayın, moblar, seriler
-        file: data.json
+      - name: rakamlar
+        label: Canlı yayın rakamları
+        file: veri/canli.json
         format: json
         fields:
-          - label: Günlük yazıları
-            name: gunluk
+          - {label: Son güncelleme, name: guncelleme, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, required: false, default: "{{now}}", hint: "Rakamları en son ne zaman güncelledin?"}
+          - {label: Toplam ödül, name: toplamOdul, widget: number, value_type: int, required: false}
+          - {label: Beğeni, name: begeni, widget: number, value_type: int, required: false}
+          - {label: Yorum, name: yorum, widget: number, value_type: int, required: false}
+          - label: Sponsorlar
+            name: sponsorlar
             widget: list
-            label_singular: yazı
-            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
+            required: false
+            label_singular: sponsor
+            summary: "{{fields.ad}}: {{fields.deger}}"
             fields:
-              - {label: Tarih, name: tarih, widget: string, hint: "Yıl-ay-gün şeklinde, örnek 2026-10-20", pattern: ['^\d{4}-\d{2}-\d{2}$', "2026-10-20 gibi yaz"]}
-              - {label: Saat, name: saat, widget: string, required: false, hint: "Örnek 21:30", pattern: ['^([01]\d|2[0-3]):[0-5]\d$', "21:30 gibi yaz"]}
-              - {label: Başlık, name: baslik, widget: string}
-              - {label: Yazı, name: metin, widget: text, hint: "Yeni paragraf için araya boş bir satır bırak"}
-          - label: Takvim etkinlikleri
-            name: takvim
+              - {label: Sponsor adı, name: ad, widget: string}
+              - {label: Katkı, name: deger, widget: number, value_type: int}
+          - label: Sıralama
+            name: siralama
             widget: list
-            label_singular: etkinlik
-            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
+            required: false
+            label_singular: izleyici
+            summary: "{{fields.ad}}: {{fields.deger}}"
             fields:
-              - {label: Tarih, name: tarih, widget: string, hint: "Örnek 2026-10-25", pattern: ['^\d{4}-\d{2}-\d{2}$', "2026-10-25 gibi yaz"]}
-              - {label: Saat, name: saat, widget: string, required: false, hint: "Örnek 20:00"}
-              - label: Tür
-                name: tur
-                widget: select
-                options: [{label: Canlı yayın, value: yayin}, {label: YouTube videosu, value: video}, {label: Diğer, value: diger}]
-              - {label: Başlık, name: baslik, widget: string}
-              - {label: Not, name: not, widget: text, required: false}
-          - label: Canlı yayın sayfası
-            name: canli
-            widget: object
-            fields:
-              - {label: Son güncelleme, name: guncelleme, widget: string, required: false, hint: "Örnek 20.10.2026"}
-              - {label: Toplam ödül, name: toplamOdul, widget: number, value_type: int, required: false}
-              - {label: Beğeni, name: begeni, widget: number, value_type: int, required: false}
-              - {label: Yorum, name: yorum, widget: number, value_type: int, required: false}
-              - label: Sponsorlar
-                name: sponsorlar
-                widget: list
-                required: false
-                fields:
-                  - {label: Sponsor, name: ad, widget: string}
-                  - {label: Katkı, name: deger, widget: number, value_type: int}
-              - label: Sıralama
-                name: siralama
-                widget: list
-                required: false
-                fields:
-                  - {label: İzleyici, name: ad, widget: string}
-                  - {label: Puan, name: deger, widget: number, value_type: int}
+              - {label: İzleyici adı, name: ad, widget: string}
+              - {label: Puan, name: deger, widget: number, value_type: int}
+
+  # ---------------------------------------------------------------- MOB PAZARI
+  - name: moblar
+    label: Mob Pazarı
+    icon: storefront
+    files:
+      - name: liste
+        label: Mob listesi
+        file: veri/moblar.json
+        format: json
+        fields:
           - label: Moblar
             name: moblar
             widget: list
@@ -72,17 +74,28 @@ collections:
             summary: "{{fields.ad}} ({{fields.coin}} coin)"
             fields:
               - {label: Mob adı, name: ad, widget: string}
-              - {label: Mob resim dosyası, name: gorsel, widget: string, hint: "mobs klasöründeki dosya adı, uzantısız. Örnek screenshot-71"}
+              - {label: Mob resmi, name: gorsel, widget: image, media_folder: /mobs, public_folder: /mobs, hint: "Resmi buraya yükle. Kendisi 400x400 WebP'ye çevirir."}
               - {label: Hediye adı, name: hediye, widget: string}
-              - {label: Hediye resim dosyası, name: hediyeGorsel, widget: string, required: false, hint: "hediyeler klasöründeki dosya adı, uzantısız"}
-              - {label: Coin, name: coin, widget: number, value_type: int}
-          - label: Novel serileri
+              - {label: Hediye resmi, name: hediyeGorsel, widget: image, required: false, media_folder: /hediyeler, public_folder: /hediyeler, hint: "İstersen yükle, istemezsen boş bırak."}
+              - {label: Coin, name: coin, widget: number, value_type: int, hint: "Hediyenin coin değeri"}
+
+  # ---------------------------------------------------------------- NOVEL
+  - name: novel
+    label: Novel
+    icon: menu_book
+    files:
+      - name: seriler
+        label: Novel serileri
+        file: veri/seriler.json
+        format: json
+        fields:
+          - label: Seriler
             name: seriler
             widget: list
             label_singular: seri
             summary: "{{fields.ad}}"
             fields:
-              - {label: Seri kodu, name: id, widget: string, hint: "Küçük harf, boşluksuz. Örnek ornek-seri"}
+              - {label: Seri kodu, name: id, widget: string, hint: "Küçük harf, boşluksuz, Türkçe harf yok. Örnek: fleshbeyondhumanity. Bölüm dosyalarının klasör adı bu olacak."}
               - {label: Seri adı, name: ad, widget: string}
               - label: Dil
                 name: dil
@@ -93,4 +106,54 @@ collections:
                 name: bolumler
                 widget: list
                 label_singular: bölüm
+                hint: "Buraya sadece bölümün adı yazılır. Bölümün metni ayrı bir dosya olarak yüklenir."
                 field: {label: Bölüm adı, name: ad, widget: string}
+
+  # ---------------------------------------------------------------- GÜNLÜK
+  - name: gunluk
+    label: Günlük
+    icon: edit_note
+    files:
+      - name: yazilar
+        label: Günlük yazıları
+        file: veri/gunluk.json
+        format: json
+        fields:
+          - label: Yazılar
+            name: gunluk
+            widget: list
+            label_singular: yazı
+            add_to_top: true
+            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
+            fields:
+              - {label: Tarih, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}"}
+              - {label: Saat, name: saat, widget: datetime, type: time, date_format: false, time_format: "HH:mm", required: false, hint: "İstersen boş bırak."}
+              - {label: Başlık, name: baslik, widget: string}
+              - {label: Yazı, name: metin, widget: text, hint: "Yeni paragraf için araya boş bir satır bırak."}
+
+  # ---------------------------------------------------------------- TAKVİM
+  - name: takvim
+    label: Takvim
+    icon: calendar_month
+    files:
+      - name: etkinlikler
+        label: Takvim etkinlikleri
+        file: veri/takvim.json
+        format: json
+        fields:
+          - label: Etkinlikler
+            name: takvim
+            widget: list
+            label_singular: etkinlik
+            add_to_top: true
+            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
+            fields:
+              - {label: Tarih, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}"}
+              - {label: Saat, name: saat, widget: datetime, type: time, date_format: false, time_format: "HH:mm", required: false}
+              - label: Tür
+                name: tur
+                widget: select
+                default: yayin
+                options: [{label: Canlı yayın, value: yayin}, {label: YouTube videosu, value: video}, {label: Diğer, value: diger}]
+              - {label: Başlık, name: baslik, widget: string}
+              - {label: Not, name: not, widget: text, required: false, hint: "İstersen kısa bir açıklama."}

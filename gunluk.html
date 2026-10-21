@@ -21,12 +21,14 @@ const TUR={yayin:"Canlı yayın",video:"YouTube videosu",diger:"Diğer"};
 const pad=n=>String(n).padStart(2,"0");
 const anahtar=(y,a,g)=>y+"-"+pad(a+1)+"-"+pad(g);
 const gecerli=t=>/^\d{4}-\d{2}-\d{2}$/.test(t||"");
+function saatYaz(s){const m=String(s||"").match(/(\d{1,2}):(\d{2})/);return m?pad(m[1])+":"+m[2]:""}
 function tarihYaz(t){const [y,a,g]=t.split("-").map(Number);return g+" "+AYLAR[a-1]+" "+y}
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
 
-fetch("data.json").then(r=>r.json()).then(d=>{
-  const olaylar=(d.takvim||[]).filter(o=>gecerli(o.tarih)).sort((a,b)=>(a.tarih+(a.saat||"")).localeCompare(b.tarih+(b.saat||"")));
-  const yazilar=(d.gunluk||[]).filter(y=>gecerli(y.tarih)).sort((a,b)=>(b.tarih+(b.saat||"")).localeCompare(a.tarih+(a.saat||"")));
+Promise.all(["veri/takvim.json","veri/gunluk.json"].map(u=>fetch(u).then(r=>r.json()))).then(([t,g])=>{
+  const duzelt=l=>(l||[]).map(x=>({...x,tarih:String(x.tarih||"").slice(0,10),saat:saatYaz(x.saat)}));
+  const olaylar=duzelt(t.takvim).filter(o=>gecerli(o.tarih)).sort((a,b)=>(a.tarih+(a.saat||"")).localeCompare(b.tarih+(b.saat||"")));
+  const yazilar=duzelt(g.gunluk).filter(y=>gecerli(y.tarih)).sort((a,b)=>(b.tarih+(b.saat||"")).localeCompare(a.tarih+(a.saat||"")));
   const bn=new Date(),bugun=anahtar(bn.getFullYear(),bn.getMonth(),bn.getDate());
   let yil=bn.getFullYear(),ay=bn.getMonth(),secili=bugun;
 
@@ -110,7 +112,7 @@ fetch("data.json").then(r=>r.json()).then(d=>{
     if(odak){const s=takvimKutu.querySelector(".secili");if(s)s.focus({preventScroll:true})}
   }
   ciz();
-}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
 </body>
 </html>

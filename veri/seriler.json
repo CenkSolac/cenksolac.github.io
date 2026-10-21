@@ -1,0 +1,22 @@
+{
+  "seriler": [
+    {
+      "id": "fleshbeyondhumanity",
+      "ad": "FleshBeyondHumanity",
+      "dil": "tr",
+      "ozet": "Buraya serinin kısa özetini yaz.",
+      "bolumler": [
+        "Bölüm 1: Başlangıç"
+      ]
+    },
+    {
+      "id": "sample-series",
+      "ad": "Sample Series",
+      "dil": "en",
+      "ozet": "Write a short summary of the series here.",
+      "bolumler": [
+        "Chapter 1: The Beginning"
+      ]
+    }
+  ]
+}

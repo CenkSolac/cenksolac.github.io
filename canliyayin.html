@@ -24,15 +24,16 @@ function tablo(baslik,kol,satirlar){
   satirlar.forEach((s,i)=>{const r=e("tr");r.append(e("td",null,(i+1)+". "+s.ad),e("td",null,sayi(s.deger)));t.append(r)});
   k.append(t);return k;
 }
-fetch("data.json").then(r=>r.json()).then(d=>{
-  const c=d.canli;
+fetch("veri/canli.json").then(r=>r.json()).then(d=>{
+  const c=d;
+  const gt=s=>/^\d{4}-\d{2}-\d{2}/.test(s||"")?s.slice(8,10)+"."+s.slice(5,7)+"."+s.slice(0,4):s;
   app.replaceChildren(e("h1",null,"Canlı yayın"));
-  if(c.guncelleme)app.append(e("p","alt","Son güncelleme: "+c.guncelleme));
+  if(c.guncelleme)app.append(e("p","alt","Son güncelleme: "+gt(c.guncelleme)));
   const g=e("div","sayilar");
   [["Toplam ödül",c.toplamOdul],["Beğeni",c.begeni],["Yorum",c.yorum]].forEach(([a,v])=>{
     const k=e("div","sayi");k.append(e("b",null,sayi(v)),e("span",null,a));g.append(k)});
   app.append(g,tablo("Sponsorlar",["Sponsor","Katkı"],c.sponsorlar),tablo("Sıralama",["İzleyici","Puan"],c.siralama));
-}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
 </body>
 </html>

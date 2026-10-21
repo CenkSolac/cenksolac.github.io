@@ -32,14 +32,15 @@
   </div>
 </main>
 <script>
-fetch("data.json").then(r=>r.json()).then(d=>{
+fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   const moblar=d.moblar||[];
   if(!moblar.length)return;
-  const onizleme=document.getElementById("onizleme");
+  function resimYolu(g,k){g=String(g||"");return /[\/.]/.test(g)?g:k+"/"+g+".webp"}
+const onizleme=document.getElementById("onizleme");
   moblar.slice(0,4).forEach(m=>{
     const kutu=document.createElement("span");
     const im=document.createElement("img");
-    im.src="mobs/"+m.gorsel+".webp";im.alt="";im.loading="lazy";
+    im.src=resimYolu(m.gorsel,"mobs");im.alt="";im.loading="lazy";
     im.onerror=()=>kutu.remove();
     kutu.append(im);onizleme.append(kutu);
   });

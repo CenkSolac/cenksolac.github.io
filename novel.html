@@ -19,13 +19,13 @@ const DIL={tr:"Türkçe",en:"English"};
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
 function link(href,c,x){const a=e("a",c,x);a.href=href;return a}
 
-fetch("data.json").then(r=>r.json()).then(d=>{
+fetch("veri/seriler.json").then(r=>r.json()).then(d=>{
   const s=d.seriler.find(x=>x.id===q.get("s"));
   if(!s)return liste(d.seriler);
   const b=parseInt(q.get("b"),10);
   if(b>=1&&b<=s.bolumler.length)return oku(s,b);
   seri(s);
-}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 
 function liste(seriler){
   app.replaceChildren();

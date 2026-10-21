@@ -14,8 +14,9 @@
 <main id="app"><p class="bos">Yükleniyor...</p></main>
 <script>
 const app=document.getElementById("app");
+function resimYolu(g,k){g=String(g||"");return /[\/.]/.test(g)?g:k+"/"+g+".webp"}
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
-fetch("data.json").then(r=>r.json()).then(d=>{
+fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   const moblar=d.moblar||[];
   app.replaceChildren(e("h1",null,"Mob Pazarı"),e("p","alt","Yayında göndermek istediğin mobu seç, yanındaki hediyeyi canlı yayında gönder."));
   const arac=e("div","arac"),ara=e("input"),sira=e("select");
@@ -32,18 +33,18 @@ fetch("data.json").then(r=>r.json()).then(d=>{
     if(!r.length){izgara.append(e("p","bos","Aramana uyan mob yok."));return}
     r.forEach(m=>{
       const k=e("article","mob"),res=e("div","resim");
-      const im=e("img");im.src="mobs/"+m.gorsel+".webp";im.alt=m.ad;im.loading="lazy";
+      const im=e("img");im.src=resimYolu(m.gorsel,"mobs");im.alt=m.ad;im.loading="lazy";
       im.onerror=()=>res.replaceChildren(document.createTextNode(m.ad.charAt(0)));
       res.append(im);
       const b=e("div","bilgi"),h=e("div","hediye");
-      if(m.hediyeGorsel){const hi=e("img");hi.src="hediyeler/"+m.hediyeGorsel+".webp";hi.alt="";hi.onerror=()=>hi.remove();h.append(hi)}
+      if(m.hediyeGorsel){const hi=e("img");hi.src=resimYolu(m.hediyeGorsel,"hediyeler");hi.alt="";hi.onerror=()=>hi.remove();h.append(hi)}
       h.append(e("span",null,m.hediye||""));
       b.append(e("h3",null,m.ad),h,e("div","coin",Number(m.coin).toLocaleString("tr-TR")+" coin"));
       k.append(res,b);izgara.append(k);
     });
   }
   ara.oninput=sira.onchange=ciz;ciz();
-}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. data.json dosyasının yerinde ve doğru yazılmış olduğundan emin ol."))});
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
 </body>
 </html>

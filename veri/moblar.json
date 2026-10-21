@@ -1,0 +1,32 @@
+{
+  "moblar": [
+    {
+      "ad": "Dev Çukur",
+      "gorsel": "/mobs/screenshot-71.webp",
+      "hediye": "Corgi",
+      "hediyeGorsel": "/hediyeler/screenshot-78.webp",
+      "coin": 299
+    },
+    {
+      "ad": "İnek",
+      "gorsel": "/mobs/screenshot-72.webp",
+      "hediye": "Ice Cream Cone",
+      "hediyeGorsel": "/hediyeler/screenshot-75.webp",
+      "coin": 1
+    },
+    {
+      "ad": "Netherite Zombi",
+      "gorsel": "/mobs/screenshot-73.webp",
+      "hediye": "Energy Capsule",
+      "hediyeGorsel": "/hediyeler/screenshot-76.webp",
+      "coin": 30
+    },
+    {
+      "ad": "Yunus Balığı",
+      "gorsel": "/mobs/screenshot-74.webp",
+      "hediye": "Heart Me",
+      "hediyeGorsel": "",
+      "coin": 1
+    }
+  ]
+}
