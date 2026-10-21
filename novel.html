@@ -135,6 +135,11 @@ function oku(s,bl,ix){
   const m=e("div","okuma");
   app.append(m);
   fetch(b.url).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    // Metin bir şekilde HTML etiketiyle gelirse etiketleri ayıkla, düz metin göster
+    if(/^\s*<[a-z!]/i.test(t)){
+      const dc=new DOMParser().parseFromString(t,"text/html"),ps=[...dc.body.querySelectorAll("p")];
+      t=ps.length?ps.map(x=>x.textContent).join("\n\n"):dc.body.textContent;
+    }
     const p=t.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
     if(!p.length)m.append(e("p","bos","Bu bölümün metni henüz yazılmadı."));
     p.forEach(x=>m.append(e("p",null,x)));
