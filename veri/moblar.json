@@ -5,49 +5,56 @@
       "gorsel": "/mobs/Screenshot_85.webp",
       "hediye": "Corgi",
       "hediyeGorsel": "/hediyeler/screenshot-78.webp",
-      "coin": 299
+      "coin": 299,
+      "aciklama": "Büyük bir obruk oluşturuyor. Oyuncu yüksekten düşerek yere çakılıyor"
     },
     {
       "ad": "İnek",
       "gorsel": "/mobs/screenshot-72.webp",
       "hediye": "Ice Cream Cone",
       "hediyeGorsel": "/hediyeler/screenshot-75.webp",
-      "coin": 1
+      "coin": 1,
+      "aciklama": "1 tane dümdüz inek çağırıyor."
     },
     {
       "ad": "Netherite Zombi",
       "gorsel": "/mobs/screenshot-73.webp",
       "hediye": "Energy Capsule",
       "hediyeGorsel": "/hediyeler/Screenshot_91.webp",
-      "coin": 30
+      "coin": 30,
+      "aciklama": "Full set nethirayt zombie başka vasfı yok\nYayıncı: Öldürmesi uğraştırıcı..."
     },
     {
       "ad": "Yunus Balığı",
       "gorsel": "/mobs/Screenshot_88 (1).webp",
       "hediye": "Heart Me",
       "hediyeGorsel": "/hediyeler/Screenshot_92.webp",
-      "coin": 1
+      "coin": 1,
+      "aciklama": ""
     },
     {
       "ad": "[Demir]Kılıç, balta, kazma, kalkan, biftek",
       "gorsel": "/mobs/Adsız Tasarım (1).webp",
       "hediye": "FrendShip N...",
       "hediyeGorsel": "/hediyeler/Screenshot_94 (1).webp",
-      "coin": 10
+      "coin": 10,
+      "aciklama": "1 Demir kılıç\n1 Demir balta\n1 Demir kazma\n1 Kalkan\n10 tane biftek"
     },
     {
       "ad": "Yavaşlatma II",
       "gorsel": "/mobs/images (1) (1).webp",
       "hediye": "FingerHeart",
       "hediyeGorsel": "/hediyeler/Screenshot_19.webp",
-      "coin": 5
+      "coin": 5,
+      "aciklama": "Yayıncıya 30 saniye boyunca yavaşlatma 2 veriyor\n\nNegatif etki"
     },
     {
       "ad": "Bucket_axelot",
       "gorsel": "/mobs/axolotl_bucket.webp",
       "hediye": "Cake Slice",
       "hediyeGorsel": "/hediyeler/Screenshot_32.webp",
-      "coin": 1
+      "coin": 1,
+      "aciklama": "Kovanın içinde tatlı mı tatlı bir axelot veriyor direkt yayıncının envanterine düşüyor"
     }
   ],
   "oneblock": [],
