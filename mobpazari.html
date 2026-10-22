@@ -34,6 +34,9 @@ fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   const liste=Object.fromEntries(BOLUMLER.map(([k])=>[k,Array.isArray(d[k])?d[k]:[]]));
   let secili=BOLUMLER.some(([k])=>k===location.hash.slice(1))?location.hash.slice(1):"survival";
   app.replaceChildren(e("h1",null,"Mob Pazarı"),e("p","alt","Önce bölümü seç, sonra yayında göndermek istediğin mobu bul. Yanındaki hediyeyi canlı yayında gönder."));
+  const uyari=e("div","uyari");uyari.setAttribute("role","note");
+  uyari.append(e("strong",null,"Uyarı"),e("span",null,"Mob göndermeden önce yayıncıya hangi oyun modunu oynadığını sorunuz."));
+  app.append(uyari);
   const sekmeler=e("div","sekmeler");sekmeler.setAttribute("role","tablist");
   const arac=e("div","arac"),ara=e("input"),sira=e("select");
   ara.type="search";ara.placeholder="Bu bölümde mob ara";ara.setAttribute("aria-label","Mob ara");

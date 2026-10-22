@@ -119,3 +119,5 @@ nav{display:flex;flex-wrap:wrap}
 .sekme:hover{border-color:var(--vurgu);color:var(--yazi)}
 .sekme small{font-size:13px;font-weight:400;opacity:.8}
 .sekme.aktif{background:var(--vurgu);color:var(--bg);border-color:var(--vurgu)}
+.uyari{display:flex;gap:12px;align-items:flex-start;margin:0 0 22px;padding:14px 18px;background:#3a2f0b;border:1px solid #f5c86b;border-left-width:5px;border-radius:12px;color:#ffe9a8}
+.uyari strong{flex:none;color:#f5c86b;text-transform:uppercase;font-size:13px;letter-spacing:.06em;padding-top:3px}
