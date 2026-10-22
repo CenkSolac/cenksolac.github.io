@@ -19,7 +19,7 @@
 <meta property="og:description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve canlı yayın istatistikleri.">
 <meta property="og:url" content="https://cenksolac.com/">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CenkSolac","alternateName":["Cenk Solac","cenksolac"],"url":"https://cenksolac.com/","inLanguage":"tr"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CenkSolac","alternateName":["Cenk Solac","cenksolac"],"url":"https://cenksolac.com/","inLanguage":"tr","sameAs":["https://www.tiktok.com/@cenksolac", "https://www.youtube.com/@CenkSolac", "https://kick.com/cenksolac", "https://discord.gg/HTfT5xQAFj", "https://www.instagram.com/cenksolac/", "https://x.com/cenksolac", "https://github.com/CenkSolac"]}</script>
 </head>
 <body>
 <header class="ust">
@@ -44,6 +44,8 @@
     <a class="kapi" href="canliyayin"><h2>Canlı yayın</h2><p>Toplam ödül, beğeni, yorum, sponsorlar ve sıralama.</p></a>
     <a class="kapi" href="gunluk"><h2>Günlük</h2><p>Takvim: yayın günleri, videolar ve günlük yazılarım.</p></a>
   </div>
+
+  <section class="sosyal" id="sosyal"></section>
 </main>
 <script>
 fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
@@ -63,5 +65,6 @@ const onizleme=document.getElementById("onizleme");
     moblar.length+" mob, en ucuzu "+enUcuz.toLocaleString("tr-TR")+" coin";
 }).catch(()=>{});
 </script>
+<script src="/sosyal.js" defer></script>
 </body>
 </html>

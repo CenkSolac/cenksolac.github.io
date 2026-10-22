@@ -209,3 +209,23 @@ collections:
                 options: [{label: Canlı yayın, value: yayin}, {label: YouTube videosu, value: video}, {label: Diğer, value: diger}]
               - {label: Başlık, name: baslik, widget: string}
               - {label: Not, name: not, widget: text, required: false, hint: "İstersen kısa bir açıklama."}
+
+  # ---------------------------------------------------------------- SOSYAL MEDYA
+  - name: sosyal
+    label: Sosyal medya
+    icon: share
+    files:
+      - name: baglantilar
+        label: Sosyal medya bağlantıları
+        file: veri/sosyal.json
+        format: json
+        fields:
+          - label: Hesaplar
+            name: baglantilar
+            widget: list
+            label_singular: hesap
+            summary: "{{fields.ad}}"
+            hint: "Sırası sitedeki sırasıdır. İlk sıraya en önemli hesabı koy."
+            fields:
+              - {label: Hesap adı, name: ad, widget: string, hint: "Sitede görünen yazı. Örnek: TikTok"}
+              - {label: Bağlantı, name: url, widget: string, pattern: ["^https?://.+", "Bağlantı https:// ile başlamalı"], hint: "Hesabın tam adresi. Örnek: https://www.tiktok.com/@cenksolac"}

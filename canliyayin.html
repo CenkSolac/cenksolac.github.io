@@ -48,5 +48,6 @@ fetch("veri/canli.json").then(r=>r.json()).then(d=>{
   app.append(g,tablo("Sponsorlar",["Sponsor","Katkı"],c.sponsorlar),tablo("Sıralama",["İzleyici","Puan"],c.siralama));
 }).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
+<script src="/sosyal.js" defer></script>
 </body>
 </html>

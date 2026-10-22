@@ -77,5 +77,6 @@ fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   onhashchange=()=>{const k=location.hash.slice(1);if(BOLUMLER.some(x=>x[0]===k)&&k!==secili){secili=k;sekmeCiz();ciz()}};
 }).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
+<script src="/sosyal.js" defer></script>
 </body>
 </html>
