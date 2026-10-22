@@ -6,7 +6,7 @@
 {{ g.name | jsonify }}: [
 {%- assign liste = g.items | sort: "numara" -%}
 {%- for b in liste -%}
-{"numara": {{ b.numara | jsonify }}, "baslik": {{ b.baslik | jsonify }}, "url": {{ b.url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{"numara": {{ b.numara | jsonify }}, "baslik": {{ b.baslik | jsonify }}, "tarih": {{ b.tarih | jsonify }}, "url": {{ b.url | jsonify }}}{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
 ]{% unless forloop.last %},{% endunless %}
 {%- endfor -%}

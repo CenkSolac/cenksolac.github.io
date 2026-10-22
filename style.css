@@ -286,3 +286,16 @@ p.yazi-ust{margin:0 0 14px}
 .nasil li{display:flex;flex-direction:column;gap:2px;position:relative;padding-left:42px;min-width:0;counter-increment:adim}
 .nasil li::before{content:counter(adim);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--vurgu);color:var(--bg);font-weight:800;display:flex;align-items:center;justify-content:center}
 .nasil li span{color:var(--soluk);font-size:15px;overflow-wrap:anywhere}
+/* ---- Novel: rozetler, seri bilgisi, okuma ayarları ---- */
+.cip.durum{border-color:var(--vurgu)}
+.yeni-ic{align-self:center;font-size:13px;font-weight:800;color:var(--bg);background:var(--vurgu);border-radius:999px;padding:1px 11px;white-space:nowrap}
+.seri-bilgi .etiketler,.seri-sag .etiketler{margin:6px 0 8px}
+.seri-yazar{margin:0 0 6px}
+.okuma-ayar{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin:0 0 22px}
+.okuma-ayar-grup{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cip-btn:disabled{opacity:.4;cursor:default}
+/* Okuma renkleri (sadece bölüm okurken) */
+:root[data-tema="acik"]{--bg:#f6f7fb;--yuzey:#ffffff;--cizgi:#d5dbe8;--yazi:#1b2233;--soluk:#566178;--vurgu:#0b5cad;color-scheme:light}
+:root[data-tema="sepya"]{--bg:#f4ecd8;--yuzey:#fbf5e6;--cizgi:#dccfae;--yazi:#3b2f1e;--soluk:#75664b;--vurgu:#8a4b0f;color-scheme:light}
+:root[data-tema] body::before{display:none}
+:root[data-tema] .cip,:root[data-tema] .okuma code,:root[data-tema] .okuma pre{background:var(--yuzey)}

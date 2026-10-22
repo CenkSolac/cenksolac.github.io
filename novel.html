@@ -35,6 +35,7 @@
   <nav><a href="novel" aria-current="page">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="gunluk">Günlük</a></nav>
 </header>
 <main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
+<script src="/md.js"></script>
 <script>
 const app=document.getElementById("app");
 const q=new URLSearchParams(location.search);
@@ -58,12 +59,50 @@ function kapak(s,boy){
 }
 const seriLink=(id,b)=>"?s="+encodeURIComponent(id)+(b?"&b="+b:"");
 
+// ---- Yayın günü, "Yeni" rozeti ve seri bilgileri
+const BUGUN=new Date(Date.now()+3*3600e3).toISOString().slice(0,10); // Türkiye günü
+const gun10=t=>{const x=String(t||"").slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(x)?x:""};
+const yayinda=b=>{const t=gun10(b.tarih);return !t||t<=BUGUN}; // ileri tarihli bölüm o güne kadar saklı kalır
+function yeniMi(b){
+  const t=gun10(b.tarih);if(!t)return false;
+  const g=(Date.parse(BUGUN+"T00:00:00Z")-Date.parse(t+"T00:00:00Z"))/864e5;
+  return g>=0&&g<=14;
+}
+function seriRozetler(s,bl){
+  const k=e("div","etiketler");
+  if(s.durum)k.append(e("span","cip durum",s.durum));
+  (Array.isArray(s.turler)?s.turler:[]).forEach(x=>k.append(e("span","cip",String(x))));
+  if(bl&&bl.some(yeniMi))k.append(e("span","yeni-ic","Yeni bölüm"));
+  return k.children.length?k:null;
+}
+// ---- Okuma ayarları: yazı boyutu ve renk (tarayıcıda hatırlanır)
+const TEMALAR=[["koyu","Koyu"],["acik","Açık"],["sepya","Sepya"]];
+function ayarOku(){try{const a=JSON.parse(localStorage.getItem("okuma-ayar")||"{}");return{boyut:Math.min(28,Math.max(15,Number(a.boyut)||19)),tema:TEMALAR.some(x=>x[0]===a.tema)?a.tema:"koyu"}}catch(_){return{boyut:19,tema:"koyu"}}}
+function ayarYaz(a){try{localStorage.setItem("okuma-ayar",JSON.stringify(a))}catch(_){}}
+function okumaAyar(m){
+  const a=ayarOku(),kutu=e("div","okuma-ayar");kutu.setAttribute("role","group");kutu.setAttribute("aria-label","Okuma ayarları");
+  const uygula=()=>{
+    m.style.fontSize=a.boyut+"px";
+    if(a.tema==="koyu")delete document.documentElement.dataset.tema;else document.documentElement.dataset.tema=a.tema;
+    kucult.disabled=a.boyut<=15;buyut.disabled=a.boyut>=28;
+    temaDugmeleri.forEach(([k,b])=>b.setAttribute("aria-pressed",String(a.tema===k)));
+  };
+  const kucult=e("button","cip-btn","A−"),buyut=e("button","cip-btn","A+");
+  kucult.type=buyut.type="button";kucult.setAttribute("aria-label","Yazıyı küçült");buyut.setAttribute("aria-label","Yazıyı büyüt");
+  kucult.onclick=()=>{a.boyut=Math.max(15,a.boyut-2);ayarYaz(a);uygula()};
+  buyut.onclick=()=>{a.boyut=Math.min(28,a.boyut+2);ayarYaz(a);uygula()};
+  const temaDugmeleri=TEMALAR.map(([k,ad])=>{const b=e("button","cip-btn",ad);b.type="button";b.onclick=()=>{a.tema=k;ayarYaz(a);uygula()};return[k,b]});
+  const yazi=e("span","okuma-ayar-grup");yazi.append(e("span","filtre-baslik","Yazı:"),kucult,buyut);
+  const renk=e("span","okuma-ayar-grup");renk.append(e("span","filtre-baslik","Renk:"),...temaDugmeleri.map(x=>x[1]));
+  kutu.append(yazi,renk);uygula();return kutu;
+}
+
 Promise.all([
   fetch("veri/seriler.json").then(r=>r.json()),
   fetch("veri/novel-bolumler.json").then(r=>r.json()).catch(()=>({}))
 ]).then(([d,idx])=>{
-  const seriler=d.seriler||[];
-  const bolumler=id=>(idx[id]||[]).filter(x=>Number.isFinite(Number(x.numara)));
+  const seriler=(d.seriler||[]).filter(x=>x&&x.id&&x.ad).sort((a,b)=>(Number(a.sira)||999)-(Number(b.sira)||999)||String(a.ad).localeCompare(String(b.ad),"tr"));
+  const bolumler=id=>(idx[id]||[]).filter(x=>Number.isFinite(Number(x.numara))&&yayinda(x)).sort((a,b)=>Number(a.numara)-Number(b.numara));
   const s=seriler.find(x=>x.id===q.get("s"));
   if(!s)return liste(seriler,bolumler);
   const bl=bolumler(s.id),b=parseInt(q.get("b"),10);
@@ -80,22 +119,27 @@ function liste(seriler,bolumler){
   const f=e("select");f.setAttribute("aria-label","Dil");
   [["hepsi","Tüm diller"],["tr","Türkçe"],["en","English"]].forEach(([v,t])=>{const o=e("option",null,t);o.value=v;f.append(o)});
   arac.append(ara,f);
+  const durumlar=[...new Set(seriler.map(s=>s.durum).filter(Boolean))],fd=e("select");
+  fd.setAttribute("aria-label","Durum");
+  if(durumlar.length){[["hepsi","Tüm durumlar"],...durumlar.map(x=>[x,x])].forEach(([v,t])=>{const o=e("option",null,t);o.value=v;fd.append(o)});arac.append(fd)}
   const kutu=e("div","seri-liste");
   app.append(arac,kutu);
   function ciz(){
     const t=ara.value.toLocaleLowerCase("tr").trim();
-    const r=seriler.filter(s=>(f.value==="hepsi"||s.dil===f.value)&&
-      (s.ad+" "+(s.ozet||"")+" "+bolumler(s.id).map(x=>x.baslik).join(" ")).toLocaleLowerCase("tr").includes(t));
+    const r=seriler.filter(s=>(f.value==="hepsi"||s.dil===f.value)&&(fd.value==="hepsi"||s.durum===fd.value)&&
+      (s.ad+" "+(s.ozet||"")+" "+(s.yazar||"")+" "+(Array.isArray(s.turler)?s.turler.join(" "):"")+" "+bolumler(s.id).map(x=>x.baslik).join(" ")).toLocaleLowerCase("tr").includes(t));
     kutu.replaceChildren();
     if(!r.length)kutu.append(e("p","bos","Aramana uyan seri ya da bölüm yok."));
     r.forEach(s=>{
       const a=link(seriLink(s.id),"seri-kart"),g=e("div","seri-bilgi");
       const bas=e("strong",null,s.ad);bas.append(e("span","dil",DIL[s.dil]||s.dil));
-      g.append(bas,e("p","ozet",s.ozet||""),e("small",null,bolumler(s.id).length+" bölüm"));
+      const bl=bolumler(s.id),rz=seriRozetler(s,bl);
+      g.append(bas);if(rz)g.append(rz);
+      g.append(e("p","ozet",s.ozet||""),e("small",null,bl.length+" bölüm"));
       a.append(kapak(s,"kucuk"),g);kutu.append(a);
     });
   }
-  ara.oninput=f.onchange=ciz;ciz();
+  ara.oninput=f.onchange=fd.onchange=ciz;ciz();
 }
 
 function seri(s,bl){
@@ -116,7 +160,10 @@ function seri(s,bl){
   addEventListener("resize",olc);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(olc);
   requestAnimationFrame(olc);
-  sag.append(h,oz,daha);
+  sag.append(h);
+  if(s.yazar)sag.append(e("p","soluk seri-yazar","Yazar: "+s.yazar));
+  const rz=seriRozetler(s,null);if(rz)sag.append(rz);
+  sag.append(oz,daha);
   const dugmeler=e("div","dugmeler");
   if(bl.length){
     const kb=bl.find(x=>Number(x.numara)===sonOku(s.id));
@@ -147,6 +194,7 @@ function seri(s,bl){
     r.forEach(x=>{
       const a=link(seriLink(s.id,x.numara));
       a.append(e("strong",null,x.baslik));
+      if(yeniMi(x))a.append(e("small","yeni-ic","Yeni"));
       if(Number(x.numara)===son)a.append(e("small",null,"Son okuduğun"));
       kutu.append(a);
     });
@@ -169,15 +217,15 @@ function oku(s,bl,ix){
   };
   const m=e("div","okuma");
   app.append(m);
+  app.insertBefore(okumaAyar(m),m);
   fetch(b.url).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
     // Metin bir şekilde HTML etiketiyle gelirse etiketleri ayıkla, düz metin göster
     if(/^\s*<[a-z!]/i.test(t)){
       const dc=new DOMParser().parseFromString(t,"text/html"),ps=[...dc.body.querySelectorAll("p")];
       t=ps.length?ps.map(x=>x.textContent).join("\n\n"):dc.body.textContent;
     }
-    const p=t.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
-    if(!p.length)m.append(e("p","bos","Bu bölümün metni henüz yazılmadı."));
-    p.forEach(x=>m.append(e("p",null,x)));
+    if(!t.trim())m.append(e("p","bos","Bu bölümün metni henüz yazılmadı."));
+    else m.append(Md.render(t));
   }).catch(()=>m.append(e("p","bos","Bu bölümün metni yüklenemedi. Sayfayı yenile.")));
   app.append(gezin());
   document.onkeydown=ev=>{

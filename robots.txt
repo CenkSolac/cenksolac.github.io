@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /yazilar/
+Disallow: /bolumler/
 Sitemap: https://cenksolac.com/sitemap.xml

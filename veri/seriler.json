@@ -1,18 +1,7 @@
-{
-  "seriler": [
-    {
-      "id": "fleshbeyondhumanity-tr",
-      "ad": "FleshBeyondHumanity TR",
-      "kapak": "/kapaklar/fleshbeyondhumanity.webp",
-      "dil": "tr",
-      "ozet": "Zengin, şımarık ve henüz on dokuz yaşında; konforlu hayatı, özel jeti gökyüzünden düştüğü anda sona erdi.\n\nBir ahiret hayatı bekliyordu. En azından rehberlik edecek hileli bir Sistem menüsü bekliyordu. Bunun yerine, acımasız ve tanımadığı bir vahşi doğada uyandı; çiğ etten yapılmış grotesk bir bedene hapsolmuştu. Dört gözü, jilet gibi keskin pençeleri ve bir kuyruğu vardı.\n\nDurum pencereleri yok. Oyun menüleri yok. İlahi hileler yok.\n\nElinde yalnızca zayıf, çirkin bir beden ve ruhunun derinliklerinden yükselen ilkel bir ses var: ÖLDÜR. YUTUP BİTİR. EVRİM GEÇİR.\n\nEtrafı mantığa meydan okuyan yırtıcı zirve avcıları ve korkunç canavarlarla çevrili. Hayatta kalmak için saf içgüdüsüne, kurnazlığına ve biyolojik adaptasyona güvenmek zorunda. Sırlar ve kana gömülü kadim bir dünyada, etten yapılmış bir iğrenç yaratık besin zincirinin zirvesi için savaşmaya başlıyor.\n\nParasını kaybetti, konforunu kaybetti, insan formunu kaybetti.\n\nŞimdi nihai avcı olmalı; yoksa av olacak.\n\nNeler Bekleyebilirsiniz:\n\nCanavar Başrol (İnsansı Olmayan, Çiğ Etten Yaratık)\nSİSTEM YOK / Oyun Menüsü YOK (Saf Adaptasyon ve Biyolojik Gelişim)\nSert Hayatta Kalma ve Karanlık Fantezi\nZayıflıktan Güce / Evrim\nDerin Gizemler ve Stratejik Savaşlar"
-    },
-    {
-      "id": "fleshbeyondhumanity-eng",
-      "ad": "FleshBeyondHumanity Eng",
-      "kapak": "/kapaklar/fleshbeyondhumanity.webp",
-      "dil": "en",
-      "ozet": "Rich, spoiled, and nineteen—his comfortable life ended when his private jet plunged from the sky.\n\nHe expected an afterlife, or at the very least a cheat-code System menu to guide him. Instead, he wakes up in a brutal, unfamiliar wilderness trapped inside a grotesque body made of raw flesh—complete with four eyes, razor-sharp claws, and a tail.\n\nNo status windows. No game menus. No divine cheats.\n\nAll he has is a weak, hideous body and a primal voice screaming from the depths of his soul: KILL. DEVOUR. EVOLVE.\n\nSurrounded by apex predators and terrifying beasts that defy logic, he must rely on pure instinct, cunning, and biological adaptation to survive. In an ancient world buried under secrets and blood, a flesh-bound abomination begins its fight for the top of the food chain.\n\nHe lost his money, his comfort, and his human form.\n\nNow, he must become the ultimate predator—or become prey.\n\nWhat to Expect:\n\nMonster Protagonist (Non-Humanoid, Raw Flesh Abomination)\n\nNO System / NO Game Menus (Pure Adaptation & Biological Growth)\n\nGritty Survival & Dark Fantasy\n\nWeak to Strong / Evolution\n\nDeep Mysteries & Strategic Fights."
-    }
-  ]
-}
+---
+---
+{"seriler": [
+{%- for s in site.seriler -%}
+{"id": {{ s.relative_path | split: "/" | last | remove: ".md" | jsonify }}, "ad": {{ s.ad | jsonify }}, "kapak": {{ s.kapak | jsonify }}, "dil": {{ s.dil | jsonify }}, "durum": {{ s.durum | jsonify }}, "yazar": {{ s.yazar | jsonify }}, "turler": {{ s.turler | jsonify }}, "sira": {{ s.sira | jsonify }}, "ozet": {{ s.ozet | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]}

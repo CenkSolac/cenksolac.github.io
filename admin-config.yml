@@ -13,6 +13,11 @@ site_url: https://cenksolac.com
 display_url: https://cenksolac.com
 locale: tr
 
+# Dosya ve adres adları Türkçe harf içermesin (ş→s, ğ→g gibi).
+slug:
+  encoding: ascii
+  clean_accents: true
+
 # Mob resimlerinin klasörü. Hediye alanlarında ayrıca /hediyeler seçilir.
 media_folder: /mobs
 public_folder: /mobs
@@ -150,29 +155,49 @@ collections:
               - {label: Eklenme tarihi, name: eklenme, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", required: false, hint: "Yeni mob eklerken bugünün tarihi kendiliğinden gelir. Bu günden sonraki 14 gün boyunca mobun üstünde 'Yeni' rozeti görünür. Eski mobları boş bırak."}
 
   # ---------------------------------------------------------------- NOVEL SERİLERİ
-  - name: novel
+  - name: seriler
     label: Novel serileri
+    label_singular: seri
     icon: menu_book
-    files:
-      - name: seriler
-        label: Novel serileri
-        file: veri/seriler.json
-        format: json
-        fields:
-          - label: Seriler
-            name: seriler
-            widget: list
-            label_singular: seri
-            summary: "{{fields.ad}}"
-            fields:
-              - {label: Seri kodu, name: id, widget: string, hint: "Küçük harf, boşluksuz, Türkçe harf yok. Örnek: fleshbeyondhumanity. Kaydettikten sonra değiştirme."}
-              - {label: Seri adı, name: ad, widget: string}
-              - {label: Kapak görseli, name: kapak, widget: image, required: false, media_folder: /kapaklar, public_folder: /kapaklar, hint: "Dikey bir kapak resmi yükle (2:3 oran güzel durur). Kendisi küçültüp WebP yapar."}
-              - label: Dil
-                name: dil
-                widget: select
-                options: [{label: Türkçe, value: tr}, {label: English, value: en}]
-              - {label: Özet, name: ozet, widget: text, hint: "Seriye tıklayınca en üstte görünen tanıtım yazısı."}
+    folder: _seriler
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    identifier_field: ad
+    slug: "{{slug}}"
+    media_folder: /kapaklar
+    public_folder: /kapaklar
+    summary: "{{ad}}"
+    description: "Her novel serisi ayrı bir kayıt. 'Yeni seri' ile ekle. Seri kodu adından kendiliğinden oluşur, sen bir şey yazmazsın."
+    sortable_fields:
+      fields: [sira, ad]
+      default:
+        field: sira
+        direction: ascending
+    fields:
+      - {label: Seri adı, name: ad, widget: string, hint: "Sitede görünen ad. Kaydettikten sonra adı değiştirebilirsin, bölümler seriden kopmaz."}
+      - {label: Kapak görseli, name: kapak, widget: image, required: false, hint: "Dikey bir kapak resmi yükle (2:3 oran güzel durur). Kendisi küçültüp WebP yapar."}
+      - label: Dil
+        name: dil
+        widget: select
+        options: [{label: Türkçe, value: tr}, {label: English, value: en}]
+      - label: Durum
+        name: durum
+        widget: select
+        required: false
+        options: [Devam ediyor, Tamamlandı, Ara verildi]
+        hint: "Seri hangi aşamada? Sitede rozet olarak görünür, ziyaretçi buna göre filtreleyebilir."
+      - {label: Yazar, name: yazar, widget: string, required: false, hint: "İstersen yaz. Seri sayfasında 'Yazar: ...' diye görünür."}
+      - label: Türler
+        name: turler
+        widget: select
+        multiple: true
+        required: false
+        options: [Fantastik, Aksiyon, Macera, Romantik, Gizem, Korku, Bilim kurgu, Komedi, Drama, Sistem, Reenkarnasyon, Hayatta kalma, Karanlık, Savaş, Okul, Günlük yaşam]
+        hint: "İstediklerini seç. Sitede küçük etiketler olarak görünür. Listede olmayan bir tür lazımsa söyle, eklerim."
+      - {label: Sıra, name: sira, widget: number, value_type: int, required: false, default: 1, hint: "Sitedeki sıra. 1 en üstte görünür, 2 onun altında."}
+      - {label: Özet, name: ozet, widget: text, hint: "Seriye tıklayınca en üstte görünen tanıtım yazısı. Paragraflar arasında boş satır bırak."}
+      - {label: Sitede yayınla, name: published, widget: boolean, default: true, hint: "Kapatırsan seri sitede görünmez. Hazır olunca aç."}
 
   # ---------------------------------------------------------------- NOVEL BÖLÜMLERİ
   - name: bolumler
@@ -183,25 +208,37 @@ collections:
     path: "{{seri}}/{{numara}}"
     extension: md
     format: yaml-frontmatter
+    create: true
     summary: "{{seri}} · Bölüm {{numara}}: {{baslik}}"
+    description: "Her bölüm ayrı bir kayıt. Önce 'Yeni bölüm'e bas, seriyi seç, numarayı yaz. Listeyi seriye göre gruplayabilirsin. Taslak bölümler sitede görünmez."
     sortable_fields:
-      fields: [numara, seri, baslik]
+      fields: [numara, seri, baslik, tarih]
       default:
         field: numara
         direction: descending
+    view_groups:
+      - {label: Seriye göre, field: seri}
+    view_filters:
+      - {label: Taslaklar, field: published, pattern: false}
     fields:
       - label: Seri
         name: seri
         widget: relation
-        collection: novel
-        file: seriler
-        value_field: "{{seriler.*.id}}"
-        display_fields: ["{{seriler.*.ad}}"]
-        search_fields: ["{{seriler.*.ad}}"]
-        hint: "Hangi serinin bölümü? Liste, Novel serileri bölümünden gelir."
-      - {label: Bölüm numarası, name: numara, widget: number, value_type: int, min: 1, hint: "1, 2, 3 diye devam et. Aynı seride aynı numarayı iki kez kullanma. Kaydettikten sonra değiştirme."}
+        collection: seriler
+        value_field: "{{slug}}"
+        search_fields: [ad]
+        display_fields: [ad]
+        hint: "Hangi serinin bölümü? Liste, Novel serileri bölümünden gelir. Yeni seriyi önce orada ekle."
+      - {label: Bölüm numarası, name: numara, widget: number, value_type: int, min: 1, hint: "Serideki son bölümün numarasından bir fazlasını yaz. Aynı seride aynı numarayı iki kere kullanma, bölümler birbirine karışır. Kaydettikten sonra değiştirme."}
       - {label: Bölüm başlığı, name: baslik, widget: string, hint: "Sitede böyle görünür. Örnek: Bölüm 5: Yeni Başlangıç"}
-      - {label: Bölüm metni, name: metin, widget: text, hint: "Yeni paragraf için araya boş bir satır bırak."}
+      - {label: Yayın günü, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", required: false, hint: "Bölüm bu günden itibaren sitede görünür. İleri bir gün seçersen o güne kadar saklı kalır. Son 14 gün içindeki bölümler 'Yeni' rozeti alır. Eski bölümlerde boş kalabilir."}
+      - label: Bölüm metni
+        name: metin
+        widget: markdown
+        buttons: [bold, italic, heading-two, quote]
+        editor_components: []
+        hint: "Normal yaz, yapıştırabilirsin. Yeni paragraf için araya boş satır bırak. Sahne değişimi için boş bir satıra --- yaz. Üstteki düğmelerle kalın, italik, başlık ve alıntı yapabilirsin."
+      - {label: Sitede yayınla, name: published, widget: boolean, default: true, hint: "Kapatırsan bölüm taslak olarak kalır ve sitede hiç görünmez. Yarım kalan bölümler için kapat, hazır olunca aç."}
 
   # ---------------------------------------------------------------- GÜNLÜK
   - name: gunluk
