@@ -1,0 +1,9 @@
+---
+---
+{%- capture nl %}
+{% endcapture -%}
+[
+{%- for y in site.yazilar -%}
+{"baslik": {{ y.baslik | jsonify }}, "tarih": {{ y.tarih | jsonify }}, "saat": {{ y.saat | jsonify }}, "ruh": {{ y.ruh | jsonify }}, "etiketler": {{ y.etiketler | jsonify }}, "kapak": {{ y.kapak | jsonify }}, "ozet": {{ y.metin | replace: nl, " " | truncate: 180 | jsonify }}, "url": {{ y.url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

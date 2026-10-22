@@ -5,6 +5,10 @@ backend:
   commit_messages:
     update: "Panelden güncelleme: {{collection}}"
     uploadMedia: "Panelden resim yüklendi: {{path}}"
+    create: "Panelden yeni kayıt: {{collection}} / {{slug}}"
+    delete: "Panelden silindi: {{collection}} / {{slug}}"
+# Metinleri tırnak içinde kaydeder. Saat gibi değerlerin yanlış okunmasını önler.
+yaml_quote: true
 site_url: https://cenksolac.com
 display_url: https://cenksolac.com
 locale: tr
@@ -188,24 +192,55 @@ collections:
   # ---------------------------------------------------------------- GÜNLÜK
   - name: gunluk
     label: Günlük
+    label_singular: yazı
     icon: edit_note
-    files:
-      - name: yazilar
-        label: Günlük yazıları
-        file: veri/gunluk.json
-        format: json
-        fields:
-          - label: Yazılar
-            name: gunluk
-            widget: list
-            label_singular: yazı
-            add_to_top: true
-            summary: "{{fields.tarih}} {{fields.saat}} {{fields.baslik}}"
-            fields:
-              - {label: Tarih, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}"}
-              - {label: Saat, name: saat, widget: datetime, type: time, date_format: false, time_format: "HH:mm", required: false, hint: "İstersen boş bırak."}
-              - {label: Başlık, name: baslik, widget: string}
-              - {label: Yazı, name: metin, widget: text, hint: "Yeni paragraf için araya boş bir satır bırak."}
+    folder: _yazilar
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    identifier_field: baslik
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    media_folder: /gunluk-resimleri
+    public_folder: /gunluk-resimleri
+    summary: "{{tarih}} · {{baslik}}"
+    description: "Her günlük yazısı ayrı bir kayıt. Üstteki 'Yeni yazı' düğmesiyle yaz, listeden tıklayıp düzenle."
+    sortable_fields:
+      fields: [tarih, baslik]
+      default:
+        field: tarih
+        direction: descending
+    fields:
+      - {label: Başlık, name: baslik, widget: string, hint: "Yazının adı. Sitede liste ve okuma sayfasında görünür."}
+      - {label: Hangi güne ait, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", hint: "Takvimde bu günün altında görünür."}
+      - {label: Saat, name: saat, widget: datetime, type: time, date_format: false, time_format: "HH:mm", required: false, hint: "İstersen boş bırak."}
+      - label: Ruh halim
+        name: ruh
+        widget: select
+        required: false
+        hint: "İstersen seç. Yazının yanında küçük bir ikon olarak görünür."
+        options:
+          - {label: "😄 Harika", value: harika}
+          - {label: "🙂 İyi", value: iyi}
+          - {label: "😐 Normal", value: normal}
+          - {label: "😴 Yorgun", value: yorgun}
+          - {label: "😔 Üzgün", value: uzgun}
+          - {label: "😡 Sinirli", value: sinirli}
+          - {label: "🤩 Heyecanlı", value: heyecanli}
+      - label: Etiketler
+        name: etiketler
+        widget: list
+        required: false
+        label_singular: etiket
+        field: {label: Etiket, name: etiket, widget: string}
+        hint: "İstersen ekle. Örnek: yayın, minecraft, novel. Ziyaretçiler etikete göre filtreleyebilir."
+      - {label: Kapak fotoğrafı, name: kapak, widget: image, required: false, hint: "İstersen bir fotoğraf ekle. Kendisi küçültüp WebP yapar."}
+      - label: Yazı
+        name: metin
+        widget: markdown
+        buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list]
+        editor_components: [image]
+        hint: "Normal yaz. Yeni paragraf için araya boş satır bırak. Üstteki düğmelerle kalın, italik, başlık, liste, alıntı ve bağlantı ekleyebilirsin."
+      - {label: Sitede yayınla, name: published, widget: boolean, default: true, hint: "Kapatırsan yazı taslak olarak kalır, sitede hiç görünmez. Hazır olunca aç."}
 
   # ---------------------------------------------------------------- TAKVİM
   - name: takvim

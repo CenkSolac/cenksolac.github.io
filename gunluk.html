@@ -36,42 +36,138 @@ const app=document.getElementById("app");
 const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const GUNLER=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
 const TUR={yayin:"Canlı yayın",video:"YouTube videosu",diger:"Diğer"};
+const RUH={harika:["😄","Harika"],iyi:["🙂","İyi"],normal:["😐","Normal"],yorgun:["😴","Yorgun"],uzgun:["😔","Üzgün"],sinirli:["😡","Sinirli"],heyecanli:["🤩","Heyecanlı"]};
+const SAYFA=10;
 const pad=n=>String(n).padStart(2,"0");
 const anahtar=(y,a,g)=>y+"-"+pad(a+1)+"-"+pad(g);
 const gecerli=t=>/^\d{4}-\d{2}-\d{2}$/.test(t||"");
-function saatYaz(s){const m=String(s||"").match(/(\d{1,2}):(\d{2})/);return m?pad(m[1])+":"+m[2]:""}
+// Saat "10:00" yazısı olarak gelir. Bir yerde sayıya dönüşmüşse (10:00 -> 36000 sn ya da 600 dk) onu da doğru oku.
+function saatYaz(s){
+  if(typeof s==="number"&&isFinite(s)){
+    const dk=s>=1440?Math.floor(s/60):s;
+    return pad(Math.floor(dk/60)%24)+":"+pad(dk%60);
+  }
+  const m=String(s==null?"":s).match(/(\d{1,2}):(\d{2})/);
+  return m?pad(m[1])+":"+m[2]:"";
+}
 function tarihYaz(t){const [y,a,g]=t.split("-").map(Number);return g+" "+AYLAR[a-1]+" "+y}
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+function link(href,c,x){const a=e("a",c,x);a.href=href;return a}
 
-Promise.all(["veri/takvim.json","veri/gunluk.json"].map(u=>fetch(u).then(r=>r.json()))).then(([t,g])=>{
-  const duzelt=l=>(l||[]).map(x=>({...x,tarih:String(x.tarih||"").slice(0,10),saat:saatYaz(x.saat)}));
-  const olaylar=duzelt(t.takvim).filter(o=>gecerli(o.tarih)).sort((a,b)=>(a.tarih+(a.saat||"")).localeCompare(b.tarih+(b.saat||"")));
-  const yazilar=duzelt(g.gunluk).filter(y=>gecerli(y.tarih)).sort((a,b)=>(b.tarih+(b.saat||"")).localeCompare(a.tarih+(a.saat||"")));
+// ---- Yazı düzenleyicisinden gelen biçimi (kalın, italik, başlık, liste, alıntı, bağlantı, resim) güvenle göster ----
+function guvenliUrl(u){u=String(u||"").trim();return /^https?:\/\//i.test(u)||/^\/(?!\/)/.test(u)}
+function inline(t,ata){
+  const re=/\*\*(\S(?:.*?\S)?)\*\*|`([^`\n]+)`|!\[([^\]\n]*)\]\(([^)\s]+)\)|\[([^\]\n]+)\]\(([^)\s]+)\)|\*(\S(?:[^*\n]*?\S)?)\*/g;
+  let son=0,m;
+  while((m=re.exec(t))){
+    if(m.index>son)ata.append(document.createTextNode(t.slice(son,m.index)));
+    if(m[1]!==undefined){const b=e("strong");inline(m[1],b);ata.append(b)}
+    else if(m[2]!==undefined)ata.append(e("code",null,m[2]));
+    else if(m[4]!==undefined){
+      if(guvenliUrl(m[4])){const i=e("img");i.src=m[4].trim();i.alt=m[3]||"";i.loading="lazy";ata.append(i)}
+      else ata.append(document.createTextNode(m[0]));
+    }else if(m[6]!==undefined){
+      if(guvenliUrl(m[6])){const a=e("a");a.href=m[6].trim();a.rel="noopener noreferrer";if(/^https?:/i.test(m[6]))a.target="_blank";inline(m[5],a);ata.append(a)}
+      else ata.append(document.createTextNode(m[0]));
+    }else if(m[7]!==undefined){const i=e("em");inline(m[7],i);ata.append(i)}
+    son=re.lastIndex;
+  }
+  if(son<t.length)ata.append(document.createTextNode(t.slice(son)));
+}
+const BLOK_DURDUR=/^(```|#{1,3}\s|\s*>|\s*([-*+]|\d+[.)])\s+|(\*|-|_)(\s*\3){2,}\s*$)/;
+function md(kaynak){
+  const out=document.createDocumentFragment();
+  const s=String(kaynak||"").replace(/\r\n?/g,"\n").split("\n");
+  let i=0;
+  const bos=l=>!l.trim();
+  while(i<s.length){
+    const l=s[i];
+    if(bos(l)){i++;continue}
+    let m;
+    if(/^```/.test(l)){
+      const tampon=[];i++;
+      while(i<s.length&&!/^```/.test(s[i])){tampon.push(s[i]);i++}
+      i++;
+      const pre=e("pre");pre.append(e("code",null,tampon.join("\n")));out.append(pre);continue;
+    }
+    if((m=l.match(/^(#{1,3})\s+(.*)$/))){
+      const h=e("h"+Math.max(2,m[1].length));inline(m[2].trim(),h);out.append(h);i++;continue;
+    }
+    if(/^(\*|-|_)(\s*\1){2,}\s*$/.test(l.trim())){out.append(e("hr"));i++;continue}
+    if(/^\s*>/.test(l)){
+      const tampon=[];
+      while(i<s.length&&/^\s*>/.test(s[i])){tampon.push(s[i].replace(/^\s*>\s?/,""));i++}
+      const bq=e("blockquote");bq.append(md(tampon.join("\n")));out.append(bq);continue;
+    }
+    if(/^\s*([-*+])\s+/.test(l)||/^\s*\d+[.)]\s+/.test(l)){
+      const sirali=/^\s*\d+[.)]\s+/.test(l),liste=e(sirali?"ol":"ul");
+      const kural=sirali?/^\s*\d+[.)]\s+(.*)$/:/^\s*[-*+]\s+(.*)$/;
+      while(i<s.length&&(m=s[i].match(kural))){const li=e("li");inline(m[1],li);liste.append(li);i++}
+      out.append(liste);continue;
+    }
+    const tampon=[];
+    while(i<s.length&&!bos(s[i])&&(tampon.length===0||!BLOK_DURDUR.test(s[i]))){tampon.push(s[i]);i++}
+    const p=e("p");inline(tampon.join("\n"),p);out.append(p);
+  }
+  return out;
+}
+function ozetTemizle(t){return String(t||"").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]+)\]\([^)]*\)/g,"$1").replace(/[*`]/g,"").replace(/(^|\s)[#>]+\s*/g,"$1").replace(/\s+/g," ").trim()}
+
+function yaziKart(y){
+  const a=link("?y="+encodeURIComponent(y.id),"yazi-kart"),g=e("div","yazi-govde"),ust=e("div","yazi-ust");
+  if(RUH[y.ruh])ust.append(e("span","ruh",RUH[y.ruh][0]));
+  ust.append(e("span",null,tarihYaz(y.tarih)+(y.saat?", "+y.saat:"")));
+  g.append(ust,e("strong",null,y.baslik||"Günlük"));
+  if(y.ozet)g.append(e("p","yazi-ozet",y.ozet));
+  if(y.etiketler.length){const t=e("div","etiketler");y.etiketler.forEach(x=>t.append(e("span","cip",x)));g.append(t)}
+  a.append(g);
+  if(y.kapak){const im=e("img","yazi-kucuk");im.src=y.kapak;im.alt="";im.loading="lazy";im.onerror=()=>im.remove();a.append(im)}
+  return a;
+}
+
+Promise.all([
+  fetch("veri/takvim.json").then(r=>r.json()).catch(()=>({})),
+  fetch("veri/gunluk-yazilari.json").then(r=>r.json()).catch(()=>[])
+]).then(([t,g])=>{
+  const olaylar=(t.takvim||[]).map(x=>({...x,tarih:String(x.tarih||"").slice(0,10),saat:saatYaz(x.saat)}))
+    .filter(o=>gecerli(o.tarih)).sort((a,b)=>(a.tarih+(a.saat||"")).localeCompare(b.tarih+(b.saat||"")));
+  const yazilar=(Array.isArray(g)?g:[]).map(x=>({
+    id:String(x.url||"").split("/").pop().replace(/\.html$/,""),
+    url:x.url,baslik:x.baslik,tarih:String(x.tarih||"").slice(0,10),saat:saatYaz(x.saat),
+    ruh:x.ruh,etiketler:(Array.isArray(x.etiketler)?x.etiketler:[]).map(String).filter(Boolean),
+    kapak:x.kapak||"",ozet:ozetTemizle(x.ozet)
+  })).filter(y=>y.id&&gecerli(y.tarih))
+    .sort((a,b)=>(b.tarih+(b.saat||"")).localeCompare(a.tarih+(a.saat||"")));
+  const yid=new URLSearchParams(location.search).get("y");
+  const ix=yazilar.findIndex(y=>y.id===yid);
+  if(ix>=0)return oku(yazilar,ix);
+  liste(olaylar,yazilar);
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
+
+function liste(olaylar,yazilar){
+  document.title="Günlük | CenkSolac";
   const bn=new Date(),bugun=anahtar(bn.getFullYear(),bn.getMonth(),bn.getDate());
   let yil=bn.getFullYear(),ay=bn.getMonth(),secili=bugun;
-
   app.replaceChildren(e("h1",null,"Günlük"));
   const sonraki=olaylar.find(o=>o.tur==="yayin"&&o.tarih>=bugun);
   app.append(e("p","alt",sonraki
     ?"Sıradaki canlı yayın: "+tarihYaz(sonraki.tarih)+(sonraki.saat?", "+sonraki.saat:"")
     :"Yayın günlerim, videolarım ve notlarım burada."));
-
   const takvimKutu=e("section"),detayKutu=e("section","detay"),yaziKutu=e("section");
   app.append(takvimKutu,detayKutu,yaziKutu);
 
-  function ciz(odak){
-    // takvim
+  function takvimCiz(odak){
     takvimKutu.replaceChildren();
     const ust=e("div","takvim-ust"),btn=e("div");
     const onceki=e("button","dgm","‹"),ileri=e("button","dgm","›"),bugunBtn=e("button","dgm","Bugün");
     onceki.setAttribute("aria-label","Önceki ay");ileri.setAttribute("aria-label","Sonraki ay");
-    onceki.onclick=()=>{ay--;if(ay<0){ay=11;yil--}ciz()};
-    ileri.onclick=()=>{ay++;if(ay>11){ay=0;yil++}ciz()};
-    bugunBtn.onclick=()=>{yil=bn.getFullYear();ay=bn.getMonth();secili=bugun;ciz()};
+    onceki.onclick=()=>{ay--;if(ay<0){ay=11;yil--}takvimCiz();detayCiz()};
+    ileri.onclick=()=>{ay++;if(ay>11){ay=0;yil++}takvimCiz();detayCiz()};
+    bugunBtn.onclick=()=>{yil=bn.getFullYear();ay=bn.getMonth();secili=bugun;takvimCiz();detayCiz()};
     btn.append(onceki,bugunBtn,ileri);
     ust.append(e("h2",null,AYLAR[ay]+" "+yil),btn);
     const izgara=e("div","takvim");
-    GUNLER.forEach(g=>izgara.append(e("div","bas",g)));
+    GUNLER.forEach(x=>izgara.append(e("div","bas",x)));
     const bosluk=(new Date(yil,ay,1).getDay()+6)%7,gunSayisi=new Date(yil,ay+1,0).getDate();
     for(let i=0;i<bosluk;i++)izgara.append(e("div"));
     for(let g=1;g<=gunSayisi;g++){
@@ -80,20 +176,21 @@ Promise.all(["veri/takvim.json","veri/gunluk.json"].map(u=>fetch(u).then(r=>r.js
       const b=e("button","gun"+(k===bugun?" bugun":"")+(k===secili?" secili":""));
       b.append(e("span",null,String(g)));
       const nk=e("span","noktalar");
-      [...new Set(buGun.map(o=>TUR[o.tur]?o.tur:"diger"))].forEach(t=>nk.append(e("i","nokta "+t)));
+      [...new Set(buGun.map(o=>TUR[o.tur]?o.tur:"diger"))].forEach(x=>nk.append(e("i","nokta "+x)));
       if(buYazi.length)nk.append(e("i","nokta yazi"));
       b.append(nk);
       const sayi=buGun.length+buYazi.length;
       b.setAttribute("aria-label",g+" "+AYLAR[ay]+" "+yil+(sayi?", "+sayi+" kayıt":""));
-      b.onclick=()=>{secili=k;ciz(true)};
+      b.onclick=()=>{secili=k;takvimCiz(true);detayCiz()};
       izgara.append(b);
     }
     const aciklama=e("div","aciklama");
-    [["yayin","Canlı yayın"],["video","Video"],["diger","Diğer"],["yazi","Günlük yazısı"]].forEach(([c,t])=>{
-      const s=e("span");s.append(e("i","nokta "+c),document.createTextNode(" "+t));aciklama.append(s)});
+    [["yayin","Canlı yayın"],["video","Video"],["diger","Diğer"],["yazi","Günlük yazısı"]].forEach(([c,x])=>{
+      const s=e("span");s.append(e("i","nokta "+c),document.createTextNode(" "+x));aciklama.append(s)});
     takvimKutu.append(ust,izgara,aciklama);
-
-    // gün detayı
+    if(odak){const s=takvimKutu.querySelector(".secili");if(s)s.focus({preventScroll:true})}
+  }
+  function detayCiz(){
     detayKutu.replaceChildren(e("h3",null,tarihYaz(secili)));
     const gOlay=olaylar.filter(o=>o.tarih===secili),gYazi=yazilar.filter(y=>y.tarih===secili);
     if(!gOlay.length&&!gYazi.length)detayKutu.append(e("p","bos","Bu güne ait kayıt yok."));
@@ -106,31 +203,74 @@ Promise.all(["veri/takvim.json","veri/gunluk.json"].map(u=>fetch(u).then(r=>r.js
       if(o.not)m.append(e("br"),e("small","soluk",o.not));
       s.append(m);detayKutu.append(s);
     });
-    gYazi.forEach(y=>{
-      detayKutu.append(e("h4",null,(y.saat?y.saat+" · ":"")+(y.baslik||"Günlük")));
-      const m=e("div","okuma");
-      String(y.metin||"").split(/\n\s*\n/).forEach(p=>{if(p.trim())m.append(e("p",null,p.trim()))});
-      detayKutu.append(m);
-    });
-
-    // günlük yazıları listesi
-    yaziKutu.replaceChildren(e("h2",null,"Günlük yazıları"));
-    if(!yazilar.length)yaziKutu.append(e("p","bos","Henüz günlük yazısı yok."));
-    else{
-      const l=e("div","liste");
-      yazilar.forEach(y=>{
-        const a=e("a");a.href="#gun";
-        const sol=e("strong",null,y.baslik||"Günlük");
-        a.append(sol,e("small",null,tarihYaz(y.tarih)+(y.saat?", "+y.saat:"")));
-        a.onclick=ev=>{ev.preventDefault();secili=y.tarih;yil=Number(y.tarih.slice(0,4));ay=Number(y.tarih.slice(5,7))-1;ciz();detayKutu.scrollIntoView({behavior:"smooth",block:"start"})};
-        l.append(a);
-      });
-      yaziKutu.append(l);
+    if(gYazi.length){
+      const k=e("div","detay-yazilar");
+      gYazi.forEach(y=>k.append(yaziKart(y)));
+      detayKutu.append(k);
     }
-    if(odak){const s=takvimKutu.querySelector(".secili");if(s)s.focus({preventScroll:true})}
   }
-  ciz();
-}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
+
+  // ---- Yazılar: arama, etiket filtresi, "daha fazla göster" ----
+  function yazilarCiz(){
+    yaziKutu.replaceChildren(e("h2",null,"Günlük yazıları"));
+    if(!yazilar.length){yaziKutu.append(e("p","bos","Henüz günlük yazısı yok."));return}
+    const etiketler=[...new Set(yazilar.flatMap(y=>y.etiketler))].sort((a,b)=>a.localeCompare(b,"tr"));
+    const arac=e("div","arac"),ara=e("input"),sec=e("select");
+    ara.type="search";ara.placeholder="Yazılarda ara";ara.setAttribute("aria-label","Yazılarda ara");
+    sec.setAttribute("aria-label","Etikete göre filtrele");
+    const hepsi=e("option",null,"Tüm etiketler");hepsi.value="";sec.append(hepsi);
+    etiketler.forEach(x=>{const o=e("option",null,x);o.value=x;sec.append(o)});
+    if(yazilar.length>SAYFA||etiketler.length)arac.append(ara);
+    if(etiketler.length)arac.append(sec);
+    if(arac.children.length)yaziKutu.append(arac);
+    const kutu=e("div","yazi-liste"),daha=e("button","btn daha-tablo");
+    daha.type="button";
+    yaziKutu.append(kutu,daha);
+    let gorunen=SAYFA;
+    function ciz(){
+      const t=ara.value.toLocaleLowerCase("tr").trim(),et=sec.value;
+      const r=yazilar.filter(y=>(!et||y.etiketler.includes(et))&&
+        (!t||(y.baslik+" "+y.ozet+" "+y.etiketler.join(" ")).toLocaleLowerCase("tr").includes(t)));
+      kutu.replaceChildren();
+      if(!r.length){kutu.append(e("p","bos","Aramana uyan yazı yok."))}
+      r.slice(0,gorunen).forEach(y=>kutu.append(yaziKart(y)));
+      daha.hidden=r.length<=gorunen;
+      daha.textContent="Daha fazla göster ("+(r.length-gorunen)+" yazı daha)";
+    }
+    daha.onclick=()=>{gorunen+=SAYFA;ciz()};
+    ara.oninput=sec.onchange=()=>{gorunen=SAYFA;ciz()};
+    ciz();
+  }
+  takvimCiz();detayCiz();yazilarCiz();
+}
+
+function oku(yazilar,ix){
+  const y=yazilar[ix],yeni=yazilar[ix-1],eski=yazilar[ix+1];
+  document.title=(y.baslik||"Günlük")+" | CenkSolac";
+  app.replaceChildren(link("gunluk","soluk","← Tüm günlük"));
+  app.append(e("h1",null,y.baslik||"Günlük"));
+  const ust=e("p","yazi-ust");
+  if(RUH[y.ruh])ust.append(e("span","ruh",RUH[y.ruh][0]),document.createTextNode(" "+RUH[y.ruh][1]+" · "));
+  ust.append(document.createTextNode(tarihYaz(y.tarih)+(y.saat?", "+y.saat:"")));
+  app.append(ust);
+  if(y.etiketler.length){const t=e("div","etiketler");y.etiketler.forEach(x=>t.append(e("span","cip",x)));app.append(t)}
+  if(y.kapak){const im=e("img","yazi-kapak");im.src=y.kapak;im.alt="";im.onerror=()=>im.remove();app.append(im)}
+  const m=e("div","okuma");app.append(m);
+  fetch(y.url).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    if(!t.trim())m.append(e("p","bos","Bu yazının metni boş."));
+    else m.append(md(t));
+  }).catch(()=>m.append(e("p","bos","Yazı yüklenemedi. Sayfayı yenile.")));
+  const gezin=e("div","gezin");
+  gezin.append(eski?link("?y="+encodeURIComponent(eski.id),null,"← Önceki yazı"):e("span"));
+  if(yeni)gezin.append(link("?y="+encodeURIComponent(yeni.id),null,"Sonraki yazı →"));
+  app.append(gezin);
+  document.onkeydown=ev=>{
+    if(ev.altKey||ev.ctrlKey||ev.metaKey||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;
+    if(ev.key==="ArrowLeft"&&eski)location.href="?y="+encodeURIComponent(eski.id);
+    if(ev.key==="ArrowRight"&&yeni)location.href="?y="+encodeURIComponent(yeni.id);
+  };
+  scrollTo(0,0);
+}
 </script>
 <script src="/sosyal.js" defer></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a9599270e81e478da7f01f26d0834670"}'></script><!-- End Cloudflare Web Analytics -->
