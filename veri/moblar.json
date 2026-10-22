@@ -6,7 +6,10 @@
       "hediye": "Corgi",
       "hediyeGorsel": "/hediyeler/screenshot-78.webp",
       "coin": 299,
-      "aciklama": "Büyük bir obruk oluşturuyor. Oyuncu yüksekten düşerek yere çakılıyor"
+      "aciklama": "Büyük bir obruk oluşturuyor. Oyuncu yüksekten düşerek yere çakılıyor",
+      "tehlike": "Yüksek",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     },
     {
       "ad": "İnek",
@@ -14,7 +17,10 @@
       "hediye": "Ice Cream Cone",
       "hediyeGorsel": "/hediyeler/screenshot-75.webp",
       "coin": 1,
-      "aciklama": "İnek kralın torunu karispet intikam yeminiyle koşmaya devam ediyor\n\nÖzellik: Dümdüz inek..."
+      "aciklama": "İnek kralın torunu karispet intikam yeminiyle koşmaya devam ediyor\n\nÖzellik: Dümdüz inek...",
+      "tehlike": "Zararsız",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     },
     {
       "ad": "Netherite Zombi",
@@ -22,7 +28,10 @@
       "hediye": "Energy Capsule",
       "hediyeGorsel": "/hediyeler/Screenshot_91.webp",
       "coin": 30,
-      "aciklama": "Full set nethirayt zombie başka vasfı yok\n5x geliyor zombie\n\nBenim yorumum öldürmesi fazlasıyla uğraştırıcı..."
+      "aciklama": "Full set nethirayt zombie başka vasfı yok\n5x geliyor zombie\n\nBenim yorumum öldürmesi fazlasıyla uğraştırıcı...",
+      "tehlike": "Orta",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     },
     {
       "ad": "Yunus Balığı",
@@ -30,7 +39,10 @@
       "hediye": "Heart Me",
       "hediyeGorsel": "/hediyeler/Screenshot_92.webp",
       "coin": 1,
-      "aciklama": "Yaniii ne denir bilemiyorum karada zıplayan bir yunus balığı?"
+      "aciklama": "Yaniii ne denir bilemiyorum karada zıplayan bir yunus balığı?",
+      "tehlike": "Zararsız",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     },
     {
       "ad": "[Demir]Kılıç, balta, kazma, kalkan, biftek",
@@ -38,7 +50,10 @@
       "hediye": "FrendShip N...",
       "hediyeGorsel": "/hediyeler/Screenshot_94 (1).webp",
       "coin": 10,
-      "aciklama": "1 Demir kılıç\n1 Demir balta\n1 Demir kazma\n1 Kalkan\n10 tane biftek"
+      "aciklama": "1 Demir kılıç\n1 Demir balta\n1 Demir kazma\n1 Kalkan\n10 tane biftek",
+      "tehlike": "",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     },
     {
       "ad": "Yavaşlatma II",
@@ -46,7 +61,10 @@
       "hediye": "FingerHeart",
       "hediyeGorsel": "/hediyeler/Screenshot_19.webp",
       "coin": 5,
-      "aciklama": "Yayıncıya 30 saniye boyunca yavaşlatma 2 veriyor\n\nNegatif etki"
+      "aciklama": "Yayıncıya 30 saniye boyunca yavaşlatma 2 veriyor\n\nNegatif etki",
+      "tehlike": "",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     },
     {
       "ad": "Bucket_axelot",
@@ -54,7 +72,10 @@
       "hediye": "Cake Slice",
       "hediyeGorsel": "/hediyeler/Screenshot_32.webp",
       "coin": 1,
-      "aciklama": "Kovanın içinde tatlı mı tatlı bir axelot.\nKim axelot sevmez ki \n\nDirekt yayıncının envanterine düşüyor"
+      "aciklama": "Kovanın içinde tatlı mı tatlı bir axelot.\nKim axelot sevmez ki \n\nDirekt yayıncının envanterine düşüyor",
+      "tehlike": "",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     }
   ],
   "oneblock": [],
