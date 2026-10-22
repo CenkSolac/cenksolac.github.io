@@ -22,6 +22,6 @@ metin: |-
 
   Site hızla günceleniyor ve iyi ilerliyorum ve ve yorucu geçiyor
 
-  Bugünlük bu kadar notum yarın daha fazla gelişmeyle devam edeceğim. ![](/gunluk-resimleri/30601.webp)
+  Bugünlük bu kadar notum yarın daha fazla gelişmeyle devam edeceğim. ![Emre seni unutmadım.](/gunluk-resimleri/30601.webp)
 published: true
 ---
