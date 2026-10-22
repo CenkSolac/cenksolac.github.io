@@ -29,13 +29,26 @@
 const app=document.getElementById("app");
 const sayi=n=>Number(n||0).toLocaleString("tr-TR");
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
-function tablo(baslik,kol,satirlar){
+const ILK=10,EN_FAZLA=100;
+function tablo(baslik,kol,satirlar,uzun){
   const k=e("section");k.append(e("h2",null,baslik));
-  if(!satirlar||!satirlar.length){k.append(e("p","bos","Henüz veri yok."));return k}
+  let l=(satirlar||[]).filter(s=>s&&s.ad);
+  if(uzun)l=l.slice().sort((a,b)=>(Number(b.deger)||0)-(Number(a.deger)||0)).slice(0,EN_FAZLA);
+  if(!l.length){k.append(e("p","bos","Henüz veri yok."));return k}
   const t=e("table"),th=e("tr");
   kol.forEach(c=>th.append(e("th",null,c)));t.append(th);
-  satirlar.forEach((s,i)=>{const r=e("tr");r.append(e("td",null,(i+1)+". "+s.ad),e("td",null,sayi(s.deger)));t.append(r)});
-  k.append(t);return k;
+  const sat=l.map((s,i)=>{const r=e("tr");r.append(e("td",null,(i+1)+". "+s.ad),e("td",null,sayi(s.deger)));return r});
+  const gorunen=n=>sat.forEach((r,i)=>{r.hidden=i>=n});
+  sat.forEach(r=>t.append(r));
+  k.append(t);
+  if(uzun&&sat.length>ILK){
+    let acik=false;gorunen(ILK);
+    const dg=e("button","btn daha-tablo");dg.type="button";dg.setAttribute("aria-expanded","false");
+    const yaz=()=>{dg.textContent=acik?"Daha az göster":"Daha fazla göster ("+(sat.length-ILK)+" kişi daha)"};
+    dg.onclick=()=>{acik=!acik;gorunen(acik?sat.length:ILK);dg.setAttribute("aria-expanded",String(acik));yaz();if(!acik)k.scrollIntoView({block:"nearest"})};
+    yaz();k.append(dg);
+  }
+  return k;
 }
 fetch("veri/canli.json").then(r=>r.json()).then(d=>{
   const c=d;
@@ -45,7 +58,11 @@ fetch("veri/canli.json").then(r=>r.json()).then(d=>{
   const g=e("div","sayilar");
   [["Toplam ödül",c.toplamOdul],["Beğeni",c.begeni],["Yorum",c.yorum]].forEach(([a,v])=>{
     const k=e("div","sayi");k.append(e("b",null,sayi(v)),e("span",null,a));g.append(k)});
-  app.append(g,tablo("Sponsorlar",["Sponsor","Katkı"],c.sponsorlar),tablo("Sıralama",["İzleyici","Puan"],c.siralama));
+  app.append(g,
+    tablo("Coin atanlar",["İzleyici","Coin"],c.coinAtanlar,true),
+    tablo("Beğeni atanlar",["İzleyici","Beğeni"],c.begeniAtanlar,true),
+    tablo("Sponsorlar",["Sponsor","Katkı"],c.sponsorlar),
+    tablo("Sıralama",["İzleyici","Puan"],c.siralama));
 }).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
 <script src="/sosyal.js" defer></script>

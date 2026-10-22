@@ -137,3 +137,6 @@ nav{display:flex;flex-wrap:wrap}
 .hata{text-align:center;padding-top:40px}
 .hata .dev{font-size:clamp(70px,28vw,160px)}
 .olay>div{min-width:0;flex:1;overflow-wrap:anywhere}
+table tr[hidden]{display:none}
+td:first-child{overflow-wrap:anywhere}
+.daha-tablo{font:inherit;cursor:pointer;margin:-14px 0 34px}

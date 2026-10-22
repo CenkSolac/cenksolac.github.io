@@ -47,6 +47,30 @@ collections:
             fields:
               - {label: Sponsor adı, name: ad, widget: string}
               - {label: Katkı, name: deger, widget: number, value_type: int}
+          - label: Coin atanlar
+            name: coinAtanlar
+            widget: list
+            required: false
+            label_singular: izleyici
+            collapsed: true
+            max: 100
+            summary: "{{fields.ad}}: {{fields.deger}}"
+            hint: "En fazla 100 kişi. Sırayı kendisi büyükten küçüğe dizer, karışık girebilirsin. Sitede ilk 10 kişi görünür, gerisi 'Daha fazla göster' ile açılır."
+            fields:
+              - {label: İzleyici adı, name: ad, widget: string}
+              - {label: Coin, name: deger, widget: number, value_type: int}
+          - label: Beğeni atanlar
+            name: begeniAtanlar
+            widget: list
+            required: false
+            label_singular: izleyici
+            collapsed: true
+            max: 100
+            summary: "{{fields.ad}}: {{fields.deger}}"
+            hint: "En fazla 100 kişi. Sırayı kendisi büyükten küçüğe dizer, karışık girebilirsin. Sitede ilk 10 kişi görünür, gerisi 'Daha fazla göster' ile açılır."
+            fields:
+              - {label: İzleyici adı, name: ad, widget: string}
+              - {label: Beğeni, name: deger, widget: number, value_type: int}
           - label: Sıralama
             name: siralama
             widget: list
