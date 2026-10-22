@@ -34,6 +34,13 @@
       "hediye": "FrendShip N...",
       "hediyeGorsel": "/hediyeler/Screenshot_94 (1).webp",
       "coin": 10
+    },
+    {
+      "ad": "Yavaşlatma II",
+      "gorsel": "/mobs/images (1) (1).webp",
+      "hediye": "FingerHeart",
+      "hediyeGorsel": "/hediyeler/Screenshot_19.webp",
+      "coin": 5
     }
   ],
   "oneblock": [],
