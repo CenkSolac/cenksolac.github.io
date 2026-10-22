@@ -130,3 +130,6 @@ nav{display:flex;flex-wrap:wrap}
 .sosyal-satir{gap:6px 18px}
 .sosyal-satir a{color:var(--soluk);text-decoration:none}
 .sosyal-satir a:hover{color:var(--vurgu)}
+.ozet-tam.kisa{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.daha-btn{font:inherit;font-weight:600;color:var(--vurgu);background:none;border:0;padding:0;margin:-6px 0 18px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.daha-btn[hidden]{display:none}

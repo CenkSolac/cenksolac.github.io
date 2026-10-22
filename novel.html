@@ -93,7 +93,20 @@ function seri(s,bl){
   app.replaceChildren(link("novel","soluk","← Tüm seriler"));
   const ust=e("div","seri-ust"),sag=e("div","seri-sag");
   const h=e("h1",null,s.ad);h.append(e("span","dil",DIL[s.dil]||s.dil));
-  sag.append(h,e("p","ozet-tam",s.ozet||"Bu seri için henüz özet yazılmadı."));
+  const oz=e("p","ozet-tam kisa",s.ozet||"Bu seri için henüz özet yazılmadı.");
+  const daha=e("button","daha-btn","Özetin devamını gör");
+  daha.type="button";daha.hidden=true;daha.setAttribute("aria-expanded","false");
+  // Özet kısaltılmış haldeyken taşıyorsa düğmeyi göster
+  const olc=()=>{if(oz.classList.contains("kisa"))daha.hidden=!(oz.scrollHeight>oz.clientHeight+1)};
+  daha.onclick=()=>{
+    const acik=oz.classList.toggle("kisa")===false;
+    daha.textContent=acik?"Özeti kısalt":"Özetin devamını gör";
+    daha.setAttribute("aria-expanded",String(acik));
+  };
+  addEventListener("resize",olc);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(olc);
+  requestAnimationFrame(olc);
+  sag.append(h,oz,daha);
   const dugmeler=e("div","dugmeler");
   if(bl.length){
     const kb=bl.find(x=>Number(x.numara)===sonOku(s.id));
