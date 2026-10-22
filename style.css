@@ -171,3 +171,6 @@ p.yazi-ust{margin:0 0 14px}
 .yazi-liste+.daha-tablo{margin-top:6px}
 .daha-tablo[hidden]{display:none}
 .okuma p,.okuma li,.okuma h2,.okuma h3,.okuma h4,.okuma blockquote{overflow-wrap:anywhere}
+.mob-aciklama{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--cizgi);color:var(--soluk);font-size:15px;line-height:1.5;white-space:pre-line;overflow-wrap:anywhere}
+.mob-aciklama.kisa{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mob .daha-btn{margin:6px 0 0;font-size:14px}

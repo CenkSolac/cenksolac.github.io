@@ -35,6 +35,8 @@
 const app=document.getElementById("app");
 function resimYolu(g,k){g=String(g||"");return /[\/.]/.test(g)?g:k+"/"+g+".webp"}
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+let olcumler=[];
+addEventListener("resize",()=>olcumler.forEach(f=>f()));
 const BOLUMLER=[["survival","Survival"],["oneblock","OneBlock"],["castle","Castle"]];
 fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   const liste=Object.fromEntries(BOLUMLER.map(([k])=>[k,Array.isArray(d[k])?d[k]:[]]));
@@ -63,8 +65,8 @@ fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   }
   function ciz(){
     const moblar=liste[secili],t=ara.value.toLocaleLowerCase("tr").trim();
-    const r=moblar.filter(m=>String(m.ad||"").toLocaleLowerCase("tr").includes(t)).sort((a,b)=>sira.value==="artan"?a.coin-b.coin:b.coin-a.coin);
-    izgara.replaceChildren();
+    const r=moblar.filter(m=>(String(m.ad||"")+" "+String(m.hediye||"")+" "+String(m.aciklama||"")).toLocaleLowerCase("tr").includes(t)).sort((a,b)=>sira.value==="artan"?a.coin-b.coin:b.coin-a.coin);
+    izgara.replaceChildren();olcumler=[];
     if(!moblar.length){izgara.append(e("p","bos","Bu bölüme yakında mob eklenecek."));return}
     if(!r.length){izgara.append(e("p","bos","Aramana uyan mob yok."));return}
     r.forEach(m=>{
@@ -76,8 +78,18 @@ fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
       if(m.hediyeGorsel){const hi=e("img");hi.src=resimYolu(m.hediyeGorsel,"hediyeler");hi.alt="";hi.onerror=()=>hi.remove();h.append(hi)}
       h.append(e("span",null,m.hediye||""));
       b.append(e("h3",null,m.ad),h,e("div","coin",Number(m.coin).toLocaleString("tr-TR")+" coin"));
+      const metin=String(m.aciklama||"").trim();
+      if(metin){
+        // Açıklama: uzunsa 3 satırda kesilir, "Devamını gör" ile açılır
+        const ac=e("p","mob-aciklama kisa",metin),dg=e("button","daha-btn","Devamını gör");
+        dg.type="button";dg.hidden=true;dg.setAttribute("aria-expanded","false");
+        dg.onclick=()=>{const acik=ac.classList.toggle("kisa")===false;dg.textContent=acik?"Daha az göster":"Devamını gör";dg.setAttribute("aria-expanded",String(acik))};
+        olcumler.push(()=>{if(ac.classList.contains("kisa"))dg.hidden=!(ac.scrollHeight>ac.clientHeight+1)});
+        b.append(ac,dg);
+      }
       k.append(res,b);izgara.append(k);
     });
+    requestAnimationFrame(()=>olcumler.forEach(f=>f()));
   }
   ara.oninput=sira.onchange=ciz;sekmeCiz();ciz();
   onhashchange=()=>{const k=location.hash.slice(1);if(BOLUMLER.some(x=>x[0]===k)&&k!==secili){secili=k;sekmeCiz();ciz()}};
