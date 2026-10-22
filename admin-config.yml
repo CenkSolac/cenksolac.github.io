@@ -67,10 +67,38 @@ collections:
         file: veri/moblar.json
         format: json
         fields:
-          - label: Moblar
-            name: moblar
+          - label: Survival mobları
+            name: survival
             widget: list
+            required: false
             label_singular: mob
+            collapsed: true
+            summary: "{{fields.ad}} ({{fields.coin}} coin)"
+            fields:
+              - {label: Mob adı, name: ad, widget: string}
+              - {label: Mob resmi, name: gorsel, widget: image, media_folder: /mobs, public_folder: /mobs, hint: "Resmi buraya yükle. Kendisi küçültüp WebP'ye çevirir."}
+              - {label: Hediye adı, name: hediye, widget: string}
+              - {label: Hediye resmi, name: hediyeGorsel, widget: image, required: false, media_folder: /hediyeler, public_folder: /hediyeler, hint: "İstersen yükle, istemezsen boş bırak."}
+              - {label: Coin, name: coin, widget: number, value_type: int, hint: "Hediyenin coin değeri"}
+          - label: OneBlock mobları
+            name: oneblock
+            widget: list
+            required: false
+            label_singular: mob
+            collapsed: true
+            summary: "{{fields.ad}} ({{fields.coin}} coin)"
+            fields:
+              - {label: Mob adı, name: ad, widget: string}
+              - {label: Mob resmi, name: gorsel, widget: image, media_folder: /mobs, public_folder: /mobs, hint: "Resmi buraya yükle. Kendisi küçültüp WebP'ye çevirir."}
+              - {label: Hediye adı, name: hediye, widget: string}
+              - {label: Hediye resmi, name: hediyeGorsel, widget: image, required: false, media_folder: /hediyeler, public_folder: /hediyeler, hint: "İstersen yükle, istemezsen boş bırak."}
+              - {label: Coin, name: coin, widget: number, value_type: int, hint: "Hediyenin coin değeri"}
+          - label: Castle mobları
+            name: castle
+            widget: list
+            required: false
+            label_singular: mob
+            collapsed: true
             summary: "{{fields.ad}} ({{fields.coin}} coin)"
             fields:
               - {label: Mob adı, name: ad, widget: string}

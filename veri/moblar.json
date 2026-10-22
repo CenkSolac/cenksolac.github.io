@@ -1,5 +1,5 @@
 {
-  "moblar": [
+  "survival": [
     {
       "ad": "Dev Çukur",
       "gorsel": "/mobs/screenshot-71.webp",
@@ -28,5 +28,7 @@
       "hediyeGorsel": "",
       "coin": 1
     }
-  ]
+  ],
+  "oneblock": [],
+  "castle": []
 }

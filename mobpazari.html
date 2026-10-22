@@ -29,25 +29,39 @@
 const app=document.getElementById("app");
 function resimYolu(g,k){g=String(g||"");return /[\/.]/.test(g)?g:k+"/"+g+".webp"}
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+const BOLUMLER=[["survival","Survival"],["oneblock","OneBlock"],["castle","Castle"]];
 fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
-  const moblar=d.moblar||[];
-  app.replaceChildren(e("h1",null,"Mob Pazarı"),e("p","alt","Yayında göndermek istediğin mobu seç, yanındaki hediyeyi canlı yayında gönder."));
+  const liste=Object.fromEntries(BOLUMLER.map(([k])=>[k,Array.isArray(d[k])?d[k]:[]]));
+  let secili=BOLUMLER.some(([k])=>k===location.hash.slice(1))?location.hash.slice(1):"survival";
+  app.replaceChildren(e("h1",null,"Mob Pazarı"),e("p","alt","Önce bölümü seç, sonra yayında göndermek istediğin mobu bul. Yanındaki hediyeyi canlı yayında gönder."));
+  const sekmeler=e("div","sekmeler");sekmeler.setAttribute("role","tablist");
   const arac=e("div","arac"),ara=e("input"),sira=e("select");
-  ara.type="search";ara.placeholder="Mob ara";ara.setAttribute("aria-label","Mob ara");
+  ara.type="search";ara.placeholder="Bu bölümde mob ara";ara.setAttribute("aria-label","Mob ara");
   sira.setAttribute("aria-label","Sıralama");
   [["artan","Ucuzdan pahalıya"],["azalan","Pahalıdan ucuza"]].forEach(([v,t])=>{const o=e("option",null,t);o.value=v;sira.append(o)});
   arac.append(ara,sira);
   const izgara=e("div","izgara");
-  app.append(arac,izgara);
+  app.append(sekmeler,arac,izgara);
+  function sekmeCiz(){
+    sekmeler.replaceChildren();
+    BOLUMLER.forEach(([k,ad])=>{
+      const b=e("button","sekme"+(k===secili?" aktif":""),ad);
+      b.type="button";b.setAttribute("role","tab");b.setAttribute("aria-selected",k===secili?"true":"false");
+      b.append(e("small",null,String(liste[k].length)));
+      b.onclick=()=>{secili=k;history.replaceState(null,"","#"+k);sekmeCiz();ciz()};
+      sekmeler.append(b);
+    });
+  }
   function ciz(){
-    const t=ara.value.toLocaleLowerCase("tr").trim();
-    const r=moblar.filter(m=>m.ad.toLocaleLowerCase("tr").includes(t)).sort((a,b)=>sira.value==="artan"?a.coin-b.coin:b.coin-a.coin);
+    const moblar=liste[secili],t=ara.value.toLocaleLowerCase("tr").trim();
+    const r=moblar.filter(m=>String(m.ad||"").toLocaleLowerCase("tr").includes(t)).sort((a,b)=>sira.value==="artan"?a.coin-b.coin:b.coin-a.coin);
     izgara.replaceChildren();
+    if(!moblar.length){izgara.append(e("p","bos","Bu bölüme yakında mob eklenecek."));return}
     if(!r.length){izgara.append(e("p","bos","Aramana uyan mob yok."));return}
     r.forEach(m=>{
       const k=e("article","mob"),res=e("div","resim");
       const im=e("img");im.src=resimYolu(m.gorsel,"mobs");im.alt=m.ad;im.loading="lazy";
-      im.onerror=()=>res.replaceChildren(document.createTextNode(m.ad.charAt(0)));
+      im.onerror=()=>res.replaceChildren(document.createTextNode(String(m.ad||"?").charAt(0)));
       res.append(im);
       const b=e("div","bilgi"),h=e("div","hediye");
       if(m.hediyeGorsel){const hi=e("img");hi.src=resimYolu(m.hediyeGorsel,"hediyeler");hi.alt="";hi.onerror=()=>hi.remove();h.append(hi)}
@@ -56,7 +70,8 @@ fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
       k.append(res,b);izgara.append(k);
     });
   }
-  ara.oninput=sira.onchange=ciz;ciz();
+  ara.oninput=sira.onchange=ciz;sekmeCiz();ciz();
+  onhashchange=()=>{const k=location.hash.slice(1);if(BOLUMLER.some(x=>x[0]===k)&&k!==secili){secili=k;sekmeCiz();ciz()}};
 }).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
 </script>
 </body>

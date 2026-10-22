@@ -114,3 +114,8 @@ nav{display:flex;flex-wrap:wrap}
 .seri-bilgi strong,.seri-sag h1{overflow-wrap:break-word}
 .seri-bilgi .dil,.seri-sag .dil{display:inline-block;vertical-align:middle}
 .seri-sag h1{font-size:clamp(30px,7vw,52px)}
+.sekmeler{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.sekme{font:inherit;font-weight:600;color:var(--soluk);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:999px;padding:9px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.sekme:hover{border-color:var(--vurgu);color:var(--yazi)}
+.sekme small{font-size:13px;font-weight:400;opacity:.8}
+.sekme.aktif{background:var(--vurgu);color:var(--bg);border-color:var(--vurgu)}
