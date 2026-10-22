@@ -98,7 +98,8 @@ nav{display:flex;flex-wrap:wrap}
 .kapak{flex:none;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:#0e1527;border:1px solid var(--cizgi);display:flex;align-items:center;justify-content:center}
 .kapak img{width:100%;height:100%;object-fit:cover;display:block}
 .kapak.yok{font-size:44px;font-weight:800;color:#2a3860;background:linear-gradient(160deg,#16223d,#0e1527)}
-.kapak.kucuk{width:92px}
+.kapak{align-self:flex-start}
+.kapak.kucuk{width:112px}
 .kapak.buyuk{width:200px}
 .seri-bilgi{min-width:0;display:flex;flex-direction:column;gap:6px}
 .seri-bilgi strong{font-size:19px;line-height:1.25}
@@ -299,3 +300,15 @@ p.yazi-ust{margin:0 0 14px}
 :root[data-tema="sepya"]{--bg:#f4ecd8;--yuzey:#fbf5e6;--cizgi:#dccfae;--yazi:#3b2f1e;--soluk:#75664b;--vurgu:#8a4b0f;color-scheme:light}
 :root[data-tema] body::before{display:none}
 :root[data-tema] .cip,:root[data-tema] .okuma code,:root[data-tema] .okuma pre{background:var(--yuzey)}
+/* Seri kartı: kapak hiç sıkışmasın, sabit oranda kalsın */
+.seri-baslik{display:flex;flex-direction:column;min-width:0}
+.seri-baslik .etiketler{margin:8px 0 0}
+@media (max-width:600px){
+  .seri-kart{display:grid;grid-template-columns:100px minmax(0,1fr);column-gap:14px;row-gap:12px;padding:16px}
+  .seri-kart .seri-bilgi{display:contents}
+  .seri-kart .kapak{grid-row:1;grid-column:1;width:100px;align-self:start}
+  .seri-kart .seri-baslik{grid-row:1;grid-column:2;align-self:start}
+  .seri-kart .ozet,.seri-kart small{grid-column:1/-1}
+  .seri-kart .ozet{-webkit-line-clamp:4}
+  .seri-bilgi strong{font-size:18px}
+}
