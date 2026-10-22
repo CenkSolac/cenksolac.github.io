@@ -41,6 +41,13 @@
       "hediye": "FingerHeart",
       "hediyeGorsel": "/hediyeler/Screenshot_19.webp",
       "coin": 5
+    },
+    {
+      "ad": "Bucket_axelot",
+      "gorsel": "/mobs/axolotl_bucket.webp",
+      "hediye": "Cake Slice",
+      "hediyeGorsel": "/hediyeler/Screenshot_32.webp",
+      "coin": 1
     }
   ],
   "oneblock": [],
