@@ -5,6 +5,9 @@
   fetch("/veri/sosyal.json").then(function(r){return r.json()}).then(function(d){
     var l=(d.baglantilar||[]).filter(function(x){return x&&x.ad&&guvenli(x.url)});
     if(!l.length)return;
+    // Google'a hesapların adresini bildiren gizli bilgi de panelden gelen listeyle güncel kalsın
+    var ld=document.querySelector('script[type="application/ld+json"]');
+    if(ld){try{var o=JSON.parse(ld.textContent);if(o&&o.sameAs){o.sameAs=l.map(function(x){return x.url.trim()});ld.textContent=JSON.stringify(o)}}catch(_){}}
     function yap(sinif){
       var kutu=e("div",sinif);
       l.forEach(function(x){

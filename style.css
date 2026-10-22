@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Source+Serif+4:wght@400;600&display=swap");
+/* Yazı tipleri siteden gelir (Outfit ve Source Serif 4, SIL OFL lisanslı) */
+@font-face{font-family:"Outfit";font-style:normal;font-weight:400 800;font-display:swap;src:url("/fonts/outfit.woff") format("woff")}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:400 600;font-display:swap;src:url("/fonts/source-serif-4.woff") format("woff")}
 :root{--bg:#0b1020;--yuzey:#121a2f;--cizgi:#1f2a45;--yazi:#e8edf7;--soluk:#93a1bf;--vurgu:#7cc4ff;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--yazi);font:17px/1.6 "Outfit",system-ui,sans-serif;min-height:100vh;position:relative}
@@ -140,3 +142,4 @@ nav{display:flex;flex-wrap:wrap}
 table tr[hidden]{display:none}
 td:first-child{overflow-wrap:anywhere}
 .daha-tablo{font:inherit;cursor:pointer;margin:-14px 0 34px}
+@media (max-width:420px){nav a{margin-right:12px;font-size:15px}nav a:last-child{margin-right:0}.marka{font-size:20px}}
