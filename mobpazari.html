@@ -65,8 +65,9 @@ Promise.all([fetch("veri/moblar.json").then(r=>r.json()),Klip.yukle()]).then(([d
   uyari.append(e("strong",null,"Uyarı"),e("span",null,"Mob göndermeden önce yayıncıya hangi oyun modunu oynadığını sorunuz."));
   app.append(uyari);
   // "Nasıl çalışır?" kutusu (kaldırmak için bu 8 satırı silmek yeter)
-  const nasil=e("section","nasil"),nasilListe=e("ol");
-  nasil.append(e("h2",null,"Nasıl çalışır?"));
+  const nasil=e("details","nasil"),nasilListe=e("ol"),baslik=e("summary");
+  baslik.append(e("span",null,"Nasıl çalışır?"),e("span","ok","▾"));baslik.lastChild.setAttribute("aria-hidden","true");
+  nasil.append(baslik);
   [["Mobu seç","Bölümü aç, göndermek istediğin mobu bul."],["Hediyeyi gönder","Mobun yanındaki hediyeyi canlı yayında gönder."],["Yayında gör","Mob yayında oyuna gelir."]].forEach(([b,t])=>{
     const li=e("li");li.append(e("strong",null,b),e("span",null,t));nasilListe.append(li);
   });
