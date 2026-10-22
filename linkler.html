@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bağlantılar | CenkSolac</title>
+<meta name="description" content="CenkSolac'ın tüm bağlantıları: Mob Pazarı, canlı yayın klipleri, novel, günlük ve sosyal medya hesapları.">
+<link rel="stylesheet" href="style.css">
+<link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
+<!-- arama-ayarlari -->
+<link rel="canonical" href="https://cenksolac.com/linkler">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CenkSolac">
+<meta property="og:site_name" content="CenkSolac">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Bağlantılar | CenkSolac">
+<meta property="og:description" content="CenkSolac'ın tüm bağlantıları: Mob Pazarı, canlı yayın klipleri, novel, günlük ve sosyal medya hesapları.">
+<meta property="og:url" content="https://cenksolac.com/linkler">
+<meta property="og:image" content="https://cenksolac.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CenkSolac: Mob Pazarı, web novel ve canlı yayın">
+<meta name="twitter:image" content="https://cenksolac.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<main class="linkler">
+  <img class="linkler-resim" src="/favicon.png" alt="" width="96" height="96">
+  <h1>CenkSolac</h1>
+  <p class="alt">Canlı yayıncı · Mob Pazarı · Klipler · Novel</p>
+  <nav class="linkler-liste" aria-label="Site bağlantıları">
+    <a class="link-dugme ana" href="/mobpazari"><strong>Mob Pazarı</strong><span>Yayına mob göndermek için buradan seç</span></a>
+    <a class="link-dugme" href="/canliyayin"><strong>Klipler ve yayın</strong><span>Sıradaki yayın, komik anlar, takipçi editleri</span></a>
+    <a class="link-dugme" href="/novel"><strong>Novel</strong><span>Serileri oku</span></a>
+    <a class="link-dugme" href="/gunluk"><strong>Günlük</strong><span>Yayın takvimi ve günlük yazılarım</span></a>
+    <a class="link-dugme" href="/hakkimda"><strong>Hakkımda</strong><span>Ben kimim?</span></a>
+  </nav>
+  <h2 class="linkler-baslik">Hesaplarım</h2>
+  <div class="linkler-liste" id="hesaplar"></div>
+</main>
+<script>
+fetch("/veri/sosyal.json").then(r=>r.json()).then(d=>{
+  const kutu=document.getElementById("hesaplar");
+  (d.baglantilar||[]).filter(x=>x&&x.ad&&/^https?:\/\//i.test(String(x.url||"").trim())).forEach(x=>{
+    const a=document.createElement("a");a.className="link-dugme";a.href=x.url.trim();a.target="_blank";a.rel="me noopener noreferrer";
+    const s=document.createElement("strong");s.textContent=x.ad;a.append(s);kutu.append(a);
+  });
+  if(!kutu.children.length)kutu.previousElementSibling.hidden=true;
+}).catch(()=>{});
+</script>
+<script src="/uygulama.js" defer></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a9599270e81e478da7f01f26d0834670"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

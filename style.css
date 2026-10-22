@@ -232,3 +232,44 @@ p.yazi-ust{margin:0 0 14px}
 @media (max-width:480px){.klip-vitrin{grid-template-columns:minmax(0,1fr)}}
 /* Mob Pazarı kartındaki klip bağlantısı */
 .klip-link{display:inline-block;margin-top:10px;font-size:14px;font-weight:600;color:var(--vurgu);text-decoration:underline;text-underline-offset:3px}
+/* ---- Duyuru çubuğu ---- */
+.duyuru{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--vurgu);color:var(--bg);padding:6px 8px 6px 18px;position:relative}
+.duyuru-ic{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px 12px;min-width:0;text-align:center;font-weight:600;font-size:15px;line-height:1.35}
+.duyuru-metin{overflow-wrap:anywhere}
+.duyuru-link{color:var(--bg);text-decoration:underline;text-underline-offset:3px;font-weight:800;white-space:nowrap}
+.duyuru-link:focus-visible,.duyuru-kapat:focus-visible{outline-color:var(--bg)}
+.duyuru-kapat{flex:none;font:inherit;font-size:16px;line-height:1;color:var(--bg);background:none;border:0;min-width:44px;min-height:44px;cursor:pointer;opacity:.8}
+.duyuru-kapat:hover{opacity:1}
+/* ---- Uygulama olarak ekleme ---- */
+.uygulama-kutu{margin:36px 0 0}
+.uygulama-ekle{font:inherit;font-size:15px;color:var(--soluk);background:none;border:1px solid var(--cizgi);border-radius:999px;padding:9px 18px;cursor:pointer}
+.uygulama-ekle:hover{border-color:var(--vurgu);color:var(--yazi)}
+.uygulama-not{margin:10px 0 0;color:var(--soluk);font-size:15px;max-width:30em}
+/* ---- Hakkımda ---- */
+.hakkimda-giris{font-size:21px;line-height:1.5;max-width:30em;margin:0 0 1.2em}
+.hakkimda-govde{max-width:36em}
+.hakkimda-govde p{margin:0 0 1.1em;color:var(--soluk);white-space:pre-line;overflow-wrap:anywhere}
+/* ---- Bağlantılar sayfası ---- */
+.linkler{max-width:520px;text-align:center;padding-top:40px}
+.linkler-resim{display:block;margin:0 auto 14px;border-radius:22px;border:2px solid var(--cizgi);image-rendering:pixelated}
+.linkler h1{margin:0 0 4px}
+.linkler .alt{margin:0 auto 1.6em}
+.linkler-liste{display:flex;flex-direction:column;gap:12px;margin:0 0 8px}
+.link-dugme{display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px 18px;border:1px solid var(--cizgi);border-radius:14px;background:var(--yuzey);color:var(--yazi);text-decoration:none;min-width:0;overflow-wrap:anywhere}
+.link-dugme:hover{border-color:var(--vurgu)}
+.link-dugme strong{font-size:19px}
+.link-dugme span{color:var(--soluk);font-size:15px}
+.link-dugme.ana{background:var(--vurgu);border-color:var(--vurgu);color:var(--bg)}
+.link-dugme.ana span{color:var(--bg);opacity:.85}
+.linkler-baslik{font-size:19px;margin:30px 0 14px;color:var(--soluk);font-weight:600}
+/* ---- Mob Pazarı: filtreler ve rozetler ---- */
+.mob .resim{position:relative}
+.filtre-satir{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:-8px 0 20px}
+.filtre-satir:empty{display:none}
+.filtre-baslik{font-size:14px;color:var(--soluk);margin-right:2px}
+.mob-rozetler{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.t-rozet{font-size:13px;font-weight:600;border:1px solid currentColor;border-radius:999px;padding:1px 10px;background:#0e1527}
+.t-rozet[data-t="0"]{color:#6ee7a0}.t-rozet[data-t="1"]{color:#b6e26a}.t-rozet[data-t="2"]{color:#f5c86b}.t-rozet[data-t="3"]{color:#ff9d5c}.t-rozet[data-t="4"]{color:#ff6b6b}
+.t-rozet.event{color:#c9a8ff}
+.yeni-rozet{position:absolute;left:8px;top:8px;font-size:13px;font-weight:800;color:var(--bg);background:var(--vurgu);border-radius:999px;padding:1px 11px}
+.linkler-liste a.link-dugme{margin:0}

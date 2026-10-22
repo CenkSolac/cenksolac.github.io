@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hakkımda | CenkSolac</title>
+<meta name="description" content="CenkSolac kimdir? TikTok ve Kick canlı yayıncısı, Minecraft, Mob Pazarı, klipler ve web novel.">
+<link rel="stylesheet" href="style.css">
+<link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
+<!-- arama-ayarlari -->
+<link rel="canonical" href="https://cenksolac.com/hakkimda">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CenkSolac">
+<meta property="og:site_name" content="CenkSolac">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Hakkımda | CenkSolac">
+<meta property="og:description" content="CenkSolac kimdir? TikTok ve Kick canlı yayıncısı, Minecraft, Mob Pazarı, klipler ve web novel.">
+<meta property="og:url" content="https://cenksolac.com/hakkimda">
+<meta property="og:image" content="https://cenksolac.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CenkSolac: Mob Pazarı, web novel ve canlı yayın">
+<meta name="twitter:image" content="https://cenksolac.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="gunluk">Günlük</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
+<script>
+const app=document.getElementById("app");
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+fetch("veri/hakkimda.json").then(r=>r.json()).then(d=>{
+  const baslik=String(d.baslik||"").trim()||"Hakkımda",giris=String(d.giris||"").trim(),metin=String(d.metin||"").trim();
+  document.title=baslik+" | CenkSolac";
+  app.replaceChildren(e("h1",null,baslik));
+  if(giris)app.append(e("p","hakkimda-giris",giris));
+  const govde=e("div","hakkimda-govde");
+  metin.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).forEach(p=>govde.append(e("p",null,p)));
+  if(govde.children.length)app.append(govde);
+  const dugmeler=e("div","dugmeler");
+  [["Mob Pazarı","mobpazari",true],["Klipler","canliyayin",false],["Günlük","gunluk",false]].forEach(([ad,url,ana])=>{
+    const a=e("a","btn"+(ana?" ana":""),ad);a.href=url;dugmeler.append(a);
+  });
+  app.append(dugmeler);
+}).catch(()=>{app.replaceChildren(e("p","bos","Sayfa yüklenemedi. Yenile, olmazsa biraz sonra tekrar dene."))});
+</script>
+<script src="/sosyal.js" defer></script>
+<script src="/uygulama.js" defer></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a9599270e81e478da7f01f26d0834670"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
