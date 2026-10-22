@@ -1,0 +1,7 @@
+---
+---
+[
+{%- for k in site.klipler -%}
+{"id": {{ k.relative_path | jsonify }}, "baslik": {{ k.baslik | jsonify }}, "tarih": {{ k.tarih | jsonify }}, "link": {{ k.link | jsonify }}, "video": {{ k.video | jsonify }}, "yon": {{ k.yon | jsonify }}, "kapak": {{ k.kapak | jsonify }}, "etiketler": {{ k.etiketler | jsonify }}, "editor": {{ k.editor | jsonify }}, "editor_link": {{ k.editor_link | jsonify }}, "mob": {{ k.mob | jsonify }}, "aciklama": {{ k.aciklama | jsonify }}, "onecikan": {{ k.onecikan | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

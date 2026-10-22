@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="d6BCBVo_9Wag6DlwNPGO9bAja35x3YORwE5SHA3J4Rg" />
 <title>CenkSolac | Mob Pazarı, web novel ve canlı yayın</title>
-<meta name="description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve canlı yayın istatistikleri.">
+<meta name="description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve komik yayın klipleri.">
 <link rel="stylesheet" href="style.css">
 <link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
 <!-- arama-ayarlari -->
@@ -17,7 +17,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:title" content="CenkSolac | Mob Pazarı, web novel ve canlı yayın">
-<meta property="og:description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve canlı yayın istatistikleri.">
+<meta property="og:description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve komik yayın klipleri.">
 <meta property="og:url" content="https://cenksolac.com/">
 <meta property="og:image" content="https://cenksolac.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -34,7 +34,7 @@
 </header>
 <main>
   <h1 class="dev">CenkSolac</h1>
-  <p class="alt">Canlı yayında mob gönder, novel serilerimi oku, yayın rakamlarını takip et.</p>
+  <p class="alt">Canlı yayında mob gönder, novel serilerimi oku, komik yayın kliplerini izle.</p>
 
   <a class="kapi vitrin" href="mobpazari">
     <span class="etiket">Yayından geliyorsan buradan başla</span>
@@ -45,15 +45,30 @@
     <span class="dugme">Mobları gör</span>
   </a>
 
+  <div id="klipVitrin"></div>
+
   <div class="ikili">
     <a class="kapi" href="novel"><h2>Novel</h2><p>Türkçe ve İngilizce serileri oku, bölümlerde ve serilerde ara.</p></a>
-    <a class="kapi" href="canliyayin"><h2>Canlı yayın</h2><p>Toplam ödül, beğeni, yorum, sponsorlar ve sıralama.</p></a>
+    <a class="kapi" href="canliyayin"><h2>Canlı yayın</h2><p>Sıradaki yayına geri sayım, komik klipler ve takipçi editleri.</p></a>
     <a class="kapi" href="gunluk"><h2>Günlük</h2><p>Takvim: yayın günleri, videolar ve günlük yazılarım.</p></a>
   </div>
 
   <section class="sosyal" id="sosyal"></section>
 </main>
+<script src="/klip.js"></script>
 <script>
+// Öne çıkan klip (yoksa en yeni klip); hiç klip yoksa bu kutu görünmez
+Klip.yukle().then(l=>{
+  const k=l.find(x=>x.onecikan)||l[0],kutu=document.getElementById("klipVitrin");
+  if(!k||!kutu)return;
+  function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+  const a=e("a","kapi klip-vitrin");a.href="canliyayin?k="+encodeURIComponent(k.id);
+  const sag=e("div");
+  sag.append(e("span","etiket",k.onecikan?"Öne çıkan klip":"Son klip"),e("h2",null,k.baslik));
+  const alt=[k.editor?"Edit: "+k.editor:"",Klip.tarihYaz(k.tarih)].filter(Boolean).join(" · ");
+  if(alt)sag.append(e("p",null,alt));
+  a.append(Klip.kapakEl(k),sag);kutu.append(a);
+});
 fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   const moblar=[].concat(d.survival||[],d.oneblock||[],d.castle||[]);
   if(!moblar.length)return;

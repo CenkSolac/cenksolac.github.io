@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Canlı yayın | CenkSolac</title>
-<meta name="description" content="CenkSolac TikTok canlı yayın istatistikleri: toplam ödül, beğeni, yorum, sponsorlar ve izleyici sıralaması.">
+<meta name="description" content="CenkSolac canlı yayın sayfası: sıradaki yayına geri sayım, komik yayın anları ve takipçilerin yaptığı edit klipler.">
 <link rel="stylesheet" href="style.css">
 <link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
 <!-- arama-ayarlari -->
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:title" content="Canlı yayın | CenkSolac">
-<meta property="og:description" content="CenkSolac TikTok canlı yayın istatistikleri: toplam ödül, beğeni, yorum, sponsorlar ve izleyici sıralaması.">
+<meta property="og:description" content="CenkSolac canlı yayın sayfası: sıradaki yayına geri sayım, komik yayın anları ve takipçilerin yaptığı edit klipler.">
 <meta property="og:url" content="https://cenksolac.com/canliyayin">
 <meta property="og:image" content="https://cenksolac.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -31,45 +31,159 @@
   <nav><a href="novel">Novel</a><a href="canliyayin" aria-current="page">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="gunluk">Günlük</a></nav>
 </header>
 <main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
+<script src="/klip.js"></script>
 <script>
 const app=document.getElementById("app");
-const sayi=n=>Number(n||0).toLocaleString("tr-TR");
+const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const TURLER=["Komik","Edit","Yayın anı","Takipçi edit","Mob Pazarı"];
+const SAYFA=12,PENCERE=3*3600e3;
+const q=new URLSearchParams(location.search);
 function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
-const ILK=10,EN_FAZLA=100;
-function tablo(baslik,kol,satirlar,uzun){
-  const k=e("section");k.append(e("h2",null,baslik));
-  let l=(satirlar||[]).filter(s=>s&&s.ad);
-  if(uzun)l=l.slice().sort((a,b)=>(Number(b.deger)||0)-(Number(a.deger)||0)).slice(0,EN_FAZLA);
-  if(!l.length){k.append(e("p","bos","Henüz veri yok."));return k}
-  const t=e("table"),th=e("tr");
-  kol.forEach(c=>th.append(e("th",null,c)));t.append(th);
-  const sat=l.map((s,i)=>{const r=e("tr");r.append(e("td",null,(i+1)+". "+s.ad),e("td",null,sayi(s.deger)));return r});
-  const gorunen=n=>sat.forEach((r,i)=>{r.hidden=i>=n});
-  sat.forEach(r=>t.append(r));
-  k.append(t);
-  if(uzun&&sat.length>ILK){
-    let acik=false;gorunen(ILK);
-    const dg=e("button","btn daha-tablo");dg.type="button";dg.setAttribute("aria-expanded","false");
-    const yaz=()=>{dg.textContent=acik?"Daha az göster":"Daha fazla göster ("+(sat.length-ILK)+" kişi daha)"};
-    dg.onclick=()=>{acik=!acik;gorunen(acik?sat.length:ILK);dg.setAttribute("aria-expanded",String(acik));yaz();if(!acik)k.scrollIntoView({block:"nearest"})};
-    yaz();k.append(dg);
-  }
-  return k;
+function link(href,c,x){const a=e("a",c,x);a.href=href;return a}
+const gecerli=t=>/^\d{4}-\d{2}-\d{2}$/.test(t||"");
+function saatYaz(s){
+  if(typeof s==="number"&&isFinite(s)){const dk=s>=1440?Math.floor(s/60):s;return String(Math.floor(dk/60)%24).padStart(2,"0")+":"+String(dk%60).padStart(2,"0")}
+  const m=String(s==null?"":s).match(/(\d{1,2}):(\d{2})/);return m?m[1].padStart(2,"0")+":"+m[2]:"";
 }
-fetch("veri/canli.json").then(r=>r.json()).then(d=>{
-  const c=d;
-  const gt=s=>/^\d{4}-\d{2}-\d{2}/.test(s||"")?s.slice(8,10)+"."+s.slice(5,7)+"."+s.slice(0,4):s;
-  app.replaceChildren(e("h1",null,"Canlı yayın"));
-  if(c.guncelleme)app.append(e("p","alt","Son güncelleme: "+gt(c.guncelleme)));
-  const g=e("div","sayilar");
-  [["Toplam ödül",c.toplamOdul],["Beğeni",c.begeni],["Yorum",c.yorum]].forEach(([a,v])=>{
-    const k=e("div","sayi");k.append(e("b",null,sayi(v)),e("span",null,a));g.append(k)});
-  app.append(g,
-    tablo("Coin atanlar",["İzleyici","Coin"],c.coinAtanlar,true),
-    tablo("Beğeni atanlar",["İzleyici","Beğeni"],c.begeniAtanlar,true),
-    tablo("Sponsorlar",["Sponsor","Katkı"],c.sponsorlar),
-    tablo("Sıralama",["İzleyici","Puan"],c.siralama));
-}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
+function tarihYaz(t){const [y,a,g]=t.split("-").map(Number);return g+" "+AYLAR[a-1]+" "+y}
+
+app.replaceChildren(e("h1",null,"Canlı yayın"),e("p","alt","Sıradaki yayına geri sayım, komik anlar ve takipçilerimin yaptığı editler."));
+const yayinKutu=e("section","yayin-kutu"),onecikKutu=e("section"),klipKutu=e("section"),gonderKutu=e("section","gonder");
+app.append(yayinKutu,onecikKutu,klipKutu,gonderKutu);
+
+const sosyalP=fetch("/veri/sosyal.json").then(r=>r.json()).then(d=>d.baglantilar||[]).catch(()=>[]);
+const takvimP=fetch("veri/takvim.json").then(r=>r.json()).then(d=>d.takvim||[]).catch(()=>[]);
+
+// ---------------- Yayın bilgisi ve geri sayım ----------------
+const tsiMs=(t,s)=>Date.parse(t+"T"+(s||"00:00")+":00+03:00"); // Türkiye saati (UTC+3)
+function sonrakiYayin(olaylar){
+  const simdi=Date.now();
+  return olaylar.map(o=>({...o,tarih:String(o.tarih||"").slice(0,10),saat:saatYaz(o.saat)}))
+    .filter(o=>o.tur==="yayin"&&gecerli(o.tarih))
+    .map(o=>({...o,ms:tsiMs(o.tarih,o.saat)}))
+    .filter(o=>isFinite(o.ms)&&o.ms+(o.saat?PENCERE:86400e3)>simdi)
+    .sort((a,b)=>a.ms-b.ms)[0];
+}
+function sayacMetni(o){
+  const fark=o.ms-Date.now();
+  if(fark<=0)return{canli:true,metin:o.saat?"Yayın başlamış olabilir!":"Bugün yayındayım!"};
+  const g=Math.floor(fark/86400e3),s=Math.floor(fark%86400e3/3600e3),dk=Math.floor(fark%3600e3/60e3),sn=Math.floor(fark%60e3/1e3);
+  if(!o.saat)return{canli:false,metin:g+" gün sonra"};
+  if(g>0)return{canli:false,metin:g+" gün "+s+" saat "+dk+" dk"};
+  if(s>0)return{canli:false,metin:s+" saat "+dk+" dk"};
+  return{canli:false,metin:dk+" dk "+sn+" sn"};
+}
+let sayacZamani=null;
+function yayinCiz(olaylar,sosyal){
+  clearInterval(sayacZamani);
+  const o=sonrakiYayin(olaylar);
+  yayinKutu.replaceChildren();
+  const tik=sosyal.find(x=>/tiktok/i.test(x.ad)&&/^https?:\/\//i.test(x.url||"")),kick=sosyal.find(x=>/kick/i.test(x.ad)&&/^https?:\/\//i.test(x.url||""));
+  const dugmeler=e("div","dugmeler");
+  const ekle=(x,yazi,ana)=>{if(!x)return;const a=link(x.url.trim(),"btn"+(ana?" ana":""),yazi);a.target="_blank";a.rel="noopener noreferrer";dugmeler.append(a)};
+  if(!o){
+    yayinKutu.append(e("span","etiket","Yayın bilgisi"),e("h2",null,"Yeni yayın günü belli olunca burada görünecek"));
+    ekle(tik,"TikTok'ta takip et",false);ekle(kick,"Kick'te takip et",false);
+    dugmeler.append(link("gunluk","btn","Takvime bak"));
+    yayinKutu.append(dugmeler);return;
+  }
+  const d=sayacMetni(o);
+  yayinKutu.classList.toggle("canli",d.canli);
+  yayinKutu.append(e("span","etiket",d.canli?"Şu an yayında olabilirim":"Sıradaki yayın"),e("h2",null,o.baslik||"Canlı yayın"));
+  const sayac=e("div","sayac",d.metin);sayac.setAttribute("role","timer");
+  yayinKutu.append(sayac,e("p","yayin-zaman",tarihYaz(o.tarih)+(o.saat?", "+o.saat+" (Türkiye saati)":"")));
+  if(o.not)yayinKutu.append(e("p","soluk",o.not));
+  ekle(tik,"TikTok'ta izle",d.canli);ekle(kick,"Kick'te izle",d.canli);
+  yayinKutu.append(dugmeler);
+  sayacZamani=setInterval(()=>{
+    const y=sayacMetni(o);
+    if(y.canli!==d.canli){yayinCiz(olaylar,sosyal);return}
+    sayac.textContent=y.metin;
+  },1000);
+}
+Promise.all([takvimP,sosyalP]).then(([t,s])=>yayinCiz(t,s));
+
+// ---------------- Klipler ----------------
+sosyalP.then(sosyal=>{
+  const dc=sosyal.find(x=>/discord/i.test(x.ad)&&/^https?:\/\//i.test(x.url||""));
+  gonderKutu.replaceChildren(e("h2",null,"Klibini gönder"),
+    e("p",null,"Yayından komik bir an mı yakaladın ya da bir klip mi edit ettin? Linkini ya da videonu Discord'da paylaş. Beğendiklerimi sitede senin adınla yayınlarım."));
+  if(dc){const a=link(dc.url.trim(),"btn ana","Discord'da gönder");a.target="_blank";a.rel="noopener noreferrer";gonderKutu.append(a)}
+  gonderKutu.append(e("p","soluk kucuk","Klibi göndererek sitede yayınlanmasına izin vermiş olursun. İstersen adını yazmadan paylaşırım, bana söylemen yeter."));
+});
+
+Klip.yukle().then(liste=>{
+  const oneCikan=liste.find(k=>k.onecikan);
+  // Öne çıkan klip
+  if(oneCikan){
+    const a=e("article","one-cikan"),sol=e("div","one-cikan-sol"),sag=e("div","one-cikan-sag");
+    const dis=oneCikan.kaynak.tur==="dis";
+    let tik;
+    if(dis){tik=link(oneCikan.link,"klip-ac");tik.target="_blank";tik.rel="noopener noreferrer"}
+    else{tik=e("button","klip-ac");tik.type="button";tik.onclick=()=>Klip.ac(oneCikan)}
+    tik.setAttribute("aria-label",oneCikan.baslik+(dis?" (yeni sekmede açılır)":" klibini oynat"));
+    tik.append(Klip.kapakEl(oneCikan));sol.append(tik);
+    sag.append(e("span","etiket","Öne çıkan klip"),e("h2",null,oneCikan.baslik));
+    if(oneCikan.tarih)sag.append(e("p","klip-tarih",Klip.tarihYaz(oneCikan.tarih)));
+    if(oneCikan.aciklama)sag.append(e("p","klip-aciklama",oneCikan.aciklama));
+    let dugme;
+    if(dis){dugme=link(oneCikan.link,"btn ana","Klibi aç ↗");dugme.target="_blank";dugme.rel="noopener noreferrer"}
+    else{dugme=e("button","btn ana","Klibi izle");dugme.type="button";dugme.onclick=()=>Klip.ac(oneCikan)}
+    sag.append(dugme);
+    const bi=Klip.kart(oneCikan).querySelector(".klip-bilgi");if(bi)sag.append(bi);
+    a.append(sol,sag);onecikKutu.append(a);
+  }
+
+  klipKutu.append(e("h2",null,"Klipler"));
+  const kalan=liste.filter(k=>k!==oneCikan);
+  if(!liste.length){klipKutu.append(e("p","bos","Henüz klip eklenmedi. Çok yakında!"));openDeepLink(liste);return}
+  if(!kalan.length&&oneCikan){openDeepLink(liste);return}
+
+  let etiket="",mob=q.get("mob")||"",ara="",gorunen=SAYFA;
+  const cipAlan=e("div","cipler"),arac=e("div","arac"),giris=e("input"),izgara=e("div","klip-izgara"),daha=e("button","btn daha-tablo");
+  giris.type="search";giris.placeholder="Klip ara";giris.setAttribute("aria-label","Klip ara");
+  daha.type="button";
+  if(kalan.length>8)arac.append(giris);
+  klipKutu.append(cipAlan);
+  if(arac.children.length)klipKutu.append(arac);
+  klipKutu.append(izgara,daha);
+
+  const turSirasi=t=>{const i=TURLER.indexOf(t);return i<0?TURLER.length:i};
+  const etiketler=[...new Set(kalan.flatMap(k=>k.etiketler))].sort((a,b)=>turSirasi(a)-turSirasi(b)||a.localeCompare(b,"tr"));
+  const uygun=k=>(!etiket||k.etiketler.includes(etiket))&&(!mob||Klip.norm(k.mob)===Klip.norm(mob))&&
+    (!ara||Klip.norm(k.baslik+" "+k.editor+" "+k.aciklama+" "+k.etiketler.join(" ")+" "+k.mob).includes(ara));
+  function cipler(){
+    cipAlan.replaceChildren();
+    const yap=(ad,deger,sayi)=>{
+      const b=e("button","cip-btn",ad);b.type="button";b.setAttribute("aria-pressed",String(etiket===deger));
+      if(sayi!==undefined)b.append(e("small",null,String(sayi)));
+      b.onclick=()=>{etiket=deger;gorunen=SAYFA;cipler();ciz()};cipAlan.append(b)};
+    if(etiketler.length){
+      yap("Tümü","",kalan.length);
+      etiketler.forEach(t=>yap(t,t,kalan.filter(k=>k.etiketler.includes(t)).length));
+    }
+    if(mob){
+      const b=e("button","cip-btn aktif-mob","Mob: "+mob+" ✕");b.type="button";b.setAttribute("aria-label","Mob filtresini kaldır");
+      b.onclick=()=>{mob="";gorunen=SAYFA;try{const u=new URL(location.href);u.searchParams.delete("mob");history.replaceState(null,"",u.pathname+u.search)}catch(_){}cipler();ciz()};
+      cipAlan.append(b);
+    }
+  }
+  function ciz(){
+    const r=kalan.filter(uygun);
+    izgara.replaceChildren();
+    if(!r.length)izgara.append(e("p","bos","Bu seçime uyan klip yok."));
+    r.slice(0,gorunen).forEach(k=>izgara.append(Klip.kart(k)));
+    daha.hidden=r.length<=gorunen;
+    daha.textContent="Daha fazla göster ("+(r.length-gorunen)+" klip daha)";
+  }
+  daha.onclick=()=>{gorunen+=SAYFA;ciz()};
+  giris.oninput=()=>{ara=Klip.norm(giris.value);gorunen=SAYFA;ciz()};
+  cipler();ciz();openDeepLink(liste);
+});
+function openDeepLink(liste){
+  const id=q.get("k");if(!id)return;
+  const k=liste.find(x=>x.id===id);if(k)Klip.ac(k);
+}
 </script>
 <script src="/sosyal.js" defer></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a9599270e81e478da7f01f26d0834670"}'></script><!-- End Cloudflare Web Analytics -->

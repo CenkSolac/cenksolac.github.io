@@ -31,6 +31,7 @@
   <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari" aria-current="page">Mob Pazarı</a><a href="gunluk">Günlük</a></nav>
 </header>
 <main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
+<script src="/klip.js"></script>
 <script>
 const app=document.getElementById("app");
 function resimYolu(g,k){g=String(g||"");return /[\/.]/.test(g)?g:k+"/"+g+".webp"}
@@ -38,16 +39,22 @@ function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==un
 let olcumler=[];
 addEventListener("resize",()=>olcumler.forEach(f=>f()));
 const BOLUMLER=[["survival","Survival"],["oneblock","OneBlock"],["castle","Castle"]];
-fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
+Promise.all([fetch("veri/moblar.json").then(r=>r.json()),Klip.yukle()]).then(([d,klipler])=>{
   const liste=Object.fromEntries(BOLUMLER.map(([k])=>[k,Array.isArray(d[k])?d[k]:[]]));
   let secili=BOLUMLER.some(([k])=>k===location.hash.slice(1))?location.hash.slice(1):"survival";
+  // Bir klipten gelindiyse (?mob=Ad) o mobun bölümünü aç ve aramaya yaz
+  const istenen=new URLSearchParams(location.search).get("mob")||"";
+  if(istenen){
+    const bul=BOLUMLER.find(([k])=>liste[k].some(m=>Klip.norm(m.ad)===Klip.norm(istenen)));
+    if(bul&&!BOLUMLER.some(([k])=>k===location.hash.slice(1)))secili=bul[0];
+  }
   app.replaceChildren(e("h1",null,"Mob Pazarı"),e("p","alt","Önce bölümü seç, sonra yayında göndermek istediğin mobu bul. Yanındaki hediyeyi canlı yayında gönder."));
   const uyari=e("div","uyari");uyari.setAttribute("role","note");
   uyari.append(e("strong",null,"Uyarı"),e("span",null,"Mob göndermeden önce yayıncıya hangi oyun modunu oynadığını sorunuz."));
   app.append(uyari);
   const sekmeler=e("div","sekmeler");sekmeler.setAttribute("role","tablist");
   const arac=e("div","arac"),ara=e("input"),sira=e("select");
-  ara.type="search";ara.placeholder="Bu bölümde mob ara";ara.setAttribute("aria-label","Mob ara");
+  ara.type="search";ara.value=istenen;ara.placeholder="Bu bölümde mob ara";ara.setAttribute("aria-label","Mob ara");
   sira.setAttribute("aria-label","Sıralama");
   [["artan","Ucuzdan pahalıya"],["azalan","Pahalıdan ucuza"]].forEach(([v,t])=>{const o=e("option",null,t);o.value=v;sira.append(o)});
   arac.append(ara,sira);
@@ -86,6 +93,12 @@ fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
         dg.onclick=()=>{const acik=ac.classList.toggle("kisa")===false;dg.textContent=acik?"Daha az göster":"Devamını gör";dg.setAttribute("aria-expanded",String(acik))};
         olcumler.push(()=>{if(ac.classList.contains("kisa"))dg.hidden=!(ac.scrollHeight>ac.clientHeight+1)});
         b.append(ac,dg);
+      }
+      const kl=klipler.filter(x=>x.mob&&Klip.norm(x.mob)===Klip.norm(m.ad));
+      if(kl.length){
+        const l=e("a","klip-link",kl.length===1?"▶ Klibi izle":"▶ Klipleri izle ("+kl.length+")");
+        l.href=kl.length===1?"canliyayin?k="+encodeURIComponent(kl[0].id):"canliyayin?mob="+encodeURIComponent(m.ad);
+        b.append(l);
       }
       k.append(res,b);izgara.append(k);
     });

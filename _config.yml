@@ -1,10 +1,12 @@
-# GitHub Pages (Jekyll) ayarı. Novel bölümlerinin ve günlük yazılarının listesini otomatik üretir.
+# GitHub Pages (Jekyll) ayarı. Novel bölümlerinin, günlük yazılarının ve kliplerin listesini otomatik üretir.
 # Bu dosyayı değiştirmene gerek yok.
 collections:
   bolumler:
     output: true
   yazilar:
     output: true
+  klipler:
+    output: false
 defaults:
   - scope:
       path: ""

@@ -174,3 +174,61 @@ p.yazi-ust{margin:0 0 14px}
 .mob-aciklama{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--cizgi);color:var(--soluk);font-size:15px;line-height:1.5;white-space:pre-line;overflow-wrap:anywhere}
 .mob-aciklama.kisa{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .mob .daha-btn{margin:6px 0 0;font-size:14px}
+/* ---- Klipler ve yayın bilgisi ---- */
+.yayin-kutu,.one-cikan,.gonder{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;padding:22px 24px;margin-bottom:28px;min-width:0}
+.yayin-kutu h2,.one-cikan h2,.gonder h2{margin:8px 0 6px;font-size:23px;overflow-wrap:anywhere}
+.yayin-kutu.canli{border-color:var(--vurgu);background:linear-gradient(160deg,#16223d,var(--yuzey) 60%)}
+.sayac{font-size:clamp(28px,7vw,44px);font-weight:800;color:var(--vurgu);line-height:1.2;margin:4px 0;font-variant-numeric:tabular-nums}
+.yayin-zaman{margin:0 0 4px;color:var(--soluk)}
+.dugmeler{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{display:inline-block;font:inherit;cursor:pointer}
+.btn[hidden]{display:none}
+.gonder p{margin:0 0 14px;max-width:38em;color:var(--soluk)}
+.gonder .kucuk{font-size:14px;margin:14px 0 0}
+.one-cikan{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;align-items:start}
+.one-cikan-sag>*:first-child{margin-top:0}
+.one-cikan-sag .klip-bilgi{margin-top:14px}
+@media (max-width:700px){.one-cikan{grid-template-columns:minmax(0,1fr);padding:16px}.yayin-kutu,.gonder{padding:18px}}
+.cipler{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.cip-btn{font:inherit;font-size:15px;color:var(--yazi);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.cip-btn:hover{border-color:var(--vurgu)}
+.cip-btn[aria-pressed="true"],.cip-btn.aktif-mob{background:var(--vurgu);color:var(--bg);border-color:var(--vurgu);font-weight:600}
+.cip-btn small{font-size:12px;opacity:.75}
+.klip-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:18px;margin-bottom:22px}
+.klip-izgara .bos{grid-column:1/-1}
+.klip-kart{min-width:0;display:flex;flex-direction:column;gap:8px}
+.klip-ac{display:flex;flex-direction:column;gap:6px;width:100%;font:inherit;color:var(--yazi);background:none;border:0;padding:0;text-align:left;text-decoration:none;cursor:pointer}
+.klip-ac:hover .klip-baslik{color:var(--vurgu)}
+.klip-baslik{overflow-wrap:anywhere;line-height:1.3}
+.klip-tarih{font-size:14px;color:var(--soluk);margin:0}
+.klip-kapak{position:relative;aspect-ratio:16/9;background:#0e1527;border:1px solid var(--cizgi);border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.klip-kapak img,.klip-kapak video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.klip-yedek{font-weight:800;font-size:22px;color:var(--cizgi)}
+.klip-oynat{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(11,16,32,.72);border:2px solid var(--yazi)}
+.klip-oynat::after{content:"";position:absolute;left:21px;top:15px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent var(--yazi)}
+.klip-ac:hover .klip-oynat{border-color:var(--vurgu)}
+.klip-dis{position:absolute;right:10px;top:10px;font-size:20px;line-height:1;color:var(--yazi);background:rgba(11,16,32,.72);border-radius:8px;padding:6px 9px}
+.klip-rozet{position:absolute;left:8px;top:8px;font-size:12px;font-weight:600;color:var(--yazi);background:rgba(11,16,32,.78);border-radius:999px;padding:1px 10px}
+.klip-bilgi{display:flex;flex-direction:column;gap:6px;min-width:0}
+.klip-editor{margin:0;font-size:15px;color:var(--soluk);overflow-wrap:anywhere}
+.klip-editor strong{color:var(--yazi);font-weight:600}
+.klip-etiketler{display:flex;flex-wrap:wrap;gap:6px}
+.mob-cip{border-color:var(--vurgu)}
+.klip-aciklama{margin:0;color:var(--soluk);overflow-wrap:anywhere;white-space:pre-line}
+.klip-orijinal{font-size:15px}
+.klip-dialog{width:min(980px,calc(100vw - 20px));max-height:calc(100dvh - 20px);padding:0;color:var(--yazi);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px;overflow:auto}
+.klip-dialog::backdrop{background:rgba(5,8,18,.85)}
+.klip-dialog-ust{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px}
+.klip-dialog-ust strong{min-width:0;overflow-wrap:anywhere}
+.klip-dialog-alt{padding:12px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.klip-oynatici{background:#000;margin:0 auto;max-width:100%}
+.klip-oynatici iframe,.klip-oynatici video{display:block;width:100%;height:100%;border:0;background:#000}
+.klip-oynatici.yatay{aspect-ratio:16/9;width:min(100%,calc((100dvh - 230px) * 16 / 9))}
+.klip-oynatici.dikey{aspect-ratio:9/16;height:min(calc(100dvh - 230px),760px);min-height:260px}
+/* ana sayfa öne çıkan klip */
+.klip-vitrin{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:18px;align-items:center;margin-bottom:14px;padding:16px}
+.klip-vitrin h2{margin:6px 0 2px;font-size:21px;overflow-wrap:anywhere}
+.klip-vitrin p{margin:0;color:var(--soluk)}
+@media (max-width:480px){.klip-vitrin{grid-template-columns:minmax(0,1fr)}}
+/* Mob Pazarı kartındaki klip bağlantısı */
+.klip-link{display:inline-block;margin-top:10px;font-size:14px;font-weight:600;color:var(--vurgu);text-decoration:underline;text-underline-offset:3px}

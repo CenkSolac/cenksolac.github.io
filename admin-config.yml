@@ -28,62 +28,49 @@ media_libraries:
         height: 600
 
 collections:
-  # ---------------------------------------------------------------- CANLI YAYIN
-  - name: canli
-    label: Canlı yayın
-    icon: sensors
-    files:
-      - name: rakamlar
-        label: Canlı yayın rakamları
-        file: veri/canli.json
-        format: json
-        fields:
-          - {label: Son güncelleme, name: guncelleme, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, required: false, default: "{{now}}", hint: "Rakamları en son ne zaman güncelledin?"}
-          - {label: Toplam ödül, name: toplamOdul, widget: number, value_type: int, required: false}
-          - {label: Beğeni, name: begeni, widget: number, value_type: int, required: false}
-          - {label: Yorum, name: yorum, widget: number, value_type: int, required: false}
-          - label: Sponsorlar
-            name: sponsorlar
-            widget: list
-            required: false
-            label_singular: sponsor
-            summary: "{{fields.ad}}: {{fields.deger}}"
-            fields:
-              - {label: Sponsor adı, name: ad, widget: string}
-              - {label: Katkı, name: deger, widget: number, value_type: int}
-          - label: Coin atanlar
-            name: coinAtanlar
-            widget: list
-            required: false
-            label_singular: izleyici
-            collapsed: true
-            max: 100
-            summary: "{{fields.ad}}: {{fields.deger}}"
-            hint: "En fazla 100 kişi. Sırayı kendisi büyükten küçüğe dizer, karışık girebilirsin. Sitede ilk 10 kişi görünür, gerisi 'Daha fazla göster' ile açılır."
-            fields:
-              - {label: İzleyici adı, name: ad, widget: string}
-              - {label: Coin, name: deger, widget: number, value_type: int}
-          - label: Beğeni atanlar
-            name: begeniAtanlar
-            widget: list
-            required: false
-            label_singular: izleyici
-            collapsed: true
-            max: 100
-            summary: "{{fields.ad}}: {{fields.deger}}"
-            hint: "En fazla 100 kişi. Sırayı kendisi büyükten küçüğe dizer, karışık girebilirsin. Sitede ilk 10 kişi görünür, gerisi 'Daha fazla göster' ile açılır."
-            fields:
-              - {label: İzleyici adı, name: ad, widget: string}
-              - {label: Beğeni, name: deger, widget: number, value_type: int}
-          - label: Sıralama
-            name: siralama
-            widget: list
-            required: false
-            label_singular: izleyici
-            summary: "{{fields.ad}}: {{fields.deger}}"
-            fields:
-              - {label: İzleyici adı, name: ad, widget: string}
-              - {label: Puan, name: deger, widget: number, value_type: int}
+  # ---------------------------------------------------------------- KLİPLER (Canlı yayın sayfası)
+  - name: klipler
+    label: Klipler
+    label_singular: klip
+    icon: movie
+    folder: _klipler
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    identifier_field: baslik
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{tarih}} · {{baslik}}"
+    description: "Canlı yayın sayfasında görünen klipler. 'Yeni klip' ile ekle, listeden tıklayıp düzenle."
+    sortable_fields:
+      fields: [tarih, baslik]
+      default:
+        field: tarih
+        direction: descending
+    fields:
+      - {label: Başlık, name: baslik, widget: string, hint: "Klibin adı. Örnek: Dev Çukur'a düştüm"}
+      - {label: Tarih, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", hint: "Klibin yayınlandığı ya da çekildiği gün. Yeni klipler önde görünür."}
+      - {label: Video linki, name: link, widget: string, required: false, pattern: ["^https?://.+", "Link https:// ile başlamalı"], hint: "YouTube veya TikTok linkini yapıştır. TikTok için tam link lazım: tiktok.com/@kullanici/video/rakamlar. Dosya yükleyeceksen burayı boş bırak."}
+      - {label: Ya da video dosyası, name: video, widget: file, required: false, media_folder: /klipler/video, public_folder: /klipler/video, hint: "Bilgisayarından ya da telefonundan video yükle. Dosya 25 MB'ı geçmesin: 1080p ve 1 dakikaya kadar olur. Büyükse önce küçült ya da YouTube'a yükleyip linkini yapıştır."}
+      - label: Ekran şekli
+        name: yon
+        widget: select
+        required: false
+        options: [{label: Yatay (bilgisayar gibi), value: yatay}, {label: Dikey (telefon, TikTok gibi), value: dikey}]
+        hint: "Boş bırakırsan site tahmin eder: TikTok ve YouTube Shorts dikey, diğerleri yatay."
+      - {label: Kapak resmi, name: kapak, widget: image, required: false, media_folder: /klipler/kapak, public_folder: /klipler/kapak, hint: "İstersen ekle. YouTube klibinde boş bırakabilirsin, kendisi alır. Dosya ve TikTok için eklemek iyi durur."}
+      - label: Türü
+        name: etiketler
+        widget: select
+        multiple: true
+        required: false
+        options: ["Komik", "Edit", "Yayın anı", "Takipçi edit", "Mob Pazarı"]
+        hint: "Birden fazla seçebilirsin. Ziyaretçiler buna göre filtreler. Başka tür lazımsa bana söyle."
+      - {label: Klibi yapan, name: editor, widget: string, required: false, hint: "Edit'i yapan takipçinin adı. Sitede kredi olarak görünür. Boş bırakırsan görünmez."}
+      - {label: Klibi yapanın profili, name: editor_link, widget: string, required: false, pattern: ["^https?://.+", "Link https:// ile başlamalı"], hint: "Örnek: https://www.tiktok.com/@kullanici. Adına tıklayınca buraya gider."}
+      - {label: Hangi mobla ilgili, name: mob, widget: string, required: false, hint: "Mob Pazarı'ndaki mobun adını aynen yaz (örnek: Dev Çukur). O mobun kartında 'Klibi izle' düğmesi çıkar."}
+      - {label: Kısa açıklama, name: aciklama, widget: text, required: false, hint: "İstersen birkaç cümle yaz. Klibi açınca altında görünür."}
+      - {label: Öne çıkan klip, name: onecikan, widget: boolean, default: false, hint: "Açarsan klip sayfanın en üstünde ve ana sayfada büyük görünür. Birden fazlasında açıksa en yenisi görünür."}
+      - {label: Sitede yayınla, name: published, widget: boolean, default: true, hint: "Kapatırsan klip taslak olarak kalır, sitede görünmez."}
 
   # ---------------------------------------------------------------- MOB PAZARI
   - name: moblar
