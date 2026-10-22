@@ -68,12 +68,10 @@ function yeniMi(b){
   const g=(Date.parse(BUGUN+"T00:00:00Z")-Date.parse(t+"T00:00:00Z"))/864e5;
   return g>=0&&g<=14;
 }
-function seriRozetler(s,bl,en){
+function seriRozetler(s,bl){
   const k=e("div","etiketler");
   if(s.durum)k.append(e("span","cip durum",s.durum));
-  const t=(Array.isArray(s.turler)?s.turler:[]).map(String);
-  (en&&t.length>en?t.slice(0,en):t).forEach(x=>k.append(e("span","cip",x)));
-  if(en&&t.length>en)k.append(e("span","cip","+"+(t.length-en)));
+  (Array.isArray(s.turler)?s.turler:[]).forEach(x=>k.append(e("span","cip",String(x))));
   if(bl&&bl.some(yeniMi))k.append(e("span","yeni-ic","Yeni bölüm"));
   return k.children.length?k:null;
 }
@@ -135,8 +133,8 @@ function liste(seriler,bolumler){
     r.forEach(s=>{
       const a=link(seriLink(s.id),"seri-kart"),g=e("div","seri-bilgi");
       const bas=e("strong",null,s.ad);bas.append(e("span","dil",DIL[s.dil]||s.dil));
-      const bl=bolumler(s.id),rz=seriRozetler(s,bl,3),ust=e("div","seri-baslik");
-      ust.append(bas);if(rz)ust.append(rz);g.append(ust);
+      const bl=bolumler(s.id),rz=seriRozetler(s,bl);
+      g.append(bas);if(rz)g.append(rz);
       g.append(e("p","ozet",s.ozet||""),e("small",null,bl.length+" bölüm"));
       a.append(kapak(s,"kucuk"),g);kutu.append(a);
     });
