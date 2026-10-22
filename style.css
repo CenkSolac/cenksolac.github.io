@@ -273,3 +273,10 @@ p.yazi-ust{margin:0 0 14px}
 .t-rozet.event{color:#c9a8ff}
 .yeni-rozet{position:absolute;left:8px;top:8px;font-size:13px;font-weight:800;color:var(--bg);background:var(--vurgu);border-radius:999px;padding:1px 11px}
 .linkler-liste a.link-dugme{margin:0}
+/* ---- Mob Pazarı: Nasıl çalışır? ---- */
+.nasil{margin:0 0 22px;padding:18px 20px;background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px}
+.nasil h2{margin:0 0 12px;font-size:19px}
+.nasil ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:14px;counter-reset:adim}
+.nasil li{display:flex;flex-direction:column;gap:2px;position:relative;padding-left:42px;min-width:0;counter-increment:adim}
+.nasil li::before{content:counter(adim);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--vurgu);color:var(--bg);font-weight:800;display:flex;align-items:center;justify-content:center}
+.nasil li span{color:var(--soluk);font-size:15px;overflow-wrap:anywhere}

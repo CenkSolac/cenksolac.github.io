@@ -64,6 +64,13 @@ Promise.all([fetch("veri/moblar.json").then(r=>r.json()),Klip.yukle()]).then(([d
   const uyari=e("div","uyari");uyari.setAttribute("role","note");
   uyari.append(e("strong",null,"Uyarı"),e("span",null,"Mob göndermeden önce yayıncıya hangi oyun modunu oynadığını sorunuz."));
   app.append(uyari);
+  // "Nasıl çalışır?" kutusu (kaldırmak için bu 8 satırı silmek yeter)
+  const nasil=e("section","nasil"),nasilListe=e("ol");
+  nasil.append(e("h2",null,"Nasıl çalışır?"));
+  [["Mobu seç","Bölümü aç, göndermek istediğin mobu bul."],["Hediyeyi gönder","Mobun yanındaki hediyeyi canlı yayında gönder."],["Yayında gör","Mob yayında oyuna gelir."]].forEach(([b,t])=>{
+    const li=e("li");li.append(e("strong",null,b),e("span",null,t));nasilListe.append(li);
+  });
+  nasil.append(nasilListe);app.append(nasil);
   const sekmeler=e("div","sekmeler");sekmeler.setAttribute("role","tablist");
   const arac=e("div","arac"),ara=e("input"),sira=e("select");
   ara.type="search";ara.value=istenen;ara.placeholder="Bu bölümde mob ara";ara.setAttribute("aria-label","Mob ara");
