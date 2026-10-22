@@ -27,6 +27,13 @@
       "hediye": "Heart Me",
       "hediyeGorsel": "/hediyeler/Screenshot_92.webp",
       "coin": 1
+    },
+    {
+      "ad": "Kılıç, balta, kazma, kalkan, biftek",
+      "gorsel": "/mobs/Screenshot_93.webp",
+      "hediye": "FrendShip N...",
+      "hediyeGorsel": "/hediyeler/Screenshot_94.webp",
+      "coin": 10
     }
   ],
   "oneblock": [],
