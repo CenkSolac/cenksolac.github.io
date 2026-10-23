@@ -369,3 +369,19 @@ collections:
           - {label: Sayfa başlığı, name: baslik, widget: string}
           - {label: Kısa tanıtım, name: giris, widget: text, required: false, hint: "Başlığın altında büyükçe görünen bir iki cümle."}
           - {label: Yazı, name: metin, widget: text, hint: "Paragraflar arasında boş satır bırak (Enter'a iki kere bas)."}
+
+  # ---------------------------------------------------------------- BAKIM MODU
+  - name: bakim
+    label: Bakım modu
+    icon: construction
+    files:
+      - name: bakim
+        label: Bakım modu
+        file: veri/bakim.json
+        format: json
+        fields:
+          - {label: Bakım modu açık, name: aktif, widget: boolean, default: false, hint: "Açıkken ziyaretçiler sadece bakım ekranını görür. Kapatınca site normale döner. Kaydettikten sonra 1-2 dakika içinde etkili olur."}
+          - {label: Başlık, name: baslik, widget: string, required: false, default: "Bakım modu", hint: "Ekranda büyük yazılan başlık."}
+          - {label: Mesaj, name: mesaj, widget: text, required: false, hint: "Başlığın altındaki açıklama. Örnek: Siteyi güzelleştiriyorum. Çok yakında geri döneceğim!"}
+          - {label: Tahmini dönüş, name: donus, widget: string, required: false, hint: "İstersen yaz. Örnek: Bu akşam 20:00. Boş bırakırsan görünmez."}
+          - {label: Gizli giriş kodu, name: kod, widget: string, required: false, pattern: ["^[A-Za-z0-9_-]{6,}$", "En az 6 harf ya da rakam yaz. Boşluk ve Türkçe harf olmasın."], hint: "Bakım açıkken siteyi görmek için tarayıcıya cenksolac.com/?bakim=KODUN yaz. Girdiğin tarayıcı seni hatırlar. Kodu değiştirirsen eski girişler geçersiz olur. Bu bir şifre değildir, sadece ziyaretçilerin yanlışlıkla girmesini engeller."}
