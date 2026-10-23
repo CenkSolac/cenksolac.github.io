@@ -76,6 +76,17 @@
       "tehlike": "",
       "ozel_event": false,
       "eklenme": ""
+    },
+    {
+      "ad": "Yay ve ok",
+      "gorsel": "/mobs/Screenshot_64.webp",
+      "hediye": "Super Popular",
+      "hediyeGorsel": "/hediyeler/Screenshot_68.webp",
+      "coin": 9,
+      "aciklama": "Ghostları öldürmek için biçilmiş kaftan\n1 yay\n32 ok",
+      "tehlike": "",
+      "ozel_event": false,
+      "eklenme": "2026-10-23"
     }
   ],
   "oneblock": [],
