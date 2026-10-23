@@ -82,12 +82,12 @@ function yayinCiz(olaylar,sosyal){
   clearInterval(sayacZamani);
   const o=sonrakiYayin(olaylar);
   yayinKutu.replaceChildren();
-  const tik=sosyal.find(x=>/tiktok/i.test(x.ad)&&/^https?:\/\//i.test(x.url||"")),kick=sosyal.find(x=>/kick/i.test(x.ad)&&/^https?:\/\//i.test(x.url||""));
+  const tik=sosyal.find(x=>/tiktok/i.test(x.ad)&&/^https?:\/\//i.test(x.url||""));
   const dugmeler=e("div","dugmeler");
   const ekle=(x,yazi,ana)=>{if(!x)return;const a=link(x.url.trim(),"btn"+(ana?" ana":""),yazi);a.target="_blank";a.rel="noopener noreferrer";dugmeler.append(a)};
   if(!o){
     yayinKutu.append(e("span","etiket","Yayın bilgisi"),e("h2",null,"Yeni yayın günü belli olunca burada görünecek"));
-    ekle(tik,"TikTok'ta takip et",false);ekle(kick,"Kick'te takip et",false);
+    ekle(tik,"TikTok'ta takip et",false);
     dugmeler.append(link("gunluk","btn","Takvime bak"));
     yayinKutu.append(dugmeler);return;
   }
@@ -97,7 +97,7 @@ function yayinCiz(olaylar,sosyal){
   const sayac=e("div","sayac",d.metin);sayac.setAttribute("role","timer");
   yayinKutu.append(sayac,e("p","yayin-zaman",tarihYaz(o.tarih)+(o.saat?", "+o.saat+" (Türkiye saati)":"")));
   if(o.not)yayinKutu.append(e("p","soluk",o.not));
-  ekle(tik,"TikTok'ta izle",d.canli);ekle(kick,"Kick'te izle",d.canli);
+  ekle(tik,"TikTok'ta izle",d.canli);
   yayinKutu.append(dugmeler);
   sayacZamani=setInterval(()=>{
     const y=sayacMetni(o);
