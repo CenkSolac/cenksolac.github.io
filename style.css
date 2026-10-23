@@ -312,3 +312,15 @@ p.yazi-ust{margin:0 0 14px}
   .seri-kart .ozet{-webkit-line-clamp:4}
   .seri-bilgi strong{font-size:18px}
 }
+/* ---- Dil seçici (TR / EN) ---- */
+.ust .marka{margin-right:auto}
+.ust{justify-content:flex-start}
+.dil-secici{display:inline-flex;border:1px solid var(--cizgi);border-radius:999px;overflow:hidden;margin-left:18px;background:var(--yuzey)}
+.dil-secici button{font:inherit;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--soluk);background:none;border:0;padding:7px 12px;min-height:34px;cursor:pointer}
+.dil-secici button:hover{color:var(--yazi)}
+.dil-secici button[aria-pressed="true"]{background:var(--vurgu);color:var(--bg)}
+.dil-secici.sabit{position:fixed;top:12px;right:12px;margin:0;z-index:50}
+@media (max-width:540px){
+  .ust nav{order:3;flex-basis:100%}
+  .dil-secici{margin-left:0}
+}
