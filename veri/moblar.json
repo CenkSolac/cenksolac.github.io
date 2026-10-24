@@ -9,7 +9,11 @@
       "aciklama": "Büyük bir obruk oluşturuyor. Oyuncu yüksekten düşerek yere çakılıyor.\n\nBir köyü saniyesinde yok ediyor...",
       "tehlike": "Yüksek",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "İnek",
@@ -20,7 +24,11 @@
       "aciklama": "İnek kralın torunu karispet intikam yeminiyle koşmaya devam ediyor\n\nÖzellik: Dümdüz inek...",
       "tehlike": "Zararsız",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "Netherite Zombi",
@@ -31,7 +39,11 @@
       "aciklama": "Full set nethirayt zombie başka vasfı yok\n5x geliyor zombie\n\nBenim yorumum öldürmesi fazlasıyla uğraştırıcı...",
       "tehlike": "Orta",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "Yunus Balığı",
@@ -42,7 +54,11 @@
       "aciklama": "Yaniii ne denir bilemiyorum karada zıplayan bir yunus balığı?",
       "tehlike": "Zararsız",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "[Demir]Kılıç, balta, kazma, kalkan, biftek",
@@ -53,7 +69,11 @@
       "aciklama": "1 Demir kılıç\n1 Demir balta\n1 Demir kazma\n1 Kalkan\n10 tane biftek",
       "tehlike": "",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "Yavaşlatma II",
@@ -64,7 +84,11 @@
       "aciklama": "Yayıncıya 30 saniye boyunca yavaşlatma 2 veriyor\n\nNegatif etki",
       "tehlike": "Düşük",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "Bucket_axelot",
@@ -75,7 +99,11 @@
       "aciklama": "Kovanın içinde tatlı mı tatlı bir axelot.\nKim axelot sevmez ki \n\nDirekt yayıncının envanterine düşüyor",
       "tehlike": "",
       "ozel_event": false,
-      "eklenme": ""
+      "eklenme": "",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "Yay ve ok",
@@ -86,7 +114,11 @@
       "aciklama": "Ghostları öldürmek için biçilmiş kaftan\n1 yay\n32 ok",
       "tehlike": "",
       "ozel_event": false,
-      "eklenme": "2026-10-23"
+      "eklenme": "2026-10-23",
+      "video_link": "",
+      "video_dosya": "",
+      "video_yon": "",
+      "detay": ""
     },
     {
       "ad": "Kutu ev",
@@ -97,7 +129,11 @@
       "aciklama": "Yayıncı ev mi yapamıyor dert etme ona bir ev verebilirsin!\n1 yatak \n1 sandık\n1 çalışma masası\n1 fırın",
       "tehlike": "",
       "ozel_event": false,
-      "eklenme": "2026-10-24"
+      "eklenme": "2026-10-24",
+      "video_link": "https://www.youtube.com/watch?v=WVi5YTm-XB4",
+      "video_dosya": "",
+      "video_yon": "Yatay",
+      "detay": ""
     }
   ],
   "oneblock": [],
