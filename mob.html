@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mob ayrıntısı | CenkSolac</title>
+<meta name="description" content="CenkSolac Mob Pazarı: mobun tüm ayrıntıları, videosu ve yayında nasıl çalıştığı.">
+<link rel="stylesheet" href="style.css">
+<link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
+<link rel="canonical" href="https://cenksolac.com/mobpazari" id="kanonik">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="/manifest.webmanifest">
+<script src="/bakim.js"></script>
+<script src="/dil.js"></script>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CenkSolac">
+<meta property="og:site_name" content="CenkSolac">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Mob ayrıntısı | CenkSolac" id="og-baslik">
+<meta property="og:description" content="CenkSolac Mob Pazarı: mobun tüm ayrıntıları, videosu ve yayında nasıl çalıştığı." id="og-aciklama">
+<meta property="og:image" content="https://cenksolac.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://cenksolac.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari" aria-current="page">Mob Pazarı</a><a href="gunluk">Günlük</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
+<script src="/md.js"></script>
+<script src="/klip.js"></script>
+<script>
+const app=document.getElementById("app");
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+function resimYolu(g,k){g=String(g||"");return /[\/.]/.test(g)?g:k+"/"+g+".webp"}
+const SEVIYELER=["Zararsız","Düşük","Orta","Yüksek","Ölümcül"];
+const BUGUN=new Date(Date.now()+3*3600e3).toISOString().slice(0,10);
+function yeniMi(m){
+  const t=String(m.eklenme||"").slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(t))return false;
+  const gun=(Date.parse(BUGUN+"T00:00:00Z")-Date.parse(t+"T00:00:00Z"))/864e5;
+  return gun>=-1&&gun<=14;
+}
+const BOLUMLER={survival:"Survival",oneblock:"OneBlock",castle:"Castle"};
+function geri(bolum){
+  const a=e("a","geri","← Mob Pazarı");a.href="mobpazari"+(bolum?"#"+bolum:"");return a;
+}
+function bulunamadi(){
+  document.title="Mob bulunamadı | CenkSolac";
+  app.replaceChildren(geri(""),e("h1",null,"Mob bulunamadı"),e("p","bos","Bu mob kaldırılmış ya da adres yanlış olabilir. Mob Pazarı'ndan tekrar seçebilirsin."));
+}
+// Videoyu ziyaretçi basana kadar yüklemeyiz (hız ve gizlilik): önce resim ve oynat düğmesi
+function videoKutusu(m,kapakUrl){
+  const link=String(m.video_link||"").trim(),dosya=String(m.video_dosya||"").trim();
+  const k=Klip.kaynakBul({video:Klip.yol(dosya),link:Klip.httpUrl(link)});
+  if(k.tur==="dis"){
+    if(!Klip.httpUrl(link))return null;
+    const a=e("a","dugme","▶ Videoyu aç ↗");a.href=Klip.httpUrl(link);a.target="_blank";a.rel="noopener noreferrer";
+    const s=e("div","mob-video-dis");s.append(a);return s;
+  }
+  const dikey=m.video_yon==="Dikey"||(m.video_yon!=="Yatay"&&(k.tur==="tiktok"||/youtube\.com\/shorts\//i.test(link)));
+  const kutu=e("div","klip-oynatici mob-video "+(dikey?"dikey":"yatay"));
+  if(k.tur==="dosya"){
+    const v=e("video");v.controls=true;v.playsInline=true;v.preload="metadata";v.src=k.src;
+    if(kapakUrl)v.poster=kapakUrl;
+    v.setAttribute("aria-label","Mob videosu");kutu.append(v);return kutu;
+  }
+  const dg=e("button","mob-video-oynat");dg.type="button";dg.setAttribute("aria-label","Videoyu oynat");
+  const resim=k.tur==="youtube"?"https://i.ytimg.com/vi/"+k.id+"/hqdefault.jpg":kapakUrl;
+  if(resim){const im=e("img");im.src=resim;im.alt="";im.onerror=()=>im.remove();dg.append(im)}
+  dg.append(e("span","klip-oynat"));
+  dg.onclick=()=>{
+    const f=e("iframe");
+    f.src=k.tur==="youtube"
+      ?"https://www.youtube-nocookie.com/embed/"+k.id+"?autoplay=1&rel=0&playsinline=1"
+      :"https://www.tiktok.com/embed/v2/"+k.id;
+    f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;
+    f.referrerPolicy="strict-origin-when-cross-origin";f.title="Mob videosu";
+    kutu.replaceChildren(f);
+  };
+  kutu.append(dg);return kutu;
+}
+Promise.all([fetch("veri/moblar.json").then(r=>r.json()),Klip.yukle()]).then(([d,klipler])=>{
+  const q=new URLSearchParams(location.search),ad=q.get("m")||"",b=q.get("b")||"";
+  if(!ad)return bulunamadi();
+  const hedef=Klip.norm(ad);
+  let m=null,bolum="";
+  const sira=(b in BOLUMLER?[b]:[]).concat(Object.keys(BOLUMLER));
+  for(const k of sira){
+    const x=(Array.isArray(d[k])?d[k]:[]).find(y=>Klip.norm(y.ad)===hedef);
+    if(x){m=x;bolum=k;break}
+  }
+  if(!m)return bulunamadi();
+
+  document.title=m.ad+" | Mob Pazarı | CenkSolac";
+  const ozet=String(m.aciklama||"").replace(/\s+/g," ").trim().slice(0,160);
+  document.getElementById("og-baslik").content=document.title;
+  if(ozet)document.getElementById("og-aciklama").content=ozet;
+  const dm=document.querySelector('meta[name="description"]');if(ozet&&dm)dm.content=ozet;
+  document.getElementById("kanonik").href="https://cenksolac.com/mob?b="+bolum+"&m="+encodeURIComponent(m.ad);
+
+  const kapakUrl=resimYolu(m.gorsel,"mobs");
+  const sayfa=e("article","mob-sayfa");
+  const ust=e("div","mob-ust"),res=e("div","mob-ust-resim"),im=e("img");
+  im.src=kapakUrl;im.alt=m.ad;im.onerror=()=>res.replaceChildren(document.createTextNode(String(m.ad||"?").charAt(0)));
+  res.append(im);
+  if(yeniMi(m))res.append(e("span","yeni-rozet","Yeni"));
+  const bilgi=e("div","mob-ust-bilgi");
+  bilgi.append(e("p","mob-bolum",BOLUMLER[bolum]),e("h1",null,m.ad));
+  const h=e("div","hediye");
+  if(m.hediyeGorsel){const hi=e("img");hi.src=resimYolu(m.hediyeGorsel,"hediyeler");hi.alt="";hi.onerror=()=>hi.remove();h.append(hi)}
+  h.append(e("span",null,m.hediye||""));
+  bilgi.append(h,e("div","coin",Number(m.coin).toLocaleString("tr-TR")+" coin"));
+  const sev=SEVIYELER.indexOf(String(m.tehlike||"").trim());
+  if(sev>=0||m.ozel_event===true){
+    const rz=e("div","mob-rozetler");
+    if(sev>=0){const t=e("span","t-rozet","Tehlike: "+SEVIYELER[sev]);t.dataset.t=String(sev);rz.append(t)}
+    if(m.ozel_event===true)rz.append(e("span","t-rozet event","Özel event"));
+    bilgi.append(rz);
+  }
+  ust.append(res,bilgi);
+  sayfa.append(ust);
+
+  const ac=String(m.aciklama||"").trim();
+  if(ac){const p=e("p","mob-ozet-yazi",ac);p.dataset.dilYok="";sayfa.append(p)}
+
+  const vk=videoKutusu(m,kapakUrl);
+  if(vk)sayfa.append(vk);
+
+  const detay=String(m.detay||"").trim();
+  if(detay){
+    sayfa.append(e("h2","mob-baslik","Ayrıntılı bilgi"));
+    const y=e("div","okuma mob-yazi");y.append(Md.render(detay));sayfa.append(y);
+  }
+
+  const kl=klipler.filter(x=>x.mob&&Klip.norm(x.mob)===hedef);
+  if(kl.length){
+    sayfa.append(e("h2","mob-baslik","Bu mobun klipleri"));
+    const iz=e("div","klip-izgara");kl.forEach(k=>iz.append(Klip.kart(k)));sayfa.append(iz);
+  }
+  const alt=e("p","mob-alt");const g=geri(bolum);alt.append(g);
+  app.replaceChildren(geri(bolum),sayfa,alt);
+}).catch(()=>{app.replaceChildren(geri(""),e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
+</script>
+<script src="/sosyal.js" defer></script>
+<script src="/uygulama.js" defer></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a9599270e81e478da7f01f26d0834670"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

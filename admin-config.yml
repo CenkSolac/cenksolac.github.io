@@ -109,6 +109,10 @@ collections:
                 hint: "Mobun oyuncuya ne kadar zarar verdiği. Sitede rozet olarak görünür ve ziyaretçi buna göre filtreler. Boş bırakırsan rozet görünmez."
               - {label: Özel event mobu, name: ozel_event, widget: boolean, default: false, required: false, hint: "Sadece özel event sırasında gönderilen mobsa aç. Ziyaretçi 'Özel event' filtresiyle bunları ayırabilir."}
               - {label: Eklenme tarihi, name: eklenme, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", required: false, hint: "Yeni mob eklerken bugünün tarihi kendiliğinden gelir. Bu günden sonraki 14 gün boyunca mobun üstünde 'Yeni' rozeti görünür. Eski mobları boş bırak."}
+              - {label: Video linki, name: video_link, widget: string, required: false, pattern: ["^https?://.+", "Link https:// ile başlamalı"], hint: "Ayrıntı sayfasında gösterilecek video. YouTube ya da TikTok linkini yapıştır (TikTok için tam link: tiktok.com/@kullanici/video/rakamlar). Dosya yükleyeceksen burayı boş bırak."}
+              - {label: Ya da video dosyası, name: video_dosya, widget: file, required: false, media_folder: /mobs/video, public_folder: /mobs/video, hint: "Videoyu bilgisayarından ya da telefonundan yükle. Dosya 25 MB'ı geçmesin. Büyükse YouTube'a yükleyip linkini yukarıya yapıştır."}
+              - {label: Videonun yönü, name: video_yon, widget: select, required: false, options: [Yatay, Dikey], hint: "Boş bırakırsan TikTok ve YouTube Shorts dikey, diğerleri yatay gösterilir. Yüklediğin dosya dikey çekildiyse 'Dikey' seç."}
+              - {label: Ayrıntılı yazı, name: detay, widget: markdown, required: false, buttons: [bold, italic, heading-two, heading-three, bulleted-list, numbered-list, quote, link], editor_components: [], hint: "Mobun kendi sayfasında görünen uzun yazı: nasıl çalıştığı, ipuçları, hikâyesi... Doluysa mob kartında 'Tüm ayrıntılar' bağlantısı çıkar. Boş bırakırsan ve video da yoksa ayrıntı sayfası açılmaz."}
           - label: OneBlock mobları
             name: oneblock
             widget: list
@@ -131,6 +135,10 @@ collections:
                 hint: "Mobun oyuncuya ne kadar zarar verdiği. Sitede rozet olarak görünür ve ziyaretçi buna göre filtreler. Boş bırakırsan rozet görünmez."
               - {label: Özel event mobu, name: ozel_event, widget: boolean, default: false, required: false, hint: "Sadece özel event sırasında gönderilen mobsa aç. Ziyaretçi 'Özel event' filtresiyle bunları ayırabilir."}
               - {label: Eklenme tarihi, name: eklenme, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", required: false, hint: "Yeni mob eklerken bugünün tarihi kendiliğinden gelir. Bu günden sonraki 14 gün boyunca mobun üstünde 'Yeni' rozeti görünür. Eski mobları boş bırak."}
+              - {label: Video linki, name: video_link, widget: string, required: false, pattern: ["^https?://.+", "Link https:// ile başlamalı"], hint: "Ayrıntı sayfasında gösterilecek video. YouTube ya da TikTok linkini yapıştır (TikTok için tam link: tiktok.com/@kullanici/video/rakamlar). Dosya yükleyeceksen burayı boş bırak."}
+              - {label: Ya da video dosyası, name: video_dosya, widget: file, required: false, media_folder: /mobs/video, public_folder: /mobs/video, hint: "Videoyu bilgisayarından ya da telefonundan yükle. Dosya 25 MB'ı geçmesin. Büyükse YouTube'a yükleyip linkini yukarıya yapıştır."}
+              - {label: Videonun yönü, name: video_yon, widget: select, required: false, options: [Yatay, Dikey], hint: "Boş bırakırsan TikTok ve YouTube Shorts dikey, diğerleri yatay gösterilir. Yüklediğin dosya dikey çekildiyse 'Dikey' seç."}
+              - {label: Ayrıntılı yazı, name: detay, widget: markdown, required: false, buttons: [bold, italic, heading-two, heading-three, bulleted-list, numbered-list, quote, link], editor_components: [], hint: "Mobun kendi sayfasında görünen uzun yazı: nasıl çalıştığı, ipuçları, hikâyesi... Doluysa mob kartında 'Tüm ayrıntılar' bağlantısı çıkar. Boş bırakırsan ve video da yoksa ayrıntı sayfası açılmaz."}
           - label: Castle mobları
             name: castle
             widget: list
@@ -153,6 +161,10 @@ collections:
                 hint: "Mobun oyuncuya ne kadar zarar verdiği. Sitede rozet olarak görünür ve ziyaretçi buna göre filtreler. Boş bırakırsan rozet görünmez."
               - {label: Özel event mobu, name: ozel_event, widget: boolean, default: false, required: false, hint: "Sadece özel event sırasında gönderilen mobsa aç. Ziyaretçi 'Özel event' filtresiyle bunları ayırabilir."}
               - {label: Eklenme tarihi, name: eklenme, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", required: false, hint: "Yeni mob eklerken bugünün tarihi kendiliğinden gelir. Bu günden sonraki 14 gün boyunca mobun üstünde 'Yeni' rozeti görünür. Eski mobları boş bırak."}
+              - {label: Video linki, name: video_link, widget: string, required: false, pattern: ["^https?://.+", "Link https:// ile başlamalı"], hint: "Ayrıntı sayfasında gösterilecek video. YouTube ya da TikTok linkini yapıştır (TikTok için tam link: tiktok.com/@kullanici/video/rakamlar). Dosya yükleyeceksen burayı boş bırak."}
+              - {label: Ya da video dosyası, name: video_dosya, widget: file, required: false, media_folder: /mobs/video, public_folder: /mobs/video, hint: "Videoyu bilgisayarından ya da telefonundan yükle. Dosya 25 MB'ı geçmesin. Büyükse YouTube'a yükleyip linkini yukarıya yapıştır."}
+              - {label: Videonun yönü, name: video_yon, widget: select, required: false, options: [Yatay, Dikey], hint: "Boş bırakırsan TikTok ve YouTube Shorts dikey, diğerleri yatay gösterilir. Yüklediğin dosya dikey çekildiyse 'Dikey' seç."}
+              - {label: Ayrıntılı yazı, name: detay, widget: markdown, required: false, buttons: [bold, italic, heading-two, heading-three, bulleted-list, numbered-list, quote, link], editor_components: [], hint: "Mobun kendi sayfasında görünen uzun yazı: nasıl çalıştığı, ipuçları, hikâyesi... Doluysa mob kartında 'Tüm ayrıntılar' bağlantısı çıkar. Boş bırakırsan ve video da yoksa ayrıntı sayfası açılmaz."}
 
   # ---------------------------------------------------------------- NOVEL SERİLERİ
   - name: seriler

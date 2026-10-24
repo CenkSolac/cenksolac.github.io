@@ -177,5 +177,5 @@
     return a;
   }
 
-  window.Klip={yukle:yukle,kart:kart,kapakEl:kapakEl,ac:ac,norm:norm,tarihYaz:tarihYaz};
+  window.Klip={yukle:yukle,kart:kart,kapakEl:kapakEl,ac:ac,norm:norm,tarihYaz:tarihYaz,kaynakBul:kaynakBul,httpUrl:httpUrl,yol:yol};
 })();

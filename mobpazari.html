@@ -147,6 +147,12 @@ Promise.all([fetch("veri/moblar.json").then(r=>r.json()),Klip.yukle()]).then(([d
         l.href=kl.length===1?"canliyayin?k="+encodeURIComponent(kl[0].id):"canliyayin?mob="+encodeURIComponent(m.ad);
         b.append(l);
       }
+      if(String(m.detay||"").trim()||String(m.video_link||"").trim()||String(m.video_dosya||"").trim()){
+        const dl=e("a","detay-link","Tüm ayrıntılar →");
+        dl.href="mob?b="+secili+"&m="+encodeURIComponent(m.ad);
+        dl.setAttribute("aria-label",m.ad+" için tüm ayrıntılar");
+        b.append(dl);
+      }
       k.append(res,b);izgara.append(k);
     });
     requestAnimationFrame(()=>olcumler.forEach(f=>f()));

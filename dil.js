@@ -74,6 +74,7 @@
     "Bu bölümde mob ara":"Search mobs in this section","Mob ara":"Search mobs","Ucuzdan pahalıya":"Cheapest first","Pahalıdan ucuza":"Most expensive first",
     "Tehlike:":"Danger:","Hepsi":"All","Özel event":"Special event","Yeni":"New",
     "Zararsız":"Harmless","Düşük":"Low","Orta":"Medium","Yüksek":"High","Ölümcül":"Deadly",
+    "← Mob Pazarı":"← Mob Market","Tüm ayrıntılar →":"Full details →","Ayrıntılı bilgi":"Details","Bu mobun klipleri":"Clips of this mob","Mob bulunamadı":"Mob not found","Bu mob kaldırılmış ya da adres yanlış olabilir. Mob Pazarı'ndan tekrar seçebilirsin.":"This mob may have been removed or the address is wrong. You can pick it again from the Mob Market.","▶ Videoyu aç ↗":"▶ Open the video ↗","Videoyu oynat":"Play the video","Mob videosu":"Mob video","Mob ayrıntısı | CenkSolac":"Mob details | CenkSolac","Mob bulunamadı | CenkSolac":"Mob not found | CenkSolac",
     "Bu bölüme yakında mob eklenecek.":"Mobs will be added to this section soon.","Aramana uyan mob yok.":"No mobs match your search.",
     "Devamını gör":"Read more","Daha az göster":"Show less",
     // novel
@@ -147,6 +148,7 @@
     [/^(.+) kapağı$/,function(m){return m[1]+" cover"}],
     [/^(.+) klibini oynat$/,function(m){return "Play clip: "+m[1]}],
     [/^(.+) \(yeni sekmede açılır\)$/,function(m){return m[1]+" (opens in a new tab)"}],
+    [/^(.+) \| Mob Pazarı \| CenkSolac$/,function(m){return m[1]+" | Mob Market | CenkSolac"}],
     [/^(.+) \| CenkSolac$/,function(m){var c=coz(m[1]);return c===null?null:c+" | CenkSolac"}],
     [/^(.+) \| (.+)$/,function(m){var a=coz(m[1]),b=coz(m[2]);return(a===null&&b===null)?null:(a===null?m[1]:a)+" | "+(b===null?m[2]:b)}]
   ];
