@@ -87,6 +87,17 @@
       "tehlike": "",
       "ozel_event": false,
       "eklenme": "2026-10-23"
+    },
+    {
+      "ad": "Kutu ev",
+      "gorsel": "/mobs/Screenshot_70.webp",
+      "hediye": "Perfume",
+      "hediyeGorsel": "",
+      "coin": 20,
+      "aciklama": "Yayıncı ev mi yapamıyor dert etme ona bir ev verebilirsin!\n1 yatak \n1 sandık\n1 çalışma masası\n1 fırın",
+      "tehlike": "",
+      "ozel_event": false,
+      "eklenme": "2026-10-24"
     }
   ],
   "oneblock": [],
