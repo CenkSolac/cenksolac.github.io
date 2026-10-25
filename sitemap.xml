@@ -19,15 +19,17 @@
 {%- endfor %}
 {%- for b in site.bolumler %}
 {%- assign t = b.tarih | date: "%Y-%m-%d" %}
-{%- if b.seri and b.numara and b.seri != "test-bildirim" and t <= bugun %}
-<url><loc>https://cenksolac.com/novel?s={{ b.seri | uri_escape | xml_escape }}&amp;b={{ b.numara }}</loc>{% if t %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
+{%- if b.seri and b.numara and b.seri != "test-bildirim" %}
+{%- unless t > bugun %}
+<url><loc>https://cenksolac.com/novel?s={{ b.seri | uri_escape | xml_escape }}&amp;b={{ b.numara }}</loc>{% if t != blank %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
+{%- endunless %}
 {%- endif %}
 {%- endfor %}
 {%- for y in site.yazilar %}
 {%- assign t = y.tarih | date: "%Y-%m-%d" %}
 {%- assign yid = y.url | split: "/" | last | remove: ".html" %}
-{%- if t <= bugun %}
-<url><loc>https://cenksolac.com/gunluk?y={{ yid | uri_escape | xml_escape }}</loc>{% if t %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
-{%- endif %}
+{%- unless t > bugun %}
+<url><loc>https://cenksolac.com/gunluk?y={{ yid | uri_escape | xml_escape }}</loc>{% if t != blank %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
+{%- endunless %}
 {%- endfor %}
 </urlset>
