@@ -183,7 +183,7 @@
   function basla() {
     fetch("/veri/bildirim.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (a) {
       if (!a || a.aktif !== true || !/^https:\/\/[^\s]+$/.test(String(a.api || ""))) return;
-      api = String(a.api).replace(/\/+$/, "");
+      try { api = new URL(String(a.api)).origin; } catch (_) { return; } // sonuna yol eklenmişse (örn. /yonetim) yok sayılır
       dugmeKoy();
       senkron();
     }).catch(function () {});

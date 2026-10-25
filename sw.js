@@ -42,7 +42,7 @@ async function bildirimGoster() {
   let liste = [];
   try {
     const ayar = await (await fetch("/veri/bildirim.json", { cache: "no-store" })).json();
-    liste = await (await fetch(String(ayar.api).replace(/\/+$/, "") + "/api/mesajlar", { cache: "no-store" })).json();
+    liste = await (await fetch(new URL(String(ayar.api)).origin + "/api/mesajlar", { cache: "no-store" })).json();
   } catch (_) {}
   const yeni = (Array.isArray(liste) ? liste : [])
     .filter((m) => m && kat.includes(m.kat) && !goruldu.includes(m.id) && Date.now() - m.t < 48 * 3600e3)

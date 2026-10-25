@@ -409,4 +409,4 @@ collections:
         format: json
         fields:
           - {label: Bildirim düğmesi açık, name: aktif, widget: boolean, default: false, hint: "Açıkken sitenin üstünde 🔔 düğmesi görünür. Bildirim sunucusu kurulmadan açma. Kaydettikten sonra 1-2 dakika içinde etkili olur."}
-          - {label: Sunucu adresi, name: api, widget: string, required: false, pattern: ["^https://[^\\s]+$", "Adres https:// ile başlamalı"], hint: "Cloudflare'deki bildirim sunucusunun adresi (örnek: https://cenksolac-bildirim.hesabin.workers.dev). Bunu sadece kurulumda bir kere yazarız, sonra değiştirme."}
+          - {label: Sunucu adresi, name: api, widget: string, required: false, pattern: ["^https://[^/\\s]+$", "Sadece ana adresi yaz, sonuna / ve başka bir şey ekleme (örnek: https://cenksolac-bildirim.hesabin.workers.dev)"], hint: "Bildirim sunucusunun ana adresi. Sonuna /yonetim ya da başka bir şey EKLEME. Bunu sadece kurulumda bir kere yazarız, sonra değiştirme."}
