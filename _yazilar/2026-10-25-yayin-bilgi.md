@@ -9,5 +9,9 @@ metin: |-
   Bir süreliğine canlı yayınları bırakmaya karar verdim yeterince gelişince tekrar sizlerle olacağım.
 
   ![](/gunluk-resimleri/32102.webp)
+
+  40 şınavı başarılı bir şekilde çektim.
+
+  Siteye bildirimler çubuğu ekledim.
 published: true
 ---
