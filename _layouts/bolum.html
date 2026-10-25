@@ -1,1 +1,36 @@
-{{ page.metin }}
+{%- comment -%}
+Bölüm ve günlük yazısı dosyası. Hem okuyucu sayfası (novel, gunluk) bu dosyayı metin olarak okur, hem de Google bunu görebilir.
+Metin tek bir <p> içinde durur; okuyucu sayfası buradan düz metni alır. Google'a asıl sayfa olarak okuyucu adresi gösterilir (canonical).
+{%- endcomment -%}
+{%- if page.seri -%}
+  {%- assign asil = "https://cenksolac.com/novel?s=" | append: page.seri | append: "&b=" | append: page.numara -%}
+{%- else -%}
+  {%- assign yid = page.url | split: "/" | last | remove: ".html" -%}
+  {%- assign asil = "https://cenksolac.com/gunluk?y=" | append: yid -%}
+{%- endif -%}
+{%- assign bugun = site.time | date: "%Y-%m-%d" -%}
+{%- assign t = page.tarih | date: "%Y-%m-%d" -%}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.baslik | default: "CenkSolac" | escape }} | CenkSolac</title>
+<meta name="description" content="{{ page.metin | strip_newlines | strip | truncate: 155 | escape }}">
+<link rel="canonical" href="{{ asil | escape }}">
+{%- if t and t > bugun %}
+<meta name="robots" content="noindex">
+{%- endif %}
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<meta name="theme-color" content="#0b1020">
+</head>
+<body>
+<header class="ust"><a class="marka" href="/">CenkSolac</a></header>
+<main>
+<h1>{{ page.baslik | escape }}</h1>
+<div><a href="{{ asil | escape }}">Okuyucuda aç →</a></div>
+<p id="metin" style="white-space:pre-wrap">{{ page.metin | escape }}</p>
+</main>
+</body>
+</html>

@@ -201,6 +201,9 @@ function liste(olaylar,yazilar){
 function oku(yazilar,ix){
   const y=yazilar[ix],yeni=yazilar[ix-1],eski=yazilar[ix+1];
   document.title=(y.baslik||"Günlük")+" | CenkSolac";
+  {const k=document.querySelector('link[rel="canonical"]');if(k)k.href="https://cenksolac.com/gunluk?y="+encodeURIComponent(y.id);
+   const ok=(sel,v)=>{const n=document.querySelector(sel);if(n&&v)n.content=v};
+   ok('meta[property="og:title"]',document.title);ok('meta[name="description"]',y.ozet);ok('meta[property="og:description"]',y.ozet)}
   app.replaceChildren(link("gunluk","soluk","← Tüm günlük"));
   app.append(e("h1",null,y.baslik||"Günlük"));
   const ust=e("p","yazi-ust");
@@ -211,6 +214,7 @@ function oku(yazilar,ix){
   if(y.kapak){const im=e("img","yazi-kapak");im.src=y.kapak;im.alt="";im.onerror=()=>im.remove();app.append(im)}
   const m=e("div","okuma");app.append(m);
   fetch(y.url).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    if(/^\s*<[a-z!]/i.test(t)){const dc=new DOMParser().parseFromString(t,"text/html"),mm=dc.getElementById("metin");t=mm?mm.textContent:dc.body.textContent}
     if(!t.trim())m.append(e("p","bos","Bu yazının metni boş."));
     else m.append(md(t));
   }).catch(()=>m.append(e("p","bos","Yazı yüklenemedi. Sayfayı yenile.")));

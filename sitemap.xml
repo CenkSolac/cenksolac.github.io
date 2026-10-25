@@ -1,3 +1,6 @@
+---
+---
+{%- assign bugun = site.time | date: "%Y-%m-%d" -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>https://cenksolac.com/</loc></url>
@@ -8,4 +11,23 @@
 <url><loc>https://cenksolac.com/hakkimda</loc></url>
 <url><loc>https://cenksolac.com/linkler</loc></url>
 <url><loc>https://cenksolac.com/gizlilik</loc></url>
+{%- for s in site.seriler %}
+{%- assign sid = s.relative_path | split: "/" | last | remove: ".md" %}
+{%- if sid != "test-bildirim" %}
+<url><loc>https://cenksolac.com/novel?s={{ sid | uri_escape | xml_escape }}</loc></url>
+{%- endif %}
+{%- endfor %}
+{%- for b in site.bolumler %}
+{%- assign t = b.tarih | date: "%Y-%m-%d" %}
+{%- if b.seri and b.numara and b.seri != "test-bildirim" and t <= bugun %}
+<url><loc>https://cenksolac.com/novel?s={{ b.seri | uri_escape | xml_escape }}&amp;b={{ b.numara }}</loc>{% if t %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
+{%- endif %}
+{%- endfor %}
+{%- for y in site.yazilar %}
+{%- assign t = y.tarih | date: "%Y-%m-%d" %}
+{%- assign yid = y.url | split: "/" | last | remove: ".html" %}
+{%- if t <= bugun %}
+<url><loc>https://cenksolac.com/gunluk?y={{ yid | uri_escape | xml_escape }}</loc>{% if t %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
+{%- endif %}
+{%- endfor %}
 </urlset>

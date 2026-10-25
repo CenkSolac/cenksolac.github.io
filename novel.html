@@ -147,7 +147,7 @@ function liste(seriler,bolumler){
 }
 
 function seri(s,bl){
-  document.title=s.ad+" | CenkSolac";
+  sayfaBilgisi(s.ad+" | CenkSolac",s.ad+" - CenkSolac web novel serisi, tüm bölümler.","novel"+seriLink(s.id));
   app.replaceChildren(link("novel","soluk","← Tüm seriler"));
   const ust=e("div","seri-ust"),sag=e("div","seri-sag");
   const h=e("h1",null,s.ad);h.append(e("span","dil",DIL[s.dil]||s.dil));
@@ -207,9 +207,15 @@ function seri(s,bl){
   ciz();
 }
 
+function sayfaBilgisi(baslik,aciklama,adres){
+  document.title=baslik;
+  const k=document.querySelector('link[rel="canonical"]');if(k)k.href="https://cenksolac.com/"+adres;
+  const ok=(sel,v)=>{const n=document.querySelector(sel);if(n&&v)n.content=v};
+  ok('meta[property="og:title"]',baslik);ok('meta[name="description"]',aciklama);ok('meta[property="og:description"]',aciklama);
+}
 function oku(s,bl,ix){
   const b=bl[ix],onceki=bl[ix-1],sonraki=bl[ix+1];
-  document.title=b.baslik+" | "+s.ad;
+  sayfaBilgisi(b.baslik+" | "+s.ad,s.ad+" - "+b.baslik+". CenkSolac web novel, bölüm bölüm oku.","novel"+seriLink(s.id,b.numara));
   sonOku(s.id,Number(b.numara));
   app.replaceChildren(link(seriLink(s.id),"soluk","← "+s.ad+" · tüm bölümler"));
   app.append(e("h1",null,b.baslik));
@@ -225,8 +231,8 @@ function oku(s,bl,ix){
   fetch(b.url).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
     // Metin bir şekilde HTML etiketiyle gelirse etiketleri ayıkla, düz metin göster
     if(/^\s*<[a-z!]/i.test(t)){
-      const dc=new DOMParser().parseFromString(t,"text/html"),ps=[...dc.body.querySelectorAll("p")];
-      t=ps.length?ps.map(x=>x.textContent).join("\n\n"):dc.body.textContent;
+      const dc=new DOMParser().parseFromString(t,"text/html"),mm=dc.getElementById("metin"),ps=[...dc.body.querySelectorAll("p")];
+      t=mm?mm.textContent:ps.length?ps.map(x=>x.textContent).join("\n\n"):dc.body.textContent;
     }
     if(!t.trim())m.append(e("p","bos","Bu bölümün metni henüz yazılmadı."));
     else m.append(Md.render(t));
