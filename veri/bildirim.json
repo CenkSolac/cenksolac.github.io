@@ -1,4 +1,4 @@
 {
-  "aktif": false,
-  "api": ""
+  "aktif": true,
+  "api": "https://cenksolac-bildirim.mcenksolac.workers.dev"
 }
