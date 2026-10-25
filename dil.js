@@ -34,7 +34,7 @@
   var AY={"Ocak":"January","Şubat":"February","Mart":"March","Nisan":"April","Mayıs":"May","Haziran":"June","Temmuz":"July","Ağustos":"August","Eylül":"September","Ekim":"October","Kasım":"November","Aralık":"December"};
   var SOZ={
     // menü ve ortak
-    "Novel":"Novel","Canlı yayın":"Live stream","Mob Pazarı":"Mob Market","Günlük":"Diary","Hakkımda":"About me",
+    "Novel":"Novel","Canlı yayın":"Live stream","Mob Pazarı":"Mob Market","Günlük":"Diary","Hakkımda":"About me","Gizlilik":"Privacy","Gizlilik | CenkSolac":"Privacy | CenkSolac",
     "Yükleniyor...":"Loading...","Ana sayfaya dön":"Back to home","Sayfa bulunamadı":"Page not found",
     "Aradığın sayfa yok ya da taşınmış olabilir.":"The page you're looking for doesn't exist or may have moved.",
     "Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene.":"Couldn't load the data. Refresh the page; if that doesn't help, try again in a bit.",
@@ -75,6 +75,7 @@
     "Tehlike:":"Danger:","Hepsi":"All","Özel event":"Special event","Yeni":"New",
     "Zararsız":"Harmless","Düşük":"Low","Orta":"Medium","Yüksek":"High","Ölümcül":"Deadly",
     "← Mob Pazarı":"← Mob Market","Tüm ayrıntılar →":"Full details →","Ayrıntılı bilgi":"Details","Bu mobun klipleri":"Clips of this mob","Mob bulunamadı":"Mob not found","Bu mob kaldırılmış ya da adres yanlış olabilir. Mob Pazarı'ndan tekrar seçebilirsin.":"This mob may have been removed or the address is wrong. You can pick it again from the Mob Market.","▶ Videoyu aç ↗":"▶ Open the video ↗","Videoyu oynat":"Play the video","Mob videosu":"Mob video","Mob ayrıntısı | CenkSolac":"Mob details | CenkSolac","Mob bulunamadı | CenkSolac":"Mob not found | CenkSolac",
+    "Bildirimler":"Notifications","Bildirimleri aç":"Turn on notifications","Bildirimleri kapat":"Turn off notifications","Kaydet":"Save","Canlı yayın başlayınca":"When a live stream starts","Yeni novel bölümü çıkınca":"When a new novel chapter is out","İstediğin bildirimleri seç. Ad, e-posta ya da telefon numarası istemiyorum.":"Choose the notifications you want. I don't ask for a name, email or phone number.","En az bir tür seç.":"Pick at least one type.","Bildirimler açık. İstediğin zaman buradan değiştirebilirsin.":"Notifications are on. You can change this here any time.","Bildirimler kapatıldı.":"Notifications are off.","Bildirimlere izin verilmedi. Tarayıcının site ayarlarından izin verebilirsin.":"Notifications are blocked. You can allow them in your browser's site settings.","Bu tarayıcı bildirimleri desteklemiyor.":"This browser doesn't support notifications.","iPhone'da önce siteyi ana ekrana ekle (Paylaş > Ana Ekrana Ekle), sonra oradan açıp tekrar dene.":"On iPhone, first add the site to your Home Screen (Share > Add to Home Screen), then open it from there and try again.","Bir sorun çıktı. Biraz sonra tekrar dene.":"Something went wrong. Please try again in a moment.","Gizlilik bilgisi":"Privacy info",
     "Bu bölüme yakında mob eklenecek.":"Mobs will be added to this section soon.","Aramana uyan mob yok.":"No mobs match your search.",
     "Devamını gör":"Read more","Daha az göster":"Show less",
     // novel

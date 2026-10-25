@@ -348,3 +348,30 @@ p.yazi-ust{margin:0 0 14px}
   .mob-ust{grid-template-columns:1fr}
   .mob-ust-resim{max-width:220px}
 }
+
+/* Bildirim düğmesi ve penceresi */
+.bildirim-dugme{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:14px;font-weight:600;color:var(--soluk);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:999px;padding:0 13px;min-height:34px;margin-left:18px;cursor:pointer}
+.bildirim-dugme:hover{color:var(--yazi);border-color:var(--vurgu)}
+.bildirim-dugme:focus-visible{outline:2px solid var(--vurgu);outline-offset:3px}
+.bildirim-dugme+.dil-secici{margin-left:10px}
+.bildirim-zil{font-size:15px;line-height:1}
+.bildirim-pencere{width:min(440px,calc(100vw - 24px));padding:0;color:var(--yazi);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:14px}
+.bildirim-pencere::backdrop{background:rgba(5,8,18,.85)}
+.bildirim-ust{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--cizgi);font-size:18px}
+.bildirim-govde{padding:16px 18px 20px;display:flex;flex-direction:column;gap:10px}
+.bildirim-giris{margin:0;color:var(--soluk)}
+.bildirim-secenek{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--cizgi);border-radius:10px;cursor:pointer;min-height:48px}
+.bildirim-secenek input{width:20px;height:20px;min-width:0;padding:0;border-radius:4px;accent-color:var(--vurgu);flex:none}
+.bildirim-durum{margin:2px 0 0;min-height:1.4em;color:var(--soluk);font-size:15px}
+.bildirim-durum.hata{color:#ff9d9d}
+.bildirim-kaydet{border:0;font:inherit;font-weight:700;cursor:pointer;align-self:flex-start;margin:0}
+.bildirim-kaydet:disabled{opacity:.5;cursor:default}
+.bildirim-kapat-btn{align-self:flex-start;font:inherit;font-weight:600;color:var(--soluk);background:none;border:0;padding:6px 0;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.bildirim-kapat-btn[hidden]{display:none}
+.bildirim-kimlik{margin:0;font-size:12px;color:var(--soluk);word-break:break-all;user-select:all}
+.bildirim-gizlilik{font-size:14px;color:var(--vurgu)}
+@media (max-width:540px){
+  .bildirim-etiket{display:none}
+  .bildirim-dugme{margin-left:0;padding:0 11px}
+  .bildirim-dugme+.dil-secici{margin-left:8px}
+}

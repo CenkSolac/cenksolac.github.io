@@ -20,3 +20,7 @@ defaults:
       type: "yazilar"
     values:
       layout: "bolum"
+
+# Bildirim sunucusunun kodu sitede yayınlanmaz (Cloudflare'e ayrıca yüklenir)
+exclude:
+  - sunucu

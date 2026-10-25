@@ -10,7 +10,7 @@
     if(ld){try{var o=JSON.parse(ld.textContent);if(o&&o.sameAs){o.sameAs=l.map(function(x){return x.url.trim()});ld.textContent=JSON.stringify(o)}}catch(_){}}
     function yap(sinif){
       var kutu=e("div",sinif);
-      var h=e("a",null,"Hakkımda");h.href="/hakkimda";kutu.append(h);
+      var h=e("a",null,"Hakkımda");h.href="/hakkimda";kutu.append(h);var g=e("a",null,"Gizlilik");g.href="/gizlilik";kutu.append(g);
       l.forEach(function(x){
         var a=e("a",null,x.ad);a.href=x.url.trim();a.target="_blank";a.rel="me noopener noreferrer";kutu.append(a);
       });

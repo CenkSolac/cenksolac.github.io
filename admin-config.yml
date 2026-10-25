@@ -397,3 +397,16 @@ collections:
           - {label: Mesaj, name: mesaj, widget: text, required: false, hint: "Başlığın altındaki açıklama. Örnek: Siteyi güzelleştiriyorum. Çok yakında geri döneceğim!"}
           - {label: Tahmini dönüş, name: donus, widget: string, required: false, hint: "İstersen yaz. Örnek: Bu akşam 20:00. Boş bırakırsan görünmez."}
           - {label: Gizli giriş kodu, name: kod, widget: string, required: false, pattern: ["^[A-Za-z0-9_-]{6,}$", "En az 6 harf ya da rakam yaz. Boşluk ve Türkçe harf olmasın."], hint: "Bakım açıkken siteyi görmek için tarayıcıya cenksolac.com/?bakim=KODUN yaz. Girdiğin tarayıcı seni hatırlar. Kodu değiştirirsen eski girişler geçersiz olur. Bu bir şifre değildir, sadece ziyaretçilerin yanlışlıkla girmesini engeller."}
+
+  # ---------------------------------------------------------------- BİLDİRİMLER
+  - name: bildirim
+    label: Bildirimler
+    icon: notifications
+    files:
+      - name: bildirim
+        label: Bildirim düğmesi
+        file: veri/bildirim.json
+        format: json
+        fields:
+          - {label: Bildirim düğmesi açık, name: aktif, widget: boolean, default: false, hint: "Açıkken sitenin üstünde 🔔 düğmesi görünür. Bildirim sunucusu kurulmadan açma. Kaydettikten sonra 1-2 dakika içinde etkili olur."}
+          - {label: Sunucu adresi, name: api, widget: string, required: false, pattern: ["^https://[^\\s]+$", "Adres https:// ile başlamalı"], hint: "Cloudflare'deki bildirim sunucusunun adresi (örnek: https://cenksolac-bildirim.hesabin.workers.dev). Bunu sadece kurulumda bir kere yazarız, sonra değiştirme."}
