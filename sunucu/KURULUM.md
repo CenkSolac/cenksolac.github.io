@@ -11,3 +11,10 @@ Kod: `sunucu/bildirim-sunucu.js` (tek dosya, dış paket yok). Sitede yayınlanm
 7. `veri/bildirim.json` içinde `api` alanına Worker adresini yaz, `aktif`i true yap (panelde "Bildirimler").
 
 Bildirim göndermek: `https://ADRES/yonetim`.
+
+## Otomatik yeni bölüm bildirimi (isteğe bağlı ek adım)
+
+Worker > Settings > Trigger events > Add > Cron Triggers > `* * * * *` (her dakika). Worker her 10 dakikada
+sitedeki `veri/novel-bolumler.json` dosyasına bakar; yeni yayınlanan bölüm varsa "novel" abonelerine bildirim gönderir.
+İlk çalışmada mevcut bölümleri sessizce kaydeder (bildirim yollamaz). İleri tarihli bölümler tarihi gelince bildirilir.
+Türkçe seri sadece Türkçe, İngilizce seri sadece İngilizce abonelere gider.

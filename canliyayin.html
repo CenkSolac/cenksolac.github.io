@@ -38,6 +38,7 @@
 </header>
 <main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
 <script src="/klip.js"></script>
+<script src="/saat.js"></script>
 <script>
 const app=document.getElementById("app");
 const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -98,6 +99,8 @@ function yayinCiz(olaylar,sosyal){
   yayinKutu.append(e("span","etiket",d.canli?"Şu an yayında olabilirim":"Sıradaki yayın"),e("h2",null,o.baslik||"Canlı yayın"));
   const sayac=e("div","sayac",d.metin);sayac.setAttribute("role","timer");
   yayinKutu.append(sayac,e("p","yayin-zaman",tarihYaz(o.tarih)+(o.saat?", "+o.saat+" (Türkiye saati)":"")));
+  const yerel=YerelSaat.yaz(o.tarih,o.saat);
+  if(yerel){const yp=e("p","yayin-zaman yerel",yerel);yp.setAttribute("data-dil-yok","");yayinKutu.append(yp)}
   if(o.not)yayinKutu.append(e("p","soluk",o.not));
   ekle(tik,"TikTok'ta izle",d.canli);
   yayinKutu.append(dugmeler);

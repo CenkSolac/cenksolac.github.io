@@ -38,6 +38,7 @@
 </header>
 <main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
 <script src="/md.js"></script>
+<script src="/saat.js"></script>
 <script>
 const app=document.getElementById("app");
 const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -104,6 +105,8 @@ function liste(olaylar,yazilar){
   app.append(e("p","alt",sonraki
     ?"Sıradaki canlı yayın: "+tarihYaz(sonraki.tarih)+(sonraki.saat?", "+sonraki.saat:"")
     :"Yayın günlerim, videolarım ve notlarım burada."));
+  const yerel=sonraki&&sonraki.saat?YerelSaat.yaz(sonraki.tarih,sonraki.saat):"";
+  if(yerel){const yp=e("p","alt yerel",yerel);yp.setAttribute("data-dil-yok","");app.append(yp)}
   const takvimKutu=e("section"),detayKutu=e("section","detay"),yaziKutu=e("section");
   app.append(takvimKutu,detayKutu,yaziKutu);
 

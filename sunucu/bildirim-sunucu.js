@@ -144,19 +144,20 @@ async function gonder(req, env) {
   const vapid = await anahtarOku(env);
   if (!vapid) return cevap(req, env, { hata: "anahtar_yok" }, 400);
 
-  if (!b.imlec) { // ilk grup: mesajı kaydet (sonraki gruplarda tekrar yazılmaz)
-    let l = (await env.ABONELER.get("mesajlar", "json")) || [];
-    l = l.filter((x) => x.id !== id);
-    l.unshift({ id, kat: b.kat, tr, en, url: yol, t: Date.now() });
-    await env.ABONELER.put("mesajlar", JSON.stringify(l.slice(0, MESAJ_SAYISI)));
-  }
+  if (!b.imlec) await mesajKaydet(env, { id, kat: b.kat, tr, en, url: yol }); // ilk grup: mesajı kaydet
 
-  const hedef = metin(b.hedef, 40).replace(/[^a-f0-9]/g, "");
-  const sayfa = await env.ABONELER.list({ prefix: "a:", limit: PARTI, cursor: b.imlec || undefined });
+  const r = await partiGonder(env, vapid, { kat: b.kat, hedef: metin(b.hedef, 40).replace(/[^a-f0-9]/g, ""), imlec: b.imlec });
+  return cevap(req, env, r);
+}
+
+// Bir seferde PARTI kişiye "dürtme" yollar. Hem elle gönderme hem otomatik gönderim kullanır.
+async function partiGonder(env, vapid, o) {
+  const sayfa = await env.ABONELER.list({ prefix: "a:", limit: PARTI, cursor: o.imlec || undefined });
   const secilen = sayfa.keys.filter((k) => {
-    if (hedef) return k.name === "a:" + hedef;
+    if (o.hedef) return k.name === "a:" + o.hedef;
     const m = k.metadata;
-    return m && String(m.k || "").split(",").includes(b.kat);
+    if (!m || !String(m.k || "").split(",").includes(o.kat)) return false;
+    return !o.dil || (m.d === "en" ? "en" : "tr") === o.dil;
   });
   const jwtler = {};
   let gonderilen = 0, silinen = 0, basarisiz = 0, ornek = "";
@@ -170,8 +171,8 @@ async function gonder(req, env) {
       const r = await fetch(endpoint, {
         method: "POST",
         headers: {
-          TTL: String(b.kat === "canli" ? 1800 : 86400),
-          Urgency: b.kat === "canli" ? "high" : "normal",
+          TTL: String(o.kat === "canli" ? 1800 : 86400),
+          Urgency: o.kat === "canli" ? "high" : "normal",
           Authorization: "vapid t=" + jwt + ", k=" + vapid.public,
         },
       });
@@ -180,10 +181,85 @@ async function gonder(req, env) {
       else { basarisiz++; if (!ornek) ornek = String(r.status); }
     } catch (e) { basarisiz++; if (!ornek) ornek = "ag"; }
   }));
-  return cevap(req, env, {
+  return {
     gonderilen, silinen, basarisiz, ornek, bakilan: sayfa.keys.length, hedeflenen: secilen.length,
     imlec: sayfa.list_complete ? null : sayfa.cursor,
+  };
+}
+
+async function mesajKaydet(env, m) {
+  let l = (await env.ABONELER.get("mesajlar", "json")) || [];
+  l = l.filter((x) => x.id !== m.id);
+  l.unshift({ id: m.id, kat: m.kat, tr: m.tr, en: m.en, url: m.url, t: Date.now() });
+  await env.ABONELER.put("mesajlar", JSON.stringify(l.slice(0, MESAJ_SAYISI)));
+}
+
+// ---------------------------------------------------------------- otomatik yeni bölüm bildirimi (her dakika çalışır)
+async function siteJson(yol) {
+  const r = await fetch(SITE + yol + "?c=" + Date.now(), { headers: { "Cache-Control": "no-cache" } });
+  if (!r.ok) throw new Error("site " + r.status);
+  return JSON.parse(await r.text());
+}
+function gunTR() { return new Date(Date.now() + 3 * 3600e3).toISOString().slice(0, 10); }
+async function bolumKontrol(env) {
+  const [idx, sd] = await Promise.all([siteJson("/veri/novel-bolumler.json"), siteJson("/veri/seriler.json")]);
+  const bugun = gunTR();
+  const seriler = {};
+  ((sd && sd.seriler) || []).forEach((x) => { if (x && x.id) seriler[x.id] = { ad: String(x.ad || x.id), dil: x.dil === "en" ? "en" : "tr" }; });
+  const gorunen = []; // sitede şu an okunabilen bölümler (ileri tarihli olanlar o güne kadar sayılmaz)
+  Object.keys(idx || {}).forEach((seri) => {
+    (Array.isArray(idx[seri]) ? idx[seri] : []).forEach((b) => {
+      const n = Number(b && b.numara);
+      const t = String((b && b.tarih) || "").slice(0, 10);
+      if (!Number.isFinite(n)) return;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(t) && t > bugun) return;
+      gorunen.push({ anahtar: seri + "/" + n, seri, numara: n, baslik: String(b.baslik || "").trim() });
+    });
   });
+  const eski = await env.ABONELER.get("gorulen-bolumler", "json");
+  if (!Array.isArray(eski)) { // ilk çalışma: var olan bölümler için bildirim gitmesin
+    await env.ABONELER.put("gorulen-bolumler", JSON.stringify(gorunen.map((x) => x.anahtar)));
+    return;
+  }
+  const bilinen = new Set(eski);
+  const yeni = gorunen.filter((x) => !bilinen.has(x.anahtar));
+  if (!yeni.length) return;
+  // Önce "görüldü" yazılır: bir aksilik olursa aynı bölüm iki kez bildirilmez
+  await env.ABONELER.put("gorulen-bolumler", JSON.stringify(eski.concat(yeni.map((x) => x.anahtar))));
+
+  const seriAd = (x) => (seriler[x.seri] ? seriler[x.seri].ad : x.seri);
+  const tekSeri = yeni.every((x) => x.seri === yeni[0].seri);
+  const diller = new Set(yeni.map((x) => (seriler[x.seri] ? seriler[x.seri].dil : "tr")));
+  let tr, en, yol;
+  if (yeni.length === 1) {
+    const g = (seriAd(yeni[0]) + ": " + (yeni[0].baslik || "Bölüm " + yeni[0].numara)).slice(0, 200);
+    tr = { b: "Yeni bölüm yayında 📖", g }; en = { b: "New chapter is out 📖", g };
+    yol = "/novel?s=" + encodeURIComponent(yeni[0].seri) + "&b=" + yeni[0].numara;
+  } else {
+    const g = (tekSeri ? seriAd(yeni[0]) + ": " : "") + yeni.length + " yeni bölüm";
+    const ge = (tekSeri ? seriAd(yeni[0]) + ": " : "") + yeni.length + " new chapters";
+    tr = { b: "Yeni bölümler yayında 📖", g }; en = { b: "New chapters are out 📖", g: ge };
+    yol = tekSeri ? "/novel?s=" + encodeURIComponent(yeni[0].seri) : "/novel";
+  }
+  const id = "bolum-" + Date.now().toString(36);
+  await mesajKaydet(env, { id, kat: "novel", tr: dilBlok(tr), en: dilBlok(en), url: yol });
+  // Tek dilli bölümse sadece o dili seçenlere gider (İngilizce bölüm Türkçe aboneyi boşuna rahatsız etmez)
+  await env.ABONELER.put("is", JSON.stringify({ kat: "novel", dil: diller.size === 1 ? Array.from(diller)[0] : "", imlec: null, t: Date.now() }));
+}
+async function zamanli(event, env) {
+  if (!env.ABONELER) return;
+  const is = await env.ABONELER.get("is", "json");
+  if (is) { // bekleyen gönderim varsa bu dakika bir parti işlenir
+    if (Date.now() - is.t > 3 * 3600e3) { await env.ABONELER.delete("is"); return; }
+    const vapid = await anahtarOku(env);
+    if (!vapid) { await env.ABONELER.delete("is"); return; }
+    const r = await partiGonder(env, vapid, { kat: is.kat, dil: is.dil, imlec: is.imlec });
+    if (r.imlec) { is.imlec = r.imlec; await env.ABONELER.put("is", JSON.stringify(is)); }
+    else await env.ABONELER.delete("is");
+    return;
+  }
+  if (new Date(event.scheduledTime).getUTCMinutes() % 10 !== 0) return; // yeni bölüm 10 dakikada bir aranır
+  await bolumKontrol(env);
 }
 
 async function durum(req, env) {
@@ -279,6 +355,9 @@ $("gonderBtn").onclick=async()=>{
 
 // ---------------------------------------------------------------- yönlendirme
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(zamanli(event, env).catch(() => {}));
+  },
   async fetch(req, env) {
     const url = new URL(req.url);
     const yol = url.pathname.replace(/\/+$/, "") || "/";
