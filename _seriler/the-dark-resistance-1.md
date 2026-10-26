@@ -1,5 +1,5 @@
 ---
-ad: The Dark Resistance
+ad: The Dark Resistance eng
 kapak: /kapaklar/32070.webp
 dil: en
 durum: Ara verildi
