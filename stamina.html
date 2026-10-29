@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yayın kartları (TikTok Live)</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; width:100%; height:100%; background:transparent; overflow:hidden; }
+  body { display:flex; align-items:center; justify-content:center; }
+  .stage {
+    width:min(100vw, 166.1538vh);
+    aspect-ratio:1080 / 650;
+    position:relative;
+    overflow:hidden;
+    background:#000;
+  }
+  .slides { position:absolute; inset:0; }
+  .slide {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:contain; opacity:0; transition:opacity .18s linear;
+  }
+  .slide.active { opacity:1; }
+  .bar-frame {
+    position:absolute; left:1.1%; right:1.1%; bottom:11.8%; height:22px;
+    border:2px solid #263d28; border-radius:2px; background:#101710;
+    box-shadow:0 0 8px rgba(89,255,34,.3); overflow:hidden;
+  }
+  .bar {
+    position:absolute; left:0; top:0; bottom:0; width:100%;
+    background:linear-gradient(180deg,#b5ff5b 0%,#39f20d 45%,#159800 100%);
+    box-shadow:0 0 8px #53ff21;
+  }
+  .bar::after {
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(0,0,0,.16) 18px 21px);
+  }
+  /* Filled area shrinks from left to right, opposite direction to the previous version. */
+  .bar.deplete { animation: drain 5s linear infinite; }
+  @keyframes drain { from { width:100%; } to { width:0%; } }
+  .stage.paused .bar.deplete { animation-play-state:paused; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage" aria-label="Dört kart ve stamina barı">
+  <div class="slides">
+<img class="slide" alt="Kart 1" src="/yayin-kartlari/kart1.png">
+<img class="slide" alt="Kart 2" src="/yayin-kartlari/kart2.png">
+<img class="slide" alt="Kart 3" src="/yayin-kartlari/kart3.png">
+<img class="slide" alt="Kart 4" src="/yayin-kartlari/kart4.png">
+  </div>
+  <div class="bar-frame"><div class="bar deplete" id="bar"></div></div>
+</div>
+<script>
+(() => {
+  const cards = [...document.querySelectorAll('.slide')];
+  const bar = document.getElementById('bar');
+  const stage = document.getElementById('stage');
+  const DURATION = 5000;
+  let current = 0, startedAt = performance.now(), raf;
+  function show(index) {
+    cards.forEach((card, i) => card.classList.toggle('active', i === index));
+    bar.classList.remove('deplete');
+    void bar.offsetWidth; // reliably restart the CSS animation on every card
+    bar.classList.add('deplete');
+  }
+  show(0);
+  function tick(now) {
+    const elapsed = now - startedAt;
+    if (elapsed >= DURATION) {
+      const steps = Math.floor(elapsed / DURATION);
+      current = (current + steps) % cards.length;
+      startedAt += steps * DURATION;
+      show(current);
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  raf = requestAnimationFrame(tick);
+  // Click to pause/resume if needed during setup.
+  stage.title = 'Duraklatmak/devam ettirmek için tıkla';
+  stage.addEventListener('click', () => {
+    const paused = stage.classList.toggle('paused');
+    if (paused) cancelAnimationFrame(raf);
+    else {
+      startedAt = performance.now();
+      show(current);
+      raf = requestAnimationFrame(tick);
+    }
+  });
+})();
+</script>
+</body>
+</html>
