@@ -9,6 +9,8 @@ collections:
     output: false
   seriler:
     output: false
+  castle:
+    output: false
 defaults:
   - scope:
       path: ""

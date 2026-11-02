@@ -1,0 +1,7 @@
+---
+---
+[
+{%- for n in site.castle -%}
+{"id": {{ n.relative_path | split: "/" | last | remove: ".md" | jsonify }}, "surum": {{ n.surum | jsonify }}, "baslik": {{ n.baslik | jsonify }}, "tarih": {{ n.tarih | date: "%Y-%m-%d" | jsonify }}, "tur": {{ n.tur | jsonify }}, "kapak": {{ n.kapak | jsonify }}, "ozet": {{ n.ozet | jsonify }}, "metin": {{ n.metin | jsonify }}, "galeri": {{ n.galeri | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

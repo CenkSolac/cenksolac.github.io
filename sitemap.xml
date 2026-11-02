@@ -7,6 +7,7 @@
 <url><loc>https://cenksolac.com/novel</loc></url>
 <url><loc>https://cenksolac.com/canliyayin</loc></url>
 <url><loc>https://cenksolac.com/mobpazari</loc></url>
+<url><loc>https://cenksolac.com/castle</loc></url>
 <url><loc>https://cenksolac.com/gunluk</loc></url>
 <url><loc>https://cenksolac.com/hakkimda</loc></url>
 <url><loc>https://cenksolac.com/linkler</loc></url>
@@ -30,6 +31,13 @@
 {%- assign yid = y.url | split: "/" | last | remove: ".html" %}
 {%- unless t > bugun %}
 <url><loc>https://cenksolac.com/gunluk?y={{ yid | uri_escape | xml_escape }}</loc>{% if t != blank %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
+{%- endunless %}
+{%- endfor %}
+{%- for n in site.castle %}
+{%- assign t = n.tarih | date: "%Y-%m-%d" %}
+{%- assign nid = n.relative_path | split: "/" | last | remove: ".md" %}
+{%- unless t > bugun %}
+<url><loc>https://cenksolac.com/castle?s={{ nid | uri_escape | xml_escape }}</loc>{% if t != blank %}<lastmod>{{ t }}</lastmod>{% endif %}</url>
 {%- endunless %}
 {%- endfor %}
 </urlset>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Castle | CenkSolac</title>
+<meta name="description" content="Castle modpack: bilgiler, fotoğraflar ve tüm sürüm notları.">
+<link rel="stylesheet" href="style.css">
+<link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
+<link rel="canonical" href="https://cenksolac.com/castle">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="/manifest.webmanifest">
+<script src="/bakim.js"></script>
+<script src="/dil.js"></script>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CenkSolac">
+<meta property="og:site_name" content="CenkSolac">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="Castle | CenkSolac">
+<meta property="og:description" content="Castle modpack: bilgiler, fotoğraflar ve tüm sürüm notları.">
+<meta property="og:url" content="https://cenksolac.com/castle">
+<meta property="og:image" content="https://cenksolac.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://cenksolac.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header class="ust">
+  <a class="marka" href="/">CenkSolac</a>
+  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="castle" aria-current="page">Castle</a><a href="gunluk">Günlük</a></nav>
+</header>
+<main id="app"><p class="bos">Yükleniyor...</p><noscript><p class="bos">Bu sayfanın çalışması için tarayıcında JavaScript açık olmalı.</p></noscript></main>
+<script src="/md.js"></script>
+<script>
+const app=document.getElementById("app");
+const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+function link(href,c,x){const a=e("a",c,x);a.href=href;return a}
+// Panelden gelen adresler: sadece sitenin içi ya da https
+function adres(u){u=String(u||"").trim();return /^https?:\/\//i.test(u)||/^\/(?!\/)/.test(u)?u:""}
+function tarihYaz(t){const m=String(t||"").match(/^(\d{4})-(\d{2})-(\d{2})/);return m?Number(m[3])+" "+AYLAR[Number(m[2])-1]+" "+m[1]:""}
+function ozetTemizle(t){return String(t||"").replace(/!\[[^\]]*\]\([^)]*\)/g,"").replace(/\[([^\]]+)\]\([^)]*\)/g,"$1").replace(/[*`]/g,"").replace(/(^|\s)[#>]+\s*/g,"$1").replace(/\s+/g," ").trim()}
+function bilgiAyarla(baslik,aciklama,sayfa){
+  document.title=baslik;
+  const k=document.querySelector('link[rel="canonical"]');if(k)k.href="https://cenksolac.com/"+sayfa;
+  const ok=(sel,v)=>{const n=document.querySelector(sel);if(n&&v)n.content=v};
+  ok('meta[property="og:title"]',baslik);ok('meta[name="description"]',aciklama);ok('meta[property="og:description"]',aciklama);
+}
+
+// ---- Fotoğraflar: küçük resimler, tıklayınca büyür ----
+let buyuk=null,buyukListe=[],buyukSira=0;
+function buyukAc(liste,sira){
+  buyukListe=liste;buyukSira=sira;
+  if(!buyuk){
+    buyuk=document.createElement("dialog");buyuk.className="castle-buyuk";buyuk.setAttribute("aria-label","Fotoğraf");
+    const f=e("figure"),im=e("img"),cap=e("figcaption");im.alt="";f.append(im,cap);
+    const kapat=e("button","dgm","Kapat");kapat.type="button";kapat.onclick=()=>buyuk.close();
+    const onceki=e("button","castle-ok sol","‹");onceki.type="button";onceki.setAttribute("aria-label","Önceki fotoğraf");onceki.onclick=()=>git(-1);
+    const sonraki=e("button","castle-ok sag","›");sonraki.type="button";sonraki.setAttribute("aria-label","Sonraki fotoğraf");sonraki.onclick=()=>git(1);
+    buyuk.append(kapat,onceki,f,sonraki);
+    buyuk.addEventListener("click",ev=>{if(ev.target===buyuk)buyuk.close()});
+    buyuk.addEventListener("keydown",ev=>{if(ev.key==="ArrowLeft")git(-1);if(ev.key==="ArrowRight")git(1)});
+    document.body.append(buyuk);
+  }
+  goster();
+  try{buyuk.showModal()}catch(_){buyuk.setAttribute("open","")}
+}
+function git(d){buyukSira=(buyukSira+d+buyukListe.length)%buyukListe.length;goster()}
+function goster(){
+  const f=buyukListe[buyukSira],im=buyuk.querySelector("img"),cap=buyuk.querySelector("figcaption");
+  im.src=f.foto;cap.textContent=f.aciklama||"";cap.hidden=!f.aciklama;
+  buyuk.querySelectorAll(".castle-ok").forEach(b=>b.hidden=buyukListe.length<2);
+}
+function galeri(liste){
+  const fl=(Array.isArray(liste)?liste:[]).map(x=>({foto:adres(x&&x.foto),aciklama:String((x&&x.aciklama)||"").trim()})).filter(x=>x.foto);
+  if(!fl.length)return null;
+  const g=e("div","castle-galeri");
+  fl.forEach((f,i)=>{
+    const b=e("button","castle-foto");b.type="button";b.setAttribute("aria-label",f.aciklama||"Fotoğrafı büyüt");
+    const im=e("img");im.src=f.foto;im.alt=f.aciklama;im.loading="lazy";im.onerror=()=>b.remove();
+    b.append(im);b.onclick=()=>buyukAc(fl,i);g.append(b);
+  });
+  return g;
+}
+
+// ---- Sürüm kartı ----
+function notKart(n){
+  const a=link("?s="+encodeURIComponent(n.id),"yazi-kart"),g=e("div","yazi-govde"),ust=e("div","yazi-ust");
+  if(n.surum)ust.append(e("span","cip surum",n.surum));
+  if(n.tur)ust.append(e("span","cip",n.tur));
+  if(n.tarih)ust.append(e("span",null,tarihYaz(n.tarih)));
+  g.append(ust,e("strong",null,n.baslik||n.surum||"Sürüm notu"));
+  const oz=String(n.ozet||"").trim()||ozetTemizle(n.metin).slice(0,180);
+  if(oz)g.append(e("p","yazi-ozet",oz));
+  a.append(g);
+  const kapak=adres(n.kapak);
+  if(kapak){const im=e("img","yazi-kucuk");im.src=kapak;im.alt="";im.loading="lazy";im.onerror=()=>im.remove();a.append(im)}
+  return a;
+}
+
+Promise.all([
+  fetch("veri/castle.json").then(r=>r.json()).catch(()=>({})),
+  fetch("veri/castle-notlari.json").then(r=>r.json()).catch(()=>[])
+]).then(([b,liste])=>{
+  const notlar=(Array.isArray(liste)?liste:[]).filter(n=>n&&n.id)
+    .sort((x,y)=>String(y.tarih||"").localeCompare(String(x.tarih||""))||String(y.surum||"").localeCompare(String(x.surum||""),"tr",{numeric:true}));
+  const sid=new URLSearchParams(location.search).get("s");
+  const ix=notlar.findIndex(n=>n.id===sid);
+  if(ix>=0)return oku(b||{},notlar,ix);
+  anaSayfa(b||{},notlar);
+}).catch(()=>{app.replaceChildren(e("p","bos","Veri yüklenemedi. Sayfayı yenile, olmazsa biraz sonra tekrar dene."))});
+
+function anaSayfa(b,notlar){
+  const ad=String(b.ad||"").trim()||"Castle";
+  const slogan=String(b.slogan||"").trim();
+  bilgiAyarla(ad+" | CenkSolac",slogan||"Castle modpack: bilgiler, fotoğraflar ve tüm sürüm notları.","castle");
+  app.replaceChildren(e("h1",null,ad));
+  if(slogan){const p=e("p","alt",slogan);app.append(p)}
+
+  // Bilgi kutusu
+  const kapak=adres(b.kapak);
+  const satirlar=(Array.isArray(b.bilgiler)?b.bilgiler:[]).map(x=>({et:String((x&&x.etiket)||"").trim(),de:String((x&&x.deger)||"").trim()})).filter(x=>x.et&&x.de);
+  if(notlar.length&&notlar[0].surum)satirlar.unshift({et:"Güncel sürüm",de:notlar[0].surum});
+  const indir=adres(b.indirme_link);
+  if(kapak||satirlar.length||indir){
+    const kutu=e("section","castle-kart");
+    if(kapak){const im=e("img","castle-kapak");im.src=kapak;im.alt=ad;im.onerror=()=>im.remove();kutu.append(im)}
+    const sag=e("div","castle-bilgi");
+    if(satirlar.length){
+      const dl=e("dl","castle-liste");
+      satirlar.forEach(x=>{const r=e("div");r.append(e("dt",null,x.et),e("dd",null,x.de));dl.append(r)});
+      sag.append(dl);
+    }
+    if(indir){
+      const a=e("a","dugme",String(b.indirme_yazi||"").trim()||"İndir");a.href=indir;a.target="_blank";a.rel="noopener noreferrer";
+      sag.append(a);
+    }
+    kutu.append(sag);app.append(kutu);
+  }
+  const g=galeri(b.fotograflar);
+  if(g){app.append(e("h2","castle-baslik","Fotoğraflar"),g)}
+  const hk=String(b.hakkinda||"").trim();
+  if(hk){const y=e("div","okuma castle-yazi");y.append(Md.render(hk));app.append(e("h2","castle-baslik","Hakkında"),y)}
+
+  app.append(e("h2","castle-baslik","Sürüm notları"));
+  if(!notlar.length){app.append(e("p","bos","Henüz sürüm notu yok."));return}
+  const kl=e("div","yazi-liste");notlar.forEach(n=>kl.append(notKart(n)));app.append(kl);
+}
+
+function oku(b,notlar,ix){
+  const n=notlar[ix],yeni=notlar[ix-1],eski=notlar[ix+1];
+  const baslik=n.baslik||n.surum||"Sürüm notu";
+  const oz=String(n.ozet||"").trim()||ozetTemizle(n.metin).slice(0,160);
+  bilgiAyarla((n.surum?n.surum+" · ":"")+baslik+" | Castle | CenkSolac",oz,"castle?s="+encodeURIComponent(n.id));
+  app.replaceChildren(link("castle","soluk","← "+(String(b.ad||"").trim()||"Castle")));
+  app.append(e("h1",null,baslik));
+  const ust=e("p","yazi-ust");
+  if(n.surum)ust.append(e("span","cip surum",n.surum));
+  if(n.tur)ust.append(e("span","cip",n.tur));
+  if(n.tarih)ust.append(e("span",null,tarihYaz(n.tarih)));
+  app.append(ust);
+  const kapak=adres(n.kapak);
+  if(kapak){const im=e("img","yazi-kapak");im.src=kapak;im.alt="";im.onerror=()=>im.remove();app.append(im)}
+  const metin=String(n.metin||"").trim();
+  if(metin){const m=e("div","okuma");m.append(Md.render(metin));app.append(m)}
+  const g=galeri(n.galeri);
+  if(g){app.append(e("h2","castle-baslik","Fotoğraflar"),g)}
+  if(!metin&&!g&&!kapak)app.append(e("p","bos","Bu sürümün notu henüz yazılmadı."));
+  const gezin=e("div","gezin");
+  gezin.append(eski?link("?s="+encodeURIComponent(eski.id),null,"← Önceki sürüm"):e("span"));
+  if(yeni)gezin.append(link("?s="+encodeURIComponent(yeni.id),null,"Sonraki sürüm →"));
+  app.append(gezin);
+  scrollTo(0,0);
+}
+</script>
+<script src="/sosyal.js" defer></script>
+<script src="/bildirim.js" defer></script>
+<script src="/uygulama.js" defer></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "a9599270e81e478da7f01f26d0834670"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

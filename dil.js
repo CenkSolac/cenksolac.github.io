@@ -34,6 +34,11 @@
   var AY={"Ocak":"January","Şubat":"February","Mart":"March","Nisan":"April","Mayıs":"May","Haziran":"June","Temmuz":"July","Ağustos":"August","Eylül":"September","Ekim":"October","Kasım":"November","Aralık":"December"};
   var SOZ={
     // menü ve ortak
+    "Castle":"Castle","Castle | CenkSolac":"Castle | CenkSolac","Sürüm notları":"Patch notes","Güncel sürüm":"Latest version","Fotoğraflar":"Photos","Hakkında":"About","İndir":"Download",
+    "Henüz sürüm notu yok.":"No patch notes yet.","Büyük güncelleme":"Major update","Küçük güncelleme":"Minor update","Hata düzeltme":"Bug fix",
+    "← Önceki sürüm":"← Previous version","Sonraki sürüm →":"Next version →","Bu sürümün notu henüz yazılmadı.":"This version's notes haven't been written yet.",
+    "Modpack bilgileri, fotoğraflar ve sürüm notları.":"Modpack info, photos and patch notes.","Modpack bilgileri ve sürüm notları":"Modpack info and patch notes",
+    "Castle modpack: bilgiler, fotoğraflar ve tüm sürüm notları.":"Castle modpack: info, photos and all patch notes.",
     "Novel":"Novel","Canlı yayın":"Live stream","Mob Pazarı":"Mob Market","Günlük":"Diary","Hakkımda":"About me","Gizlilik":"Privacy","Gizlilik | CenkSolac":"Privacy | CenkSolac",
     "Yükleniyor...":"Loading...","Ana sayfaya dön":"Back to home","Sayfa bulunamadı":"Page not found",
     "Aradığın sayfa yok ya da taşınmış olabilir.":"The page you're looking for doesn't exist or may have moved.",

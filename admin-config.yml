@@ -22,15 +22,15 @@ slug:
 media_folder: /mobs
 public_folder: /mobs
 
-# Yüklenen her resim otomatik WebP olur ve en fazla 600x600 piksele küçülür.
+# Yüklenen her resim otomatik WebP olur ve en fazla 1280x1280 piksele küçülür.
 media_libraries:
   all:
     transformations:
       raster_image:
         format: webp
         quality: 85
-        width: 600
-        height: 600
+        width: 1280
+        height: 1280
 
 collections:
   # ---------------------------------------------------------------- KLİPLER (Canlı yayın sayfası)
@@ -165,6 +165,107 @@ collections:
               - {label: Ya da video dosyası, name: video_dosya, widget: file, required: false, media_folder: /mobs/video, public_folder: /mobs/video, hint: "Videoyu bilgisayarından ya da telefonundan yükle. Dosya 25 MB'ı geçmesin. Büyükse YouTube'a yükleyip linkini yukarıya yapıştır."}
               - {label: Videonun yönü, name: video_yon, widget: select, required: false, options: [Yatay, Dikey], hint: "Boş bırakırsan TikTok ve YouTube Shorts dikey, diğerleri yatay gösterilir. Yüklediğin dosya dikey çekildiyse 'Dikey' seç."}
               - {label: Ayrıntılı yazı, name: detay, widget: markdown, required: false, buttons: [bold, italic, heading-two, heading-three, bulleted-list, numbered-list, quote, link], editor_components: [], hint: "Mobun kendi sayfasında görünen uzun yazı: nasıl çalıştığı, ipuçları, hikâyesi... Doluysa mob kartında 'Tüm ayrıntılar' bağlantısı çıkar. Boş bırakırsan ve video da yoksa ayrıntı sayfası açılmaz."}
+
+  # ---------------------------------------------------------------- CASTLE (modpack bilgisi)
+  - name: castle_bilgi
+    label: Castle modpack bilgisi
+    icon: castle
+    media_folder: /castle-resimleri
+    public_folder: /castle-resimleri
+    files:
+      - name: castle
+        label: Modpack tanıtımı
+        file: veri/castle.json
+        format: json
+        media_folder: /castle-resimleri
+        public_folder: /castle-resimleri
+        fields:
+          - {label: Modpack adı, name: ad, widget: string, default: Castle, hint: "Sayfanın başlığı olarak görünür."}
+          - {label: Kısa tanıtım, name: slogan, widget: text, required: false, hint: "Başlığın altında görünen bir iki cümle."}
+          - {label: Kapak fotoğrafı, name: kapak, widget: image, required: false, hint: "Bilgi kutusunda görünen ana fotoğraf. Kendisi küçültüp WebP yapar."}
+          - label: Bilgiler
+            name: bilgiler
+            widget: list
+            required: false
+            label_singular: bilgi
+            summary: "{{fields.etiket}}: {{fields.deger}}"
+            hint: "Küçük bilgi satırları. Örnek: Minecraft sürümü: 1.20.1, Mod yükleyici: Forge, Mod sayısı: 150, Önerilen RAM: 8 GB. Sırası sitedeki sırasıdır."
+            fields:
+              - {label: Başlık, name: etiket, widget: string, hint: "Örnek: Minecraft sürümü"}
+              - {label: Değer, name: deger, widget: string, hint: "Örnek: 1.20.1"}
+          - {label: İndirme bağlantısı, name: indirme_link, widget: string, required: false, pattern: ["^https?://.+", "Bağlantı https:// ile başlamalı"], hint: "Modpack'in indirileceği adres (CurseForge, Modrinth, Drive vb.). Boş bırakırsan düğme görünmez."}
+          - {label: Düğme yazısı, name: indirme_yazi, widget: string, required: false, default: İndir, hint: "İndirme düğmesinin üstündeki yazı. Boş bırakırsan 'İndir' yazar."}
+          - label: Fotoğraflar
+            name: fotograflar
+            widget: list
+            required: false
+            label_singular: fotoğraf
+            summary: "{{fields.aciklama}}"
+            hint: "Modpack'ten ekran görüntüleri. Tıklayınca büyür."
+            fields:
+              - {label: Fotoğraf, name: foto, widget: image}
+              - {label: Açıklama, name: aciklama, widget: string, required: false, hint: "İstersen fotoğrafın altına yazılır."}
+          - label: Hakkında
+            name: hakkinda
+            widget: markdown
+            required: false
+            buttons: [bold, italic, heading-two, heading-three, bulleted-list, numbered-list, quote, link]
+            editor_components: []
+            hint: "Modpack'i uzun uzun anlat: neler var, nasıl kurulur, nelere dikkat etmeli. Yeni paragraf için araya boş satır bırak."
+
+  # ---------------------------------------------------------------- CASTLE (sürüm notları)
+  - name: castle_notlar
+    label: Castle sürüm notları
+    label_singular: sürüm notu
+    icon: history_edu
+    folder: _castle
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    identifier_field: baslik
+    slug: "{{slug}}"
+    media_folder: /castle-resimleri
+    public_folder: /castle-resimleri
+    summary: "{{tarih}} · {{surum}} · {{baslik}}"
+    description: "Her sürümün notu ayrı bir kayıt. 'Yeni sürüm notu'na bas, sürüm numarasını ve notları yaz. Yeni olan en üstte görünür."
+    sortable_fields:
+      fields: [tarih, surum, baslik]
+      default:
+        field: tarih
+        direction: descending
+    view_filters:
+      - {label: Taslaklar, field: published, pattern: false}
+    fields:
+      - {label: Sürüm numarası, name: surum, widget: string, hint: "Örnek: 1.3.0"}
+      - {label: Başlık, name: baslik, widget: string, hint: "Sitede böyle görünür. Örnek: Ejderha güncellemesi"}
+      - {label: Yayın günü, name: tarih, widget: datetime, type: date, date_format: "YYYY-MM-DD", time_format: false, default: "{{now}}", hint: "Sürümün çıktığı gün. Liste bu güne göre sıralanır."}
+      - label: Sürüm türü
+        name: tur
+        widget: select
+        required: false
+        default: Küçük güncelleme
+        options: [Büyük güncelleme, Küçük güncelleme, Hata düzeltme, Duyuru]
+        hint: "Listede küçük bir etiket olarak görünür."
+      - {label: Kapak fotoğrafı, name: kapak, widget: image, required: false, hint: "İstersen ekle. Listede küçük, notun içinde büyük görünür."}
+      - {label: Kısa özet, name: ozet, widget: text, required: false, hint: "Listede görünen bir iki cümle. Boş bırakırsan notun ilk satırları görünür."}
+      - label: Sürüm notları
+        name: metin
+        widget: markdown
+        required: false
+        buttons: [bold, italic, heading-two, heading-three, bulleted-list, numbered-list, quote, link]
+        editor_components: []
+        hint: "Neler eklendi, neler düzeldi? Madde madde yazabilirsin (üstteki liste düğmesi). Başlık için 'Başlık' düğmesini kullan."
+      - label: Fotoğraflar
+        name: galeri
+        widget: list
+        required: false
+        label_singular: fotoğraf
+        summary: "{{fields.aciklama}}"
+        hint: "Bu sürümden ekran görüntüleri. Notun altında görünür, tıklayınca büyür."
+        fields:
+          - {label: Fotoğraf, name: foto, widget: image}
+          - {label: Açıklama, name: aciklama, widget: string, required: false, hint: "İstersen fotoğrafın altına yazılır."}
+      - {label: Sitede yayınla, name: published, widget: boolean, default: true, hint: "Kapatırsan sürüm notu taslak olarak kalır ve sitede görünmez."}
 
   # ---------------------------------------------------------------- NOVEL SERİLERİ
   - name: seriler
