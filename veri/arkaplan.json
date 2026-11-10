@@ -29,7 +29,7 @@
       "koyuluk": "orta",
       "efekt": "yildiz",
       "video": "",
-      "varsayilan": true
+      "varsayilan": false
     },
     {
       "ad": "Pony",
@@ -49,7 +49,7 @@
       "koyuluk": "orta",
       "efekt": "yaprak",
       "video": "",
-      "varsayilan": false
+      "varsayilan": true
     },
     {
       "ad": "Haimiya Senpai",
@@ -98,6 +98,16 @@
       "renk": "",
       "koyuluk": "orta",
       "efekt": "yaprak",
+      "video": "",
+      "varsayilan": false
+    },
+    {
+      "ad": "Jacob Whiteduck",
+      "ad_en": "",
+      "resim": "/arkaplanlar/33310.webp",
+      "renk": "",
+      "koyuluk": "orta",
+      "efekt": "",
       "video": "",
       "varsayilan": false
     }
