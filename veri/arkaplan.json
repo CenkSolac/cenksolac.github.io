@@ -7,8 +7,9 @@
       "resim": "/arkaplanlar/orman.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": false,
-      "efekt": "atesbocegi"
+      "efekt": "atesbocegi",
+      "video": "",
+      "varsayilan": false
     },
     {
       "ad": "Gün batımı",
@@ -16,8 +17,9 @@
       "resim": "/arkaplanlar/gunbatimi.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": false,
-      "efekt": "yaprak"
+      "efekt": "yaprak",
+      "video": "",
+      "varsayilan": false
     },
     {
       "ad": "Mor gece",
@@ -25,8 +27,9 @@
       "resim": "/arkaplanlar/mor-gece.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": true,
-      "efekt": "yildiz"
+      "efekt": "yildiz",
+      "video": "",
+      "varsayilan": true
     },
     {
       "ad": "Pony",
@@ -34,6 +37,8 @@
       "resim": "/arkaplanlar/34fbdcef2bb31f5901e59769d7cb979d.webp",
       "renk": "",
       "koyuluk": "orta",
+      "efekt": "yaprak",
+      "video": "",
       "varsayilan": false
     },
     {
@@ -42,6 +47,8 @@
       "resim": "/arkaplanlar/242573d3cf27f3ebaf0eb9c00b9c99d4.webp",
       "renk": "",
       "koyuluk": "orta",
+      "efekt": "",
+      "video": "",
       "varsayilan": false
     },
     {
@@ -50,6 +57,8 @@
       "resim": "/arkaplanlar/138b7838d3ba46db8ae1ff2f01348ab5.webp",
       "renk": "",
       "koyuluk": "orta",
+      "efekt": "",
+      "video": "",
       "varsayilan": false
     },
     {
@@ -58,6 +67,8 @@
       "resim": "/arkaplanlar/62beabc1efc6597f4b053c194a439cd6.webp",
       "renk": "",
       "koyuluk": "orta",
+      "efekt": "",
+      "video": "",
       "varsayilan": false
     }
   ]
