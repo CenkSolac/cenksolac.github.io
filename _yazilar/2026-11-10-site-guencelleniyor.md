@@ -15,7 +15,7 @@ metin: |-
   **Neyse ıhım devam edelim.** Bugün güzel bir spor yaptım: 
   Hammer curl: 20 
   Şınav: 63
-  Mekik:
+  Mekik: 20
   Plank: 01:07,96 sn yaptım 
   Reverse curl: 9
   Wrist curl: sol 13 / sağ 12 -- 5kg dumble
