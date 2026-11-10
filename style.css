@@ -416,7 +416,7 @@ dialog.castle-buyuk .dgm{position:absolute;top:10px;right:12px}
 :root[data-ap]:not([data-ap-sade]):not([data-tema]) body::before{display:none}
 :root[data-ap]:not([data-ap-sade]):not([data-tema])::before{content:"";position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;z-index:-1;pointer-events:none;
 background:linear-gradient(color-mix(in srgb,var(--bg) var(--ap-perde,72%),transparent),color-mix(in srgb,var(--bg) var(--ap-perde2,84%),transparent)),var(--ap-resim) center/cover no-repeat}
-.ust.ayarli .marka{margin-right:-4px}
+.ust.ayarli .marka{margin-right:-2px}
 .ayar-dugme{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;margin-right:auto;color:var(--soluk);background:var(--yuzey);border:1px solid var(--cizgi);border-radius:50%;cursor:pointer;flex:none}
 .ayar-dugme:hover{color:var(--yazi);border-color:var(--vurgu)}
 .ayar-dugme svg{display:block;transition:transform .3s}
@@ -432,4 +432,18 @@ background:linear-gradient(color-mix(in srgb,var(--bg) var(--ap-perde,72%),trans
 .ap-kucuk{display:block;aspect-ratio:16/10;border-radius:7px;background:var(--bg) center/cover no-repeat}
 .ap-kucuk.bos{background:repeating-linear-gradient(90deg,#0b1020 0 10px,#121a2f 10px 11px)}
 .ap-ad{overflow-wrap:anywhere;line-height:1.25}
-@media (min-width:541px){.ust.ayarli nav a{margin-left:15px}.ust.ayarli nav a:first-child{margin-left:0}.ust.ayarli .bildirim-dugme{margin-left:12px}.ust.ayarli .dil-secici{margin-left:10px}}
+.ayar-ara{margin-top:14px;padding-top:16px;border-top:1px solid var(--cizgi)}
+.ayar-satir{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.ayar-secim[aria-pressed="true"]{background:var(--vurgu);color:var(--bg);border-color:var(--vurgu);font-weight:600}
+.ayar-pencere{max-height:calc(100dvh - 24px)}
+/* Canlı yayın çubuğu ve ana sayfadaki "Yeni eklenenler" */
+.duyuru.canli{background:#d92b3a;color:#fff}
+.duyuru.canli a,.duyuru.canli button{color:#fff}
+.yeniler{margin:30px 0 0}
+.yeniler h2{font-size:23px;margin:0 0 6px}
+.yeniler .liste a{align-items:center}
+.yeniler .liste span{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.yeniler .liste strong{overflow-wrap:anywhere;font-weight:600}
+.yeniler .liste small{flex:none;white-space:nowrap}
+.yeniler .dil{margin-left:0}
+.ap-izgara{max-height:min(46vh,420px);overflow-y:auto;padding:2px}

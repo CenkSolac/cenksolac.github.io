@@ -160,16 +160,8 @@
     try { pencere.showModal(); } catch (_) { pencere.setAttribute("open", ""); }
   }
 
-  // ---- Düğme ----
-  function dugmeKoy() {
-    var ust = document.querySelector("header.ust");
-    if (!ust || document.querySelector(".bildirim-dugme")) return;
-    var b = e("button", "bildirim-dugme"); b.type = "button";
-    b.setAttribute("aria-label", "Bildirimler"); b.title = "Bildirimler";
-    b.append(e("span", "bildirim-zil", "🔔"), e("span", "bildirim-etiket", "Bildirimler"));
-    b.onclick = ac;
-    ust.insertBefore(b, ust.querySelector(".dil-secici") || null);
-  }
+  // ---- Düğme: Ayarlar penceresindedir (arkaplan.js bunu çağırır) ----
+  function dugmeKoy() { window.Bildirim = { ac: ac }; }
 
   // ---- Açık aboneliği sessizce güncel tut (dil değişti mi, adres yenilendi mi) ----
   function senkron() {

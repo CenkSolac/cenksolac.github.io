@@ -24,8 +24,9 @@
       b.onclick=function(){if(DIL===x[0])return;depo(ANAHTAR,x[0]);location.reload()};
       k.appendChild(b);
     });
-    var ust=document.querySelector("header.ust");
-    if(ust)ust.appendChild(k);else{k.className+=" sabit";document.body.appendChild(k)}
+    // Üst çubuğu olan sayfalarda dil seçimi Ayarlar penceresindedir (arkaplan.js); diğerlerinde köşede durur
+    if(document.querySelector("header.ust"))return;
+    k.className+=" sabit";document.body.appendChild(k)
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",secici);else secici();
   if(DIL==="tr")return;
@@ -35,7 +36,11 @@
   var SOZ={
     "Ayarlar":"Settings","Arka plan":"Background","Sade (resimsiz)":"Plain (no image)",
     "Sitenin arka planını seç. Renkler seçtiğin resme göre değişir. Seçimin sadece bu cihazda saklanır.":"Pick the site background. Colours change to match the image you pick. Your choice is stored only on this device.",
-    "Novel bölümü ve günlük yazısı okurken arka plan sade kalır.":"The background stays plain while you read a novel chapter or a diary entry.",
+    "Kendi yüklediğin resim sadece bu cihazda durur, hiçbir yere gönderilmez. Novel bölümü ve günlük yazısı okurken arka plan sade kalır.":"An image you upload stays only on this device and is never sent anywhere. The background stays plain while you read a novel chapter or a diary entry.",
+    "Kendi resmin":"Your own image","Kendi resmini yükle":"Upload your own image","Resmi değiştir":"Change image","Resmi kaldır":"Remove image",
+    "Resim kaydedilemedi. Başka bir resim dene.":"The image couldn't be saved. Try another one.","Bu dosya resim olarak açılamadı.":"This file couldn't be opened as an image.",
+    "🔔 Bildirim ayarları":"🔔 Notification settings","Canlı yayın başlayınca ve yeni bölüm çıkınca haber al.":"Get notified when a live stream starts and when a new chapter is out.",
+    "Yeni eklenenler":"Recently added",
     // menü ve ortak
     "Castle":"Castle","Castle | CenkSolac":"Castle | CenkSolac","Sürüm notları":"Patch notes","Güncel sürüm":"Latest version","Fotoğraflar":"Photos","Hakkında":"About","İndir":"Download",
     "Henüz sürüm notu yok.":"No patch notes yet.","Büyük güncelleme":"Major update","Küçük güncelleme":"Minor update","Hata düzeltme":"Bug fix",

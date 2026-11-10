@@ -6,7 +6,7 @@
 <meta name="google-site-verification" content="d6BCBVo_9Wag6DlwNPGO9bAja35x3YORwE5SHA3J4Rg" />
 <title>CenkSolac | Mob Pazarı, web novel ve canlı yayın</title>
 <meta name="description" content="CenkSolac: TikTok canlı yayınında gönderebileceğin moblar, web novel serileri ve komik yayın klipleri.">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 <link rel="preload" href="/fonts/outfit.woff" as="font" type="font/woff" crossorigin>
 <!-- arama-ayarlari -->
 <link rel="canonical" href="https://cenksolac.com/">
@@ -61,6 +61,8 @@
     <a class="kapi" href="gunluk"><h2>Günlük</h2><p>Takvim: yayın günleri, videolar ve günlük yazılarım.</p></a>
   </div>
 
+  <section class="yeniler" id="yeniler" hidden></section>
+
   <section class="sosyal" id="sosyal"></section>
 </main>
 <script src="/klip.js"></script>
@@ -77,6 +79,32 @@ Klip.yukle().then(l=>{
   if(alt)sag.append(e("p",null,alt));
   a.append(Klip.kapakEl(k),sag);kutu.append(a);
 });
+// Yeni eklenenler: son novel bölümleri, günlük yazıları ve Castle sürüm notları
+(function(){
+  const al=u=>fetch(u).then(r=>r.json()).catch(()=>null);
+  Promise.all([al("veri/novel-bolumler.json"),al("veri/seriler.json"),al("veri/gunluk-yazilari.json"),al("veri/castle-notlari.json")]).then(([bol,ser,yaz,cas])=>{
+    const BUGUN=new Date(Date.now()+3*3600e3).toISOString().slice(0,10); // Türkiye günü
+    const gun=t=>{const x=String(t||"").slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(x)&&x<=BUGUN?x:""};
+    const l=[],adlar={};
+    ((ser&&ser.seriler)||[]).forEach(s=>{adlar[s.id]=s.ad});
+    Object.keys(bol||{}).forEach(id=>{
+      (bol[id]||[]).filter(b=>gun(b.tarih)).sort((a,b)=>gun(b.tarih).localeCompare(gun(a.tarih))||Number(b.numara)-Number(a.numara)).slice(0,2)
+        .forEach(b=>l.push({t:gun(b.tarih),tur:"Novel",ad:(adlar[id]||id)+" · "+(b.baslik||b.numara),href:"novel?s="+encodeURIComponent(id)+"&b="+encodeURIComponent(b.numara),n:Number(b.numara)||0}));
+    });
+    (Array.isArray(yaz)?yaz:[]).forEach(y=>{const id=String(y.url||"").split("/").pop().replace(/\.html$/,"");
+      if(id&&gun(y.tarih))l.push({t:gun(y.tarih),tur:"Günlük",ad:y.baslik||id,href:"gunluk?y="+encodeURIComponent(id),n:0})});
+    (Array.isArray(cas)?cas:[]).forEach(n=>{if(n&&n.id&&gun(n.tarih))l.push({t:gun(n.tarih),tur:"Castle",ad:[n.surum,n.baslik].filter(Boolean).join(" · ")||n.id,href:"castle?s="+encodeURIComponent(n.id),n:0})});
+    if(!l.length)return;
+    l.sort((a,b)=>b.t.localeCompare(a.t)||b.n-a.n);
+    function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+    const kutu=document.getElementById("yeniler"),liste=e("div","liste");
+    l.slice(0,5).forEach(x=>{
+      const a=e("a"),sol=e("span"),ad=e("strong",null,x.ad);ad.setAttribute("data-dil-yok","");
+      a.href=x.href;sol.append(e("span","dil",x.tur),ad);a.append(sol,e("small",null,Klip.tarihYaz(x.t)));liste.append(a);
+    });
+    kutu.append(e("h2",null,"Yeni eklenenler"),liste);kutu.hidden=false;
+  });
+})();
 fetch("veri/moblar.json").then(r=>r.json()).then(d=>{
   const moblar=[].concat(d.survival||[],d.oneblock||[],d.castle||[]);
   if(!moblar.length)return;

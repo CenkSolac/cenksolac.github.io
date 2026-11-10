@@ -1,12 +1,12 @@
-// Arka plan seçimi: sol üstteki ⚙ düğmesi ve "Ayarlar" penceresi. Resimler panelden gelir (panelde "Arka planlar", veri/arkaplan.json).
-// Ziyaretçinin seçimi sadece kendi cihazında saklanır. Sitenin renkleri (düğmeler, çizgiler, vurgu) seçilen resme göre ayarlanır.
+// Ayarlar penceresi (sol üstteki ⚙ düğmesi): arka plan, bildirimler ve dil. Resimler panelden gelir (panelde "Arka planlar", veri/arkaplan.json).
+// Ziyaretçi kendi resmini de yükleyebilir; o resim ve seçim sadece kendi cihazında saklanır, hiçbir yere gönderilmez. Sitenin renkleri (düğmeler, çizgiler, vurgu) seçilen resme göre ayarlanır.
 // Novel bölümü ve günlük yazısı okurken resim gösterilmez, sadece renkler uyar.
 (function () {
   "use strict";
-  var SECIM = "arkaplan", ONBELLEK = "arkaplan-on", YOK = "yok";
+  var SECIM = "arkaplan", ONBELLEK = "arkaplan-on", KENDI_DEPO = "arkaplan-kendi", YOK = "yok", KENDI = "kendi";
   var PERDE = { az: [58, 72], orta: [72, 84], cok: [84, 92] };
   var ADLAR = ["bg", "koyu", "yuzey", "parlak", "cizgi", "yazi", "soluk", "vurgu"];
-  var kok = document.documentElement, veri = null, pencere = null, izgara = null, sira = 0;
+  var kok = document.documentElement, veri = null, pencere = null, govde = null, izgara = null, durum = "", sira = 0;
 
   function depo(a, b) {
     try {
@@ -20,6 +20,12 @@
     u = String(u || "").trim();
     return /^\/(?!\/)[^"'()\\\s<>]*$/.test(u) ? encodeURI(decodeURI(u)) : "";
   }
+  function kendiOku() {
+    var v = depo(KENDI_DEPO);
+    return v && /^data:image\/(jpeg|webp|png);base64,[A-Za-z0-9+\/=]+$/.test(v) ? v : "";
+  }
+  function kendiYaz(v) { try { localStorage.setItem(KENDI_DEPO, v); return true; } catch (_) { return false; } }
+  function adres(r) { return r === KENDI ? kendiOku() : r; }
   function hexMi(s) { return /^#[0-9a-f]{6}$/i.test(String(s || "").trim()); }
 
   // Okuma sayfaları: resim yok, sadece renk
@@ -103,7 +109,8 @@
   // ---------------------------------------------------------------- Uygulama
   function uygula(o) {
     var st = kok.style, m = document.querySelector('meta[name="theme-color"]');
-    if (!o || !o.palet || !o.resim) {
+    var yol = o && o.palet ? adres(o.resim) : "";
+    if (!yol) {
       ADLAR.forEach(function (a) { st.removeProperty("--ap-" + a); });
       st.removeProperty("--ap-resim"); st.removeProperty("--ap-perde"); st.removeProperty("--ap-perde2");
       kok.removeAttribute("data-ap");
@@ -112,7 +119,7 @@
     }
     ADLAR.forEach(function (a) { if (hexMi(o.palet[a])) st.setProperty("--ap-" + a, o.palet[a]); });
     var p = PERDE[o.koyuluk] || PERDE.orta;
-    st.setProperty("--ap-resim", 'url("' + o.resim + '")');
+    st.setProperty("--ap-resim", 'url("' + yol + '")');
     st.setProperty("--ap-perde", p[0] + "%"); st.setProperty("--ap-perde2", p[1] + "%");
     kok.setAttribute("data-ap", "");
     if (m && !kok.hasAttribute("data-tema")) { if (!m.dataset.ilk) m.dataset.ilk = m.content; m.content = o.palet.bg; }
@@ -121,10 +128,11 @@
 
   // Sayfa çizilmeden önce: son kullanılan renkleri hemen uygula (renk sıçraması olmasın)
   var on = onbellekOku();
-  if (on && resimYolu(on.resim) === on.resim) uygula(on);
+  if (on && (on.resim === KENDI || resimYolu(on.resim) === on.resim)) uygula(on);
 
+  function acik() { return !!veri && veri.aktif === true; }
   function liste() {
-    if (!veri || veri.aktif !== true || !Array.isArray(veri.liste)) return [];
+    if (!acik() || !Array.isArray(veri.liste)) return [];
     return veri.liste.map(function (x) {
       return x && {
         ad: String(x.ad || "").trim(), ad_en: String(x.ad_en || "").trim(), resim: resimYolu(x.resim),
@@ -134,7 +142,8 @@
   }
   function secili(l) {
     var s = depo(SECIM), i;
-    if (s === YOK) return null;
+    if (s === YOK || !acik()) return null;
+    if (s === KENDI && kendiOku()) return { resim: KENDI, renk: "", koyuluk: "orta" };
     for (i = 0; i < l.length; i++) if (l[i].resim === s) return l[i];
     for (i = 0; i < l.length; i++) if (l[i].varsayilan) return l[i];
     return null;
@@ -142,9 +151,9 @@
   function gecir(x) {
     var no = ++sira;
     if (!x) { depo(ONBELLEK, null); uygula(null); return Promise.resolve(); }
-    var imza = [x.resim, x.renk, x.koyuluk].join("|"), c = onbellekOku();
+    var yol = adres(x.resim), imza = [x.resim === KENDI ? KENDI + yol.length + yol.slice(-16) : x.resim, x.renk, x.koyuluk].join("|"), c = onbellekOku();
     if (c && c.imza === imza) { uygula(c); return Promise.resolve(); }
-    return (x.renk ? Promise.resolve(hexPalet(x.renk)) : resimdenPalet(x.resim)).then(function (p) {
+    return (x.renk ? Promise.resolve(hexPalet(x.renk)) : resimdenPalet(yol)).then(function (p) {
       if (no !== sira) return;
       if (!p) p = palet(220, 0.3);
       var o = { imza: imza, resim: x.resim, koyuluk: x.koyuluk, palet: p };
@@ -158,18 +167,85 @@
     var s = secili(liste()), deger = s ? s.resim : YOK;
     Array.prototype.forEach.call(izgara.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.deger === deger)); });
   }
-  function secenek(deger, ad, resim) {
+  function sec(deger) { depo(SECIM, deger); gecir(secili(liste())); isaretle(); }
+  function secenek(deger, ad, resim, cevrilmesin) {
     var b = e("button", "ap-secenek"); b.type = "button"; b.dataset.deger = deger;
     var k = e("span", "ap-kucuk" + (resim ? "" : " bos"));
     if (resim) k.style.backgroundImage = 'url("' + resim + '")';
-    var y = e("span", "ap-ad", ad); if (resim) y.setAttribute("data-dil-yok", "");
+    var y = e("span", "ap-ad", ad); if (cevrilmesin) y.setAttribute("data-dil-yok", "");
     b.append(k, y);
-    b.onclick = function () {
-      depo(SECIM, deger);
-      var l = liste();
-      gecir(secili(l)); isaretle();
-    };
+    b.onclick = function () { sec(deger); };
     return b;
+  }
+  // Ziyaretçinin kendi resmi: küçültülür ve sadece bu cihazın deposuna yazılır
+  function kendiYukle(dosya) {
+    if (!dosya) return;
+    var u = URL.createObjectURL(dosya), im = new Image();
+    function bitti(mesaj) { URL.revokeObjectURL(u); durum = mesaj || ""; doldur(); }
+    im.onload = function () {
+      var denemeler = [[1600, 0.82], [1200, 0.72], [900, 0.6]], i, tamam = false;
+      try {
+        for (i = 0; i < denemeler.length && !tamam; i++) {
+          var o = Math.min(1, denemeler[i][0] / Math.max(im.naturalWidth, im.naturalHeight));
+          var cv = document.createElement("canvas");
+          cv.width = Math.max(1, Math.round(im.naturalWidth * o)); cv.height = Math.max(1, Math.round(im.naturalHeight * o));
+          cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+          tamam = kendiYaz(cv.toDataURL("image/jpeg", denemeler[i][1])) && !!kendiOku();
+        }
+      } catch (_) { tamam = false; }
+      if (!tamam) { bitti("Resim kaydedilemedi. Başka bir resim dene."); return; }
+      depo(SECIM, KENDI); gecir(secili(liste())); bitti("");
+    };
+    im.onerror = function () { bitti("Bu dosya resim olarak açılamadı."); };
+    im.src = u;
+  }
+  function dilBolumu() {
+    var k = e("div", "ayar-satir"); k.setAttribute("data-dil-yok", "");
+    [["tr", "Türkçe"], ["en", "English"]].forEach(function (x) {
+      var b = e("button", "dgm ayar-secim", x[1]); b.type = "button"; b.lang = x[0];
+      b.setAttribute("aria-pressed", String(kok.lang === x[0]));
+      b.onclick = function () { if (kok.lang === x[0]) return; depo("dil", x[0]); location.reload(); };
+      k.append(b);
+    });
+    return k;
+  }
+  function doldur() {
+    if (!govde) return;
+    var en = kok.lang === "en", parca = [];
+    izgara = null;
+    if (acik()) {
+      var kendi = kendiOku();
+      izgara = e("div", "ap-izgara");
+      izgara.append(secenek(YOK, "Sade (resimsiz)", ""));
+      liste().forEach(function (x, i) { izgara.append(secenek(x.resim, (en && x.ad_en) || x.ad || (en ? "Background " : "Arka plan ") + (i + 1), x.resim, true)); });
+      if (kendi) izgara.append(secenek(KENDI, "Kendi resmin", kendi));
+      var satir = e("div", "ayar-satir"), giris = document.createElement("input");
+      giris.type = "file"; giris.accept = "image/*"; giris.hidden = true;
+      giris.onchange = function () { kendiYukle(giris.files && giris.files[0]); };
+      var yukle = e("button", "dgm", kendi ? "Resmi değiştir" : "Kendi resmini yükle"); yukle.type = "button";
+      yukle.onclick = function () { giris.click(); };
+      satir.append(giris, yukle);
+      if (kendi) {
+        var sil = e("button", "bildirim-kapat-btn", "Resmi kaldır"); sil.type = "button";
+        sil.onclick = function () { depo(KENDI_DEPO, null); if (depo(SECIM) === KENDI) depo(SECIM, null); gecir(secili(liste())); durum = ""; doldur(); };
+        satir.append(sil);
+      }
+      parca.push(e("h3", "ayar-baslik", "Arka plan"),
+        e("p", "bildirim-giris", "Sitenin arka planını seç. Renkler seçtiğin resme göre değişir. Seçimin sadece bu cihazda saklanır."), izgara, satir);
+      if (durum) { var d = e("p", "bildirim-durum hata", durum); d.setAttribute("role", "status"); parca.push(d); }
+      parca.push(e("p", "ayar-not", "Kendi yüklediğin resim sadece bu cihazda durur, hiçbir yere gönderilmez. Novel bölümü ve günlük yazısı okurken arka plan sade kalır."));
+    }
+    if (window.Bildirim && window.Bildirim.ac) {
+      var bs = e("div", "ayar-satir"), bb = e("button", "dgm", "🔔 Bildirim ayarları"); bb.type = "button";
+      bb.onclick = function () { pencere.close(); window.Bildirim.ac(); };
+      bs.append(bb);
+      parca.push(e("h3", "ayar-baslik ayar-ara", "Bildirimler"), e("p", "bildirim-giris", "Canlı yayın başlayınca ve yeni bölüm çıkınca haber al."), bs);
+    }
+    var db = e("h3", "ayar-baslik ayar-ara", "Dil"); db.setAttribute("data-dil-yok", ""); db.textContent = "Dil / Language";
+    parca.push(db, dilBolumu());
+    govde.replaceChildren.apply(govde, parca);
+    if (parca[0]) parca[0].classList.remove("ayar-ara");
+    isaretle();
   }
   function pencereYap() {
     var d = document.createElement("dialog");
@@ -177,19 +253,13 @@
     d.addEventListener("click", function (ev) { if (ev.target === d) d.close(); });
     var ust = e("div", "bildirim-ust"), kapat = e("button", "dgm", "Kapat"); kapat.type = "button"; kapat.onclick = function () { d.close(); };
     ust.append(e("strong", null, "Ayarlar"), kapat);
-    var govde = e("div", "bildirim-govde");
-    govde.append(e("h3", "ayar-baslik", "Arka plan"), e("p", "bildirim-giris", "Sitenin arka planını seç. Renkler seçtiğin resme göre değişir. Seçimin sadece bu cihazda saklanır."));
-    izgara = e("div", "ap-izgara");
-    var en = kok.lang === "en";
-    izgara.append(secenek(YOK, "Sade (resimsiz)", ""));
-    liste().forEach(function (x, i) { izgara.append(secenek(x.resim, (en && x.ad_en) || x.ad || (en ? "Background " : "Arka plan ") + (i + 1), x.resim)); });
-    govde.append(izgara, e("p", "ayar-not", "Novel bölümü ve günlük yazısı okurken arka plan sade kalır."));
+    govde = e("div", "bildirim-govde");
     d.append(ust, govde); document.body.append(d);
     return d;
   }
   function ac() {
     if (!pencere) pencere = pencereYap();
-    isaretle();
+    durum = ""; doldur();
     try { pencere.showModal(); } catch (_) { pencere.setAttribute("open", ""); }
   }
   function dugmeKoy() {
@@ -203,11 +273,10 @@
   }
 
   // ---------------------------------------------------------------- Başlangıç
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", dugmeKoy); else dugmeKoy();
   fetch("/veri/arkaplan.json").then(function (r) { return r.json(); }).then(function (d) {
     veri = d;
-    var l = liste();
-    gecir(secili(l));
-    if (!l.length) return;
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", dugmeKoy); else dugmeKoy();
+    gecir(secili(liste()));
+    if (pencere && pencere.open) doldur();
   }).catch(function () {});
 })();

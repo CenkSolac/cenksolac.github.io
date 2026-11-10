@@ -26,6 +26,25 @@
     document.body.prepend(bar);
   }).catch(function(){});
 
+  // ---- "Canlı yayın başladı" çubuğu: canlı yayın bildirimi gönderildikten sonra 3 saat boyunca görünür
+  fetch("/veri/bildirim.json").then(function(r){return r.json()}).then(function(a){
+    if(!a||a.aktif!==true)return;
+    return fetch(new URL(String(a.api)).origin+"/api/mesajlar").then(function(r){return r.json()}).then(function(l){
+      var m=(Array.isArray(l)?l:[]).filter(function(x){return x&&x.kat==="canli"&&Number(x.t)>0})[0];
+      if(!m)return;
+      var dk=Math.floor((Date.now()-m.t)/60000);
+      if(dk<0||dk>=180||depo("canli-kapali")===String(m.id))return;
+      var en=document.documentElement.lang==="en",sa=Math.floor(dk/60),kalan=dk%60;
+      var sure=dk<1?(en?"just now":"az önce"):en?((sa?sa+" h ":"")+(kalan||!sa?kalan+" min ":"")+"ago"):((sa?sa+" sa ":"")+(kalan||!sa?kalan+" dk ":"")+"önce");
+      var bar=e("div","duyuru canli");bar.setAttribute("role","region");bar.setAttribute("data-dil-yok","");bar.setAttribute("aria-label",en?"Live stream":"Canlı yayın");
+      var ic=e("div","duyuru-ic");ic.append(e("span","duyuru-metin","🔴 "+(en?"Live stream started":"Canlı yayın başladı")+" · "+sure));
+      var a2=e("a","duyuru-link",en?"Watch":"İzle");a2.href=guvenliLink(m.url)||"/canliyayin";ic.append(a2);
+      var k=e("button","duyuru-kapat","✕");k.type="button";k.setAttribute("aria-label",en?"Close":"Kapat");
+      k.onclick=function(){bar.remove();depo("canli-kapali",String(m.id))};
+      bar.append(ic,k);document.body.prepend(bar);
+    });
+  }).catch(function(){});
+
   // ---- Uygulama olarak ekleme
   var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
   if(!standalone){
