@@ -487,6 +487,13 @@ collections:
                 default: orta
                 options: [{label: Az (resim daha net), value: az}, {label: Orta, value: orta}, {label: Çok (yazılar daha rahat okunur), value: cok}]
                 hint: "Yazılar okunsun diye resmin üstüne koyu bir perde gelir. Resim çok parlaksa 'Çok' seç."
+              - label: Hareketli efekt
+                name: efekt
+                widget: select
+                required: false
+                options: [{label: Kar yağışı, value: kar}, {label: Yıldızlar (arada kayan yıldız), value: yildiz}, {label: Ateş böcekleri, value: atesbocegi}, {label: Düşen yapraklar, value: yaprak}]
+                hint: "İstersen seç. Resmin üstünde hafif bir hareket olur. Dosya yüklemez, telefonda da çalışır, siteyi yavaşlatmaz. Boş bırakırsan efekt olmaz."
+              - {label: Video (isteğe bağlı), name: video, widget: file, required: false, media_folder: /arkaplanlar/video, public_folder: /arkaplanlar/video, hint: "Resmin yerine oynayan sessiz, kısa bir video (MP4). Sadece bilgisayarda oynar; telefonda yukarıdaki resim görünür. 10-15 saniyelik, başı sonu birbirine uyan, 5 MB'tan küçük bir video en iyisidir. Dosya 25 MB'ı geçmesin."}
               - {label: Varsayılan olsun, name: varsayilan, widget: boolean, default: false, hint: "Açarsan, seçim yapmamış her ziyaretçi siteyi bu arka planla görür. Sadece birinde aç. Hiçbirinde açık değilse site sade açılır."}
 
   # ---------------------------------------------------------------- DUYURU ÇUBUĞU

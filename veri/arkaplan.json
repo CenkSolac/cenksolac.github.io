@@ -7,7 +7,8 @@
       "resim": "/arkaplanlar/orman.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": false
+      "varsayilan": false,
+      "efekt": "atesbocegi"
     },
     {
       "ad": "Gün batımı",
@@ -15,7 +16,8 @@
       "resim": "/arkaplanlar/gunbatimi.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": false
+      "varsayilan": false,
+      "efekt": "yaprak"
     },
     {
       "ad": "Mor gece",
@@ -23,7 +25,8 @@
       "resim": "/arkaplanlar/mor-gece.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": true
+      "varsayilan": true,
+      "efekt": "yildiz"
     },
     {
       "ad": "Pony",

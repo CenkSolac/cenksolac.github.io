@@ -106,6 +106,102 @@
     });
   }
 
+  // ---------------------------------------------------------------- Hareket: kodla çizilen efektler ve video
+  // Efekt (kar, yıldız, ateş böceği, yaprak) dosya indirmez. Video sadece geniş ekranda oynar; telefonda resim görünür.
+  var EFEKTLER = { kar: 70, yildiz: 90, atesbocegi: 26, yaprak: 20 }, HAREKET = "arkaplan-hareket";
+  var sahne = null, tuval = null, kare = 0, simdiki = null, boyutla = null;
+  function hareketAcik() { return depo(HAREKET) !== "0"; }
+  function azHareket() { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (_) { return false; } }
+  function sahneDurdur() {
+    if (kare) cancelAnimationFrame(kare);
+    kare = 0; boyutla = null;
+    if (sahne) sahne.remove();
+    sahne = tuval = null;
+  }
+  function sahneKur(o) {
+    simdiki = o || null;
+    sahneDurdur();
+    if (!o || !document.body || !kok.hasAttribute("data-ap") || kok.hasAttribute("data-ap-sade") || kok.hasAttribute("data-tema")) return;
+    if (!hareketAcik() || azHareket()) return;
+    var v = resimYolu(o.video), ef = EFEKTLER[o.efekt] ? o.efekt : "";
+    if (v && ((navigator.connection && navigator.connection.saveData) || !matchMedia("(min-width: 800px)").matches)) v = "";
+    if (!v && !ef) return;
+    sahne = e("div", "ap-sahne"); sahne.setAttribute("aria-hidden", "true");
+    if (v) {
+      var kutu = e("div", "ap-video"), vd = document.createElement("video");
+      vd.muted = true; vd.loop = true; vd.autoplay = true; vd.playsInline = true; vd.preload = "auto";
+      vd.setAttribute("muted", ""); vd.setAttribute("playsinline", ""); vd.disablePictureInPicture = true; vd.tabIndex = -1;
+      vd.addEventListener("playing", function () { kutu.classList.add("oynuyor"); });
+      vd.addEventListener("error", function () { kutu.remove(); });
+      vd.src = v;
+      kutu.append(vd, e("div", "ap-perde")); sahne.append(kutu);
+      var p = vd.play(); if (p && p.catch) p.catch(function () {});
+    }
+    if (ef) { tuval = document.createElement("canvas"); sahne.append(tuval); }
+    document.body.prepend(sahne);
+    if (ef) efektBaslat(ef, (o.palet && hexMi(o.palet.vurgu) && o.palet.vurgu) || "#ffffff");
+  }
+  function efektBaslat(tur, renk) {
+    var benim = tuval, cx = benim.getContext("2d"), W = 0, H = 0, olcek = Math.min(window.devicePixelRatio || 1, 1.5), p = [], son = 0, kayan = null, i;
+    function r(a, b) { return a + Math.random() * (b - a); }
+    function boyut() { W = window.innerWidth; H = window.innerHeight; benim.width = Math.round(W * olcek); benim.height = Math.round(H * olcek); cx.setTransform(olcek, 0, 0, olcek, 0, 0); }
+    function yeni(ilk) {
+      if (tur === "kar") return { x: r(0, W), y: ilk ? r(0, H) : -8, b: r(1, 3.2), vy: r(18, 55), vx: r(-10, 10), f: r(0, 6.3), a: r(0.35, 0.9) };
+      if (tur === "yildiz") return { x: r(0, W), y: r(0, H), b: r(0.5, 1.7), f: r(0, 6.3), h: r(0.4, 1.6), a: r(0.3, 0.9) };
+      if (tur === "atesbocegi") return { x: r(0, W), y: r(0, H), b: r(1.4, 2.8), yon: r(0, 6.3), hiz: r(8, 22), f: r(0, 6.3), h: r(0.6, 1.6) };
+      return { x: r(0, W), y: ilk ? r(0, H) : -14, b: r(5, 10), vy: r(25, 60), vx: r(-18, 18), f: r(0, 6.3), d: r(0, 6.3), dv: r(-1.6, 1.6), a: r(0.45, 0.85) };
+    }
+    function daire(x, y, b) { cx.beginPath(); cx.arc(x, y, b, 0, 6.2832); cx.fill(); }
+    boyut(); boyutla = boyut;
+    var adet = Math.round(EFEKTLER[tur] * Math.max(0.4, Math.min(1.3, W * H / 1024000)));
+    for (i = 0; i < adet; i++) p.push(yeni(true));
+    function ciz(t) {
+      if (benim !== tuval) return;
+      kare = requestAnimationFrame(ciz);
+      var gecen = t - son;
+      if (gecen < 30) return; // en fazla ~30 kare/sn
+      son = t;
+      if (document.hidden) return;
+      var dt = Math.min(0.06, gecen / 1000), sn = t / 1000, q;
+      cx.clearRect(0, 0, W, H);
+      cx.fillStyle = tur === "kar" || tur === "yildiz" ? "#ffffff" : renk;
+      for (i = 0; i < p.length; i++) {
+        q = p[i];
+        if (tur === "kar") {
+          q.f += dt; q.x += (q.vx + Math.sin(q.f) * 12) * dt; q.y += q.vy * dt;
+          if (q.y > H + 8) q = p[i] = yeni(false);
+          cx.globalAlpha = q.a; daire(q.x, q.y, q.b);
+        } else if (tur === "yildiz") {
+          cx.globalAlpha = q.a * (0.55 + 0.45 * Math.sin(q.f + sn * q.h)); daire(q.x, q.y, q.b);
+        } else if (tur === "atesbocegi") {
+          q.yon += r(-1.5, 1.5) * dt; q.x += Math.cos(q.yon) * q.hiz * dt; q.y += Math.sin(q.yon) * q.hiz * dt;
+          if (q.x < -10) q.x = W + 10; else if (q.x > W + 10) q.x = -10;
+          if (q.y < -10) q.y = H + 10; else if (q.y > H + 10) q.y = -10;
+          var isik = Math.max(0, Math.sin(q.f + sn * q.h));
+          cx.globalAlpha = 0.16 * isik; daire(q.x, q.y, q.b * 4.5);
+          cx.globalAlpha = 0.2 + 0.8 * isik; daire(q.x, q.y, q.b);
+        } else {
+          q.f += dt * 1.3; q.d += q.dv * dt; q.x += (q.vx + Math.sin(q.f) * 25) * dt; q.y += q.vy * dt;
+          if (q.y > H + 14) q = p[i] = yeni(false);
+          cx.globalAlpha = q.a; cx.save(); cx.translate(q.x, q.y); cx.rotate(q.d);
+          cx.beginPath(); cx.ellipse(0, 0, q.b, q.b * 0.45, 0, 0, 6.2832); cx.fill(); cx.restore();
+        }
+      }
+      if (tur === "yildiz") { // arada bir kayan yıldız
+        if (!kayan && Math.random() < dt * 0.12) kayan = { x: r(W * 0.1, W * 0.9), y: r(0, H * 0.4), vx: r(280, 460) * (Math.random() < 0.5 ? -1 : 1), vy: r(120, 220), o: 0 };
+        if (kayan) {
+          kayan.o += dt; kayan.x += kayan.vx * dt; kayan.y += kayan.vy * dt;
+          cx.globalAlpha = Math.max(0, 0.9 - kayan.o); cx.strokeStyle = "#ffffff"; cx.lineWidth = 1.6; cx.lineCap = "round";
+          cx.beginPath(); cx.moveTo(kayan.x, kayan.y); cx.lineTo(kayan.x - kayan.vx * 0.12, kayan.y - kayan.vy * 0.12); cx.stroke();
+          if (kayan.o > 0.9) kayan = null;
+        }
+      }
+      cx.globalAlpha = 1;
+    }
+    kare = requestAnimationFrame(ciz);
+  }
+  window.addEventListener("resize", function () { if (boyutla) boyutla(); });
+
   // ---------------------------------------------------------------- Uygulama
   function uygula(o) {
     var st = kok.style, m = document.querySelector('meta[name="theme-color"]');
@@ -115,6 +211,7 @@
       st.removeProperty("--ap-resim"); st.removeProperty("--ap-perde"); st.removeProperty("--ap-perde2");
       kok.removeAttribute("data-ap");
       if (m && m.dataset.ilk) m.content = m.dataset.ilk;
+      sahneKur(null);
       return;
     }
     ADLAR.forEach(function (a) { if (hexMi(o.palet[a])) st.setProperty("--ap-" + a, o.palet[a]); });
@@ -123,6 +220,7 @@
     st.setProperty("--ap-perde", p[0] + "%"); st.setProperty("--ap-perde2", p[1] + "%");
     kok.setAttribute("data-ap", "");
     if (m && !kok.hasAttribute("data-tema")) { if (!m.dataset.ilk) m.dataset.ilk = m.content; m.content = o.palet.bg; }
+    sahneKur(o);
   }
   function onbellekOku() { try { return JSON.parse(depo(ONBELLEK) || "null"); } catch (_) { return null; } }
 
@@ -136,7 +234,8 @@
     return veri.liste.map(function (x) {
       return x && {
         ad: String(x.ad || "").trim(), ad_en: String(x.ad_en || "").trim(), resim: resimYolu(x.resim),
-        renk: hexMi(x.renk) ? String(x.renk).trim().toLowerCase() : "", koyuluk: PERDE[x.koyuluk] ? x.koyuluk : "orta", varsayilan: x.varsayilan === true
+        renk: hexMi(x.renk) ? String(x.renk).trim().toLowerCase() : "", koyuluk: PERDE[x.koyuluk] ? x.koyuluk : "orta", varsayilan: x.varsayilan === true,
+        efekt: EFEKTLER[x.efekt] ? x.efekt : "", video: resimYolu(x.video)
       };
     }).filter(function (x) { return x && x.resim; });
   }
@@ -151,12 +250,12 @@
   function gecir(x) {
     var no = ++sira;
     if (!x) { depo(ONBELLEK, null); uygula(null); return Promise.resolve(); }
-    var yol = adres(x.resim), imza = [x.resim === KENDI ? KENDI + yol.length + yol.slice(-16) : x.resim, x.renk, x.koyuluk].join("|"), c = onbellekOku();
+    var yol = adres(x.resim), imza = [x.resim === KENDI ? KENDI + yol.length + yol.slice(-16) : x.resim, x.renk, x.koyuluk, x.efekt || "", x.video || ""].join("|"), c = onbellekOku();
     if (c && c.imza === imza) { uygula(c); return Promise.resolve(); }
     return (x.renk ? Promise.resolve(hexPalet(x.renk)) : resimdenPalet(yol)).then(function (p) {
       if (no !== sira) return;
       if (!p) p = palet(220, 0.3);
-      var o = { imza: imza, resim: x.resim, koyuluk: x.koyuluk, palet: p };
+      var o = { imza: imza, resim: x.resim, koyuluk: x.koyuluk, palet: p, efekt: x.efekt || "", video: x.video || "" };
       depo(ONBELLEK, JSON.stringify(o)); uygula(o);
     });
   }
@@ -232,6 +331,13 @@
       }
       parca.push(e("h3", "ayar-baslik", "Arka plan"),
         e("p", "bildirim-giris", "Sitenin arka planını seç. Renkler seçtiğin resme göre değişir. Seçimin sadece bu cihazda saklanır."), izgara, satir);
+      if (liste().some(function (x) { return x.efekt || x.video; })) {
+        var onay = e("label", "ayar-onay"), kutu = document.createElement("input");
+        kutu.type = "checkbox"; kutu.checked = hareketAcik();
+        kutu.onchange = function () { depo(HAREKET, kutu.checked ? null : "0"); sahneKur(simdiki); };
+        onay.append(kutu, e("span", null, "Hareketli arka plan (efekt ve video)"));
+        parca.push(onay);
+      }
       if (durum) { var d = e("p", "bildirim-durum hata", durum); d.setAttribute("role", "status"); parca.push(d); }
       parca.push(e("p", "ayar-not", "Kendi yüklediğin resim sadece bu cihazda durur, hiçbir yere gönderilmez. Novel bölümü ve günlük yazısı okurken arka plan sade kalır."));
     }
@@ -273,7 +379,8 @@
   }
 
   // ---------------------------------------------------------------- Başlangıç
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", dugmeKoy); else dugmeKoy();
+  function hazir() { dugmeKoy(); sahneKur(simdiki); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", hazir); else hazir();
   fetch("/veri/arkaplan.json").then(function (r) { return r.json(); }).then(function (d) {
     veri = d;
     gecir(secili(liste()));

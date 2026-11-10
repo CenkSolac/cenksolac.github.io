@@ -40,7 +40,7 @@
     "Kendi resmin":"Your own image","Kendi resmini yükle":"Upload your own image","Resmi değiştir":"Change image","Resmi kaldır":"Remove image",
     "Resim kaydedilemedi. Başka bir resim dene.":"The image couldn't be saved. Try another one.","Bu dosya resim olarak açılamadı.":"This file couldn't be opened as an image.",
     "🔔 Bildirim ayarları":"🔔 Notification settings","Canlı yayın başlayınca ve yeni bölüm çıkınca haber al.":"Get notified when a live stream starts and when a new chapter is out.",
-    "Yeni eklenenler":"Recently added",
+    "Yeni eklenenler":"Recently added","Hareketli arka plan (efekt ve video)":"Animated background (effects and video)",
     // menü ve ortak
     "Castle":"Castle","Castle | CenkSolac":"Castle | CenkSolac","Sürüm notları":"Patch notes","Güncel sürüm":"Latest version","Fotoğraflar":"Photos","Hakkında":"About","İndir":"Download",
     "Henüz sürüm notu yok.":"No patch notes yet.","Büyük güncelleme":"Major update","Küçük güncelleme":"Minor update","Hata düzeltme":"Bug fix",
