@@ -57,7 +57,7 @@
       "resim": "/arkaplanlar/138b7838d3ba46db8ae1ff2f01348ab5.webp",
       "renk": "",
       "koyuluk": "orta",
-      "efekt": "",
+      "efekt": "kar",
       "video": "",
       "varsayilan": false
     },
@@ -79,6 +79,16 @@
       "koyuluk": "orta",
       "efekt": "",
       "video": "/arkaplanlar/video/Roblox Karakterlerinin Crouch Dansı.webp",
+      "varsayilan": false
+    },
+    {
+      "ad": "Attack on Titan",
+      "ad_en": "Attack on Titan",
+      "resim": "/arkaplanlar/4b697d5e3d3c92fd4530c8d5987983f8.webp",
+      "renk": "",
+      "koyuluk": "orta",
+      "efekt": "",
+      "video": "",
       "varsayilan": false
     }
   ]
