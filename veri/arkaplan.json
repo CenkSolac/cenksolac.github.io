@@ -23,7 +23,7 @@
       "resim": "/arkaplanlar/mor-gece.webp",
       "renk": "",
       "koyuluk": "orta",
-      "varsayilan": false
+      "varsayilan": true
     },
     {
       "ad": "Pony",
