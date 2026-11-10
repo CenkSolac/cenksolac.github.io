@@ -24,6 +24,14 @@
       "renk": "",
       "koyuluk": "orta",
       "varsayilan": false
+    },
+    {
+      "ad": "Pony",
+      "ad_en": "Pony",
+      "resim": "/arkaplanlar/34fbdcef2bb31f5901e59769d7cb979d.webp",
+      "renk": "",
+      "koyuluk": "orta",
+      "varsayilan": false
     }
   ]
 }
