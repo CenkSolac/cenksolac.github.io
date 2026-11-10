@@ -33,6 +33,9 @@
   // ---------------------------------------------------------------- Çeviri sözlüğü
   var AY={"Ocak":"January","Şubat":"February","Mart":"March","Nisan":"April","Mayıs":"May","Haziran":"June","Temmuz":"July","Ağustos":"August","Eylül":"September","Ekim":"October","Kasım":"November","Aralık":"December"};
   var SOZ={
+    "Ayarlar":"Settings","Arka plan":"Background","Sade (resimsiz)":"Plain (no image)",
+    "Sitenin arka planını seç. Renkler seçtiğin resme göre değişir. Seçimin sadece bu cihazda saklanır.":"Pick the site background. Colours change to match the image you pick. Your choice is stored only on this device.",
+    "Novel bölümü ve günlük yazısı okurken arka plan sade kalır.":"The background stays plain while you read a novel chapter or a diary entry.",
     // menü ve ortak
     "Castle":"Castle","Castle | CenkSolac":"Castle | CenkSolac","Sürüm notları":"Patch notes","Güncel sürüm":"Latest version","Fotoğraflar":"Photos","Hakkında":"About","İndir":"Download",
     "Henüz sürüm notu yok.":"No patch notes yet.","Büyük güncelleme":"Major update","Küçük güncelleme":"Minor update","Hata düzeltme":"Bug fix",

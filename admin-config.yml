@@ -453,6 +453,42 @@ collections:
               - {label: Hesap adı, name: ad, widget: string, hint: "Sitede görünen yazı. Örnek: TikTok"}
               - {label: Bağlantı, name: url, widget: string, pattern: ["^https?://.+", "Bağlantı https:// ile başlamalı"], hint: "Hesabın tam adresi. Örnek: https://www.tiktok.com/@cenksolac"}
 
+  # ---------------------------------------------------------------- ARKA PLANLAR
+  - name: arkaplan
+    label: Arka planlar
+    icon: wallpaper
+    media_folder: /arkaplanlar
+    public_folder: /arkaplanlar
+    files:
+      - name: arkaplan
+        label: Site arka planları
+        file: veri/arkaplan.json
+        format: json
+        media_folder: /arkaplanlar
+        public_folder: /arkaplanlar
+        fields:
+          - {label: Arka plan seçimi açık, name: aktif, widget: boolean, default: true, hint: "Açıkken sitenin sol üstünde, logonun yanında ⚙ düğmesi görünür ve ziyaretçi arka plan seçebilir. Kapatırsan düğme kaybolur, site eski sade haline döner."}
+          - label: Arka planlar
+            name: liste
+            widget: list
+            required: false
+            label_singular: arka plan
+            summary: "{{fields.ad}}"
+            hint: "Ziyaretçinin seçebileceği resimler. Sırası sitedeki sırasıdır. Yatay (geniş) resimler en iyi durur."
+            fields:
+              - {label: Adı, name: ad, widget: string, hint: "Ziyaretçinin göreceği ad. Örnek: Orman"}
+              - {label: İngilizce adı, name: ad_en, widget: string, required: false, hint: "İstersen yaz. Site İngilizce açıldığında bu görünür. Boşsa Türkçe adı görünür."}
+              - {label: Resim, name: resim, widget: image, hint: "Resmi buraya yükle. Kendisi küçültüp WebP yapar. Sitenin renkleri (düğmeler, çizgiler) bu resme göre kendiliğinden ayarlanır."}
+              - {label: Renk (isteğe bağlı), name: renk, widget: color, required: false, hint: "Boş bırakırsan site rengi resimden kendisi seçer. Beğenmezsen buradan bir renk seç, düğmeler ve vurgular o renkte olur."}
+              - label: Resmin koyuluğu
+                name: koyuluk
+                widget: select
+                required: false
+                default: orta
+                options: [{label: Az (resim daha net), value: az}, {label: Orta, value: orta}, {label: Çok (yazılar daha rahat okunur), value: cok}]
+                hint: "Yazılar okunsun diye resmin üstüne koyu bir perde gelir. Resim çok parlaksa 'Çok' seç."
+              - {label: Varsayılan olsun, name: varsayilan, widget: boolean, default: false, hint: "Açarsan, seçim yapmamış her ziyaretçi siteyi bu arka planla görür. Sadece birinde aç. Hiçbirinde açık değilse site sade açılır."}
+
   # ---------------------------------------------------------------- DUYURU ÇUBUĞU
   - name: duyuru
     label: Duyuru çubuğu

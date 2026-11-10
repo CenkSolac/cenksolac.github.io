@@ -1,0 +1,29 @@
+{
+  "aktif": true,
+  "liste": [
+    {
+      "ad": "Orman",
+      "ad_en": "Forest",
+      "resim": "/arkaplanlar/orman.webp",
+      "renk": "",
+      "koyuluk": "orta",
+      "varsayilan": false
+    },
+    {
+      "ad": "Gün batımı",
+      "ad_en": "Sunset",
+      "resim": "/arkaplanlar/gunbatimi.webp",
+      "renk": "",
+      "koyuluk": "orta",
+      "varsayilan": false
+    },
+    {
+      "ad": "Mor gece",
+      "ad_en": "Purple night",
+      "resim": "/arkaplanlar/mor-gece.webp",
+      "renk": "",
+      "koyuluk": "orta",
+      "varsayilan": false
+    }
+  ]
+}
