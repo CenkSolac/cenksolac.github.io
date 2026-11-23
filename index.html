@@ -37,7 +37,7 @@
 <body>
 <header class="ust">
   <a class="marka" href="/">CenkSolac</a>
-  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="castle">Castle</a><a href="gunluk">Günlük</a></nav>
+  <nav><a href="novel">Novel</a><a href="canliyayin">Canlı yayın</a><a href="mobpazari">Mob Pazarı</a><a href="gunluk">Günlük</a></nav>
 </header>
 <main>
   <h1 class="dev">CenkSolac</h1>
@@ -57,7 +57,6 @@
   <div class="ikili">
     <a class="kapi" href="novel"><h2>Novel</h2><p>Türkçe ve İngilizce serileri oku, bölümlerde ve serilerde ara.</p></a>
     <a class="kapi" href="canliyayin"><h2>Canlı yayın</h2><p>Sıradaki yayına geri sayım, komik klipler ve takipçi editleri.</p></a>
-    <a class="kapi" href="castle"><h2>Castle</h2><p>Modpack bilgileri, fotoğraflar ve sürüm notları.</p></a>
     <a class="kapi" href="gunluk"><h2>Günlük</h2><p>Takvim: yayın günleri, videolar ve günlük yazılarım.</p></a>
   </div>
 
@@ -79,10 +78,10 @@ Klip.yukle().then(l=>{
   if(alt)sag.append(e("p",null,alt));
   a.append(Klip.kapakEl(k),sag);kutu.append(a);
 });
-// Yeni eklenenler: son novel bölümleri, günlük yazıları ve Castle sürüm notları
+// Yeni eklenenler: son novel bölümleri ve günlük yazıları
 (function(){
   const al=u=>fetch(u).then(r=>r.json()).catch(()=>null);
-  Promise.all([al("veri/novel-bolumler.json"),al("veri/seriler.json"),al("veri/gunluk-yazilari.json"),al("veri/castle-notlari.json")]).then(([bol,ser,yaz,cas])=>{
+  Promise.all([al("veri/novel-bolumler.json"),al("veri/seriler.json"),al("veri/gunluk-yazilari.json")]).then(([bol,ser,yaz])=>{
     const BUGUN=new Date(Date.now()+3*3600e3).toISOString().slice(0,10); // Türkiye günü
     const gun=t=>{const x=String(t||"").slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(x)&&x<=BUGUN?x:""};
     const l=[],adlar={};
@@ -93,7 +92,6 @@ Klip.yukle().then(l=>{
     });
     (Array.isArray(yaz)?yaz:[]).forEach(y=>{const id=String(y.url||"").split("/").pop().replace(/\.html$/,"");
       if(id&&gun(y.tarih))l.push({t:gun(y.tarih),tur:"Günlük",ad:y.baslik||id,href:"gunluk?y="+encodeURIComponent(id),n:0})});
-    (Array.isArray(cas)?cas:[]).forEach(n=>{if(n&&n.id&&gun(n.tarih))l.push({t:gun(n.tarih),tur:"Castle",ad:[n.surum,n.baslik].filter(Boolean).join(" · ")||n.id,href:"castle?s="+encodeURIComponent(n.id),n:0})});
     if(!l.length)return;
     l.sort((a,b)=>b.t.localeCompare(a.t)||b.n-a.n);
     function e(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
