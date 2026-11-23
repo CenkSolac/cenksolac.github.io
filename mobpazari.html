@@ -53,7 +53,7 @@ function yeniMi(m){
   return gun>=-1&&gun<=14;
 }
 const seviye=m=>SEVIYELER.indexOf(String(m.tehlike||"").trim());
-const BOLUMLER=[["survival","Survival"],["oneblock","OneBlock"],["castle","Castle"]];
+const BOLUMLER=[["survival","Survival"],["castle","Castle"],["kaos","Kaos"],["oneblock","OneBlock"],["arena","Arena"]];
 // Oyundan gelen liste (kopru/site-guncelle.js uretir) + panelde girilen moblar.
 // Panelde oyundakiyle AYNI ADLA girilen mob, oyundaki kaydin resmini/aciklamasini/videosunu degistirir.
 // Panelde oyundaki bir hediyeyi baska mob icin kullanan eski kayit gosterilmez (oyun gercegi esas).
@@ -136,12 +136,13 @@ Promise.all([fetch("veri/moblar.json").then(r=>r.json()),fetch("veri/oyun-moblar
     const moblar=liste[secili],t=ara.value.toLocaleLowerCase("tr").trim();
     const r=moblar.filter(m=>(String(m.ad||"")+" "+String(m.hediye||"")+" "+String(m.aciklama||"")).toLocaleLowerCase("tr").includes(t)&&(tehlike<0||seviye(m)===tehlike)&&(!ozel||m.ozel_event===true)&&(!yeniSadece||yeniMi(m))).sort((a,b)=>sira.value==="artan"?a.coin-b.coin:b.coin-a.coin);
     izgara.replaceChildren();olcumler=[];
+    if(durum[secili]==="yakinda")izgara.append(e("p","bos","Bu modun gerçek oyun provası bekliyor. Hediye listesi önizlemedir; göndermeden önce yayıncıya sorunuz."));
     if(!moblar.length){izgara.append(e("p","bos",durum[secili]==="yakinda"?"Bu oyun modu yakında geliyor.":"Bu bölüme yakında mob eklenecek."));return}
     if(!r.length){izgara.append(e("p","bos","Aramana uyan mob yok."));return}
     r.forEach(m=>{
       const k=e("article","mob"),res=e("div","resim");
       const im=e("img");im.src=resimYolu(m.gorsel,"mobs");im.alt=m.ad;im.loading="lazy";
-      im.onerror=()=>res.replaceChildren(document.createTextNode(String(m.ad||"?").charAt(0)));
+      im.onerror=()=>{if(!im.dataset.yedek){im.dataset.yedek="1";im.src="/mobs/oyun/"+String(m.gorsel||"kart").split("/").pop().replace(/\.[^.]+$/,"")+".svg";}else{im.onerror=null;im.src="/mobs/oyun/kart.svg";}};
       res.append(im);
       if(yeniMi(m))res.append(e("span","yeni-rozet","Yeni"));
       const b=e("div","bilgi"),h=e("div","hediye");
